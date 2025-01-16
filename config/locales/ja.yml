@@ -1,0 +1,19 @@
+ja:
+  activerecord:
+    errors:
+      messages:
+        record_invalid: "レコードの保存に失敗しました: %{errors}"
+        blank: "を入力してください"
+        required: "は必須です"
+        taken: "はすでに存在します"
+        invalid: "は不正な値です"
+        too_short: "は%{count}文字以上で入力してください"
+        too_long: "は%{count}文字以下で入力してください"
+        greater_than: "%{count}より大きい値にしてください"
+        less_than: "%{count}より小さい値にしてください"
+        not_an_integer: "は整数で入力してください"
+        confirmation: "と一致していません"
+        inclusion: "は一覧にありません"
+        exclusion: "は使用できません"
+        accepted: "を承認してください"
+        uniqueness: "はすでに存在します"
