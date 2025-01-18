@@ -22,8 +22,13 @@ RUN apt-get update -qq && \
 # Set production environment
 ENV RAILS_ENV="development" \
     # BUNDLE_DEPLOYMENT="1" \
-    BUNDLE_PATH="/usr/local/bundle"
+    BUNDLE_PATH="/usr/local/bundle" \
     # BUNDLE_WITHOUT="development"
+    DATABASE_HOST="db_container" \
+    DATABASE_NAME="database" \
+    DATABASE_USER="user" \
+    DATABASE_PASSWORD="password" \
+    REDIS_URL="redis://redis:6379"
 
 # Throw-away build stage to reduce size of final image
 FROM base AS build
@@ -60,7 +65,10 @@ COPY --from=build /rails /rails
 
 # Run and own only the runtime files as a non-root user for security
 RUN groupadd --system --gid 1000 rails && \
-    useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash
+    useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
+    mkdir -p /rails/tmp/sockets && \
+    mkdir -p /rails/tmp/pids && \
+    chown -R rails:rails /rails/tmp
 
 USER 1000:1000
 
