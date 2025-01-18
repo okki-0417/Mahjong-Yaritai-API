@@ -20,15 +20,13 @@ RUN apt-get update -qq && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Set production environment
-ENV RAILS_ENV="development" \
-    # BUNDLE_DEPLOYMENT="1" \
-    BUNDLE_PATH="/usr/local/bundle" \
-    # BUNDLE_WITHOUT="development"
-    DATABASE_HOST="db_container" \
-    DATABASE_NAME="database" \
-    DATABASE_USER="user" \
-    DATABASE_PASSWORD="password" \
-    REDIS_URL="redis://redis:6379"
+ENV RAILS_ENV=${RAILS_ENV}" \
+    BUNDLE_PATH=${BUNDLE_PATH} \
+    DATABASE_HOST=${DATABASE_HOST} \
+    DATABASE_NAME=${DATABASE_NAME} \
+    DATABASE_USER=${DATABASE_USER} \
+    DATABASE_PASSWORD=${DATABASE_PASSWORD} \
+    REDIS_URL=${REDIS_URL}
 
 # Throw-away build stage to reduce size of final image
 FROM base AS build
