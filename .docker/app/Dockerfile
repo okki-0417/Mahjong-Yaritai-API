@@ -19,15 +19,6 @@ RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y curl default-mysql-client libjemalloc2 libvips && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
-# Set production environment
-ENV RAILS_ENV=${RAILS_ENV}" \
-    BUNDLE_PATH=${BUNDLE_PATH} \
-    DATABASE_HOST=${DATABASE_HOST} \
-    DATABASE_NAME=${DATABASE_NAME} \
-    DATABASE_USER=${DATABASE_USER} \
-    DATABASE_PASSWORD=${DATABASE_PASSWORD} \
-    REDIS_URL=${REDIS_URL}
-
 # Throw-away build stage to reduce size of final image
 FROM base AS build
 
@@ -51,9 +42,6 @@ RUN bundle exec bootsnap precompile app/ lib/
 # Precompiling assets for production without requiring secret RAILS_MASTER_KEY
 # RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
-
-
-
 # Final stage for app image
 FROM base AS app
 
@@ -71,7 +59,7 @@ RUN groupadd --system --gid 1000 rails && \
 USER 1000:1000
 
 # Entrypoint prepares the database.
-# ENTRYPOINT ["/rails/bin/docker-entrypoint"]
+ENTRYPOINT ["./bin/rails", "db:prepare"]
 
 # Start server via Thruster by default, this can be overwritten at runtime
 # EXPOSE 80
