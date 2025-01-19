@@ -29,15 +29,7 @@ Rails.application.configure do
 
   # Change to :null_store to avoid any caching.
   config.cache_store = :redis_cache_store, {
-    cluster: [
-      ENV.fetch("REDIS_URL")
-    ],
-    reconnect_attempts: 1,
-    read_timeout: 1.0,
-    write_timeout: 1.0,
-    error_handler: -> (method:, returning:, exception:) {
-      Rails.logger.error "Redis error with method #{method}: #{exception.message}"
-    }
+    url: ENV.fetch("REDIS_URL")
   }
 
   config.log_level = :debug
