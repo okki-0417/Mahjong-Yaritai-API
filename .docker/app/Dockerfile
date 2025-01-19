@@ -35,7 +35,7 @@ COPY . .
 RUN bundle exec rails app:update:bin
 
 # アセットプリコンパイル
-RUN SECRET_KEY_BASE_DUMMY=1 RAILS_ENV=development ./bin/rails assets:precompile
+# RUN SECRET_KEY_BASE_DUMMY=1 RAILS_ENV=development ./bin/rails assets:precompile
 
 # 最終ステージ
 FROM base AS app
