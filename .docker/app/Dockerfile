@@ -1,66 +1,66 @@
 # syntax=docker/dockerfile:1
-# check=error=true
 
-# This Dockerfile is designed for production, not development. Use with Kamal or build'n'run by hand:
-# docker build -t default_app .
-# docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name default_app default_app
-
-# For a containerized dev environment, see Dev Containers: https://guides.rubyonrails.org/getting_started_with_devcontainer.html
-
-# Make sure RUBY_VERSION matches the Ruby version in .ruby-version
 ARG RUBY_VERSION=3.3.4
-FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
+FROM ruby:$RUBY_VERSION-slim AS base
 
-# Rails app lives here
+# 環境変数の設定
+ENV BUNDLE_PATH=/usr/local/bundle
+
+# 作業ディレクトリを設定
 WORKDIR /rails
 
-# Install base packages
+# 必要なパッケージをインストール
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl default-mysql-client libjemalloc2 libvips && \
+    apt-get install --no-install-recommends -y curl libjemalloc2 libvips && \
+    apt-get install --no-install-recommends -y libmariadb-dev && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
-# Throw-away build stage to reduce size of final image
+# ビルド用ステージ
 FROM base AS build
 
-# Install packages needed to build gems
+# ビルドに必要なパッケージをインストール
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y build-essential default-libmysqlclient-dev git pkg-config && \
+    apt-get install --no-install-recommends -y build-essential git default-libmysqlclient-dev pkg-config && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
-# Install application gems
+# Gemfileを先にコピーしてキャッシュを活用
 COPY Gemfile Gemfile.lock ./
-RUN bundle install && \
-    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
-    bundle exec bootsnap precompile --gemfile
+RUN bundle install --jobs=4 --retry=3 --path ${BUNDLE_PATH} && \
+    rm -rf ~/.bundle/ ${BUNDLE_PATH}/ruby/*/cache ${BUNDLE_PATH}/ruby/*/bundler/gems/*/.git
 
-# Copy application code
+# アプリケーションコードをすべてコピー
 COPY . .
 
-# Precompile bootsnap code for faster boot times
-RUN bundle exec bootsnap precompile app/ lib/
+# 必要なファイルを再生成（特に bin ファイル）
+RUN bundle exec rails app:update:bin
 
-# Precompiling assets for production without requiring secret RAILS_MASTER_KEY
-# RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
+# アセットプリコンパイル
+RUN SECRET_KEY_BASE_DUMMY=1 RAILS_ENV=development ./bin/rails assets:precompile
 
-# Final stage for app image
+# 最終ステージ
 FROM base AS app
 
-# Copy built artifacts: gems, application
-COPY --from=build "/usr/local/bundle" "/usr/local/bundle"
+# 必要なデータをコピー
+COPY --from=build ${BUNDLE_PATH} ${BUNDLE_PATH}
 COPY --from=build /rails /rails
 
-# Run and own only the runtime files as a non-root user for security
+# 非ルートユーザーを作成
 RUN groupadd --system --gid 1000 rails && \
-    useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
-    mkdir -p /rails/tmp/sockets && \
-    mkdir -p /rails/tmp/pids && \
-    chown -R rails:rails /rails/tmp
+useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
+mkdir -p /rails/tmp/sockets && \
+mkdir -p /rails/tmp/pids && \
+chown -R rails:rails /rails/tmp
+
+# logディレクトリの権限を再設定
+RUN mkdir -p /rails/log && \
+    touch /rails/log/development.log && \
+    chown -R rails:rails /rails/log && \
+    chmod -R u+rwX,g+rwX,o-rwx /rails/log
 
 USER 1000:1000
 
-# Entrypoint prepares the database.
-ENTRYPOINT ["./bin/rails", "db:prepare"]
+# デフォルトのポートを公開
+EXPOSE 3001
 
-# Start server via Thruster by default, this can be overwritten at runtime
-# EXPOSE 80
-CMD ["./bin/rails", "server", "-b", "0.0.0.0", "-p", "3001"]
+# サーバーを起動
+CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0", "-p", "3001", "-e", "development"]

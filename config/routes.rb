@@ -1,6 +1,9 @@
-require "sidekiq/web"
+# require "sidekiq/web"
 
 Rails.application.routes.draw do
+  # manifest.json へのリクエストを無視
+  match "/manifest.json", to: proc { [404, {}, ["Not Found"]] }, via: :all
+
   get "/", to: "sessions#new"
 
   resources :users, expect: [ :new ]
@@ -25,6 +28,6 @@ Rails.application.routes.draw do
     resources :comments, module: :what_to_discard_problems
   end
 
-  resource :redis, only: %i[show]
-  mount Sidekiq::Web, at: "/sidekiq"
+  # resource :redis, only: %i[show]
+  # mount Sidekiq::Web, at: "/sidekiq"
 end

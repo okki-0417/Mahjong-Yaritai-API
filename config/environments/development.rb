@@ -33,6 +33,10 @@ Rails.application.configure do
     expires_in: 1.hour
   }
 
+  config.log_level = :debug
+  config.log_tags = [:request_id]
+  config.logger = ActiveSupport::Logger.new("log/development.log")
+
   # Background jobs.
   config.active_job.queue_adapter = :sidekiq
 

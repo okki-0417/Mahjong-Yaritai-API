@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ThreadsController < ApplicationController
+class ThreadCommentsController < ApplicationController
   before_action :restrict_to_logged_in_user
 
   def index
