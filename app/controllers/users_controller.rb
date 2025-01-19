@@ -17,7 +17,7 @@ class UsersController < ApplicationController
       remember user
       render json: { user: }, status: :created
     else
-      render json: { errors: user.errors.full_messages.map((message) => { message: }) }, status: :unprocessable_entity
+      render json: { errors: user.errors.full_messages.map { |message| { message: } } }, status: :unprocessable_entity
     end
   end
 
@@ -29,7 +29,7 @@ class UsersController < ApplicationController
     if current_user.update(user_params)
       render json: current_user, status: :ok
     else
-      render json: { errors: current_user.errors.full_messages.map((message) => { message: }) }, status: :unprocessable_entity
+      render json: { errors: current_user.errors.full_messages.map{ |message|  { message: } } }, status: :unprocessable_entity
     end
   end
 
