@@ -29,7 +29,8 @@ Rails.application.configure do
 
   # Change to :null_store to avoid any caching.
   config.cache_store = :redis_cache_store, {
-    url: "redis://redis:6379/0/cache",
+    url: ENV.fetch("REDIS_URL"),
+    namespace: 'cache',
     expires_in: 1.hour
   }
 
