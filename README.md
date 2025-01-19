@@ -22,3 +22,8 @@ Things you may want to cover:
 * Deployment instructions
 
 * ...
+
+```
+docker build -f ./.docker/app/Dockerfile -t app .
+docker run -d --name app -p 3001:3001  --env-file .env app
+```
