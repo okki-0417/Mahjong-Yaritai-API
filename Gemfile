@@ -6,7 +6,8 @@ gem "puma", ">= 5.0"
 gem "jbuilder"
 gem "rack-cors"
 gem "bcrypt"
-gem "redis-rails", "5.0.2"
+gem 'redis', '~> 5.0'
+gem 'redis-clustering'
 gem "activesupport", "7.2.1"
 gem "sidekiq"
 gem "bootsnap", require: false
