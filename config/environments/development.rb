@@ -31,6 +31,9 @@ Rails.application.configure do
   config.cache_store = :redis_cache_store, {
     url: ENV.fetch("REDIS_URL"),
     namespace: 'cache',
+    cluster: %i[enabled read_from_replicas],
+    connect_timeout: 5,
+    read_timeout: 5,
     expires_in: 1.hour
   }
 
