@@ -1,6 +1,6 @@
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
-    origins "https://mahjong-yaritai.netlify.app/" # フロントエンドのURLを指定
+    origins "https://mahjong-yaritai.netlify.app" # フロントエンドのURLを指定
     resource "*", # 全てのパスを許可
       headers: :any, # 全てのヘッダーを許可
       methods: [ :get, :post, :put, :patch, :delete, :options, :head ], # 許可するHTTPメソッド
