@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   # manifest.json へのリクエストを無視
   match "/manifest.json", to: proc { [404, {}, ["Not Found"]] }, via: :all
 
-  get "/", to: "sessions#new"
+  get "/", to: "sessions#state"
 
   resources :users, expect: [ :new ]
 
