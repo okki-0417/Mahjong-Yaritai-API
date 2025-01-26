@@ -20,8 +20,8 @@ module SessionHelper
 
     cookies.permanent.signed[:cookies_key] = {
       value: "hello_cookies",
-      path: ENV.fetch("FRONTEND_DOMAIN"),
-      secure: Rails.env.production?,
+      secure: true,
+      httponly: true,
     }
   end
 
