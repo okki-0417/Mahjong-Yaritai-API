@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "7.2.1"
+gem "rails", "8.0.1"
 gem "mysql2", "~> 0.5"
 gem "puma", ">= 5.0"
 gem "jbuilder"
@@ -8,7 +8,7 @@ gem "rack-cors"
 gem "bcrypt"
 gem 'redis', '~> 5.0'
 gem 'redis-clustering'
-gem "activesupport", "7.2.1"
+gem "activesupport", "8.0.1"
 gem "sidekiq"
 gem "bootsnap", require: false
 gem "kamal", require: false
