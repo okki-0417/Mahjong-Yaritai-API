@@ -27,11 +27,11 @@ module SessionHelper
 
   def current_user
     if session_key = session[:session_key]
-      session_value = JSON.parse($redis.get(session_key))
+      session_value = JSON.parse($redis.get("session_key"))
       @current_user ||= User.find_by(id: session_value["user_id"])
 
     elsif cookies_key = cookies[:cookies_key]
-      cookies_value = JSON.parse($redis.get(cookies_key))
+      cookies_value = JSON.parse($redis.get("cookies_key"))
       user = User.find_by(id: cookies_value["user_id"])
 
       if user && user.authenticated?(cookies_value["remember_token"])
