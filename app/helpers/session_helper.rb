@@ -7,7 +7,12 @@ module SessionHelper
     reset_session
 
     $redis.set(:hello_session, { user_id: user.id }.to_json)
-    session.permanent[:session_key] = value: "hello_session"
+
+    session[:session_key] = {
+      value: :hello_session,
+      expire_after: 20.years.from_now,
+      secure: true,
+    }
   end
 
   def remember(user)
@@ -19,7 +24,7 @@ module SessionHelper
     }.to_json)
 
     cookies.permanent.signed[:cookies_key] = {
-      value: "hello_cookies",
+      value: :hello_cookies,
       secure: true,
       httponly: true,
     }
@@ -27,14 +32,10 @@ module SessionHelper
 
   def current_user
     if session_key = session[:session_key]
-      puts "****************<<#{session_key}>>**********"
-
       session_value = JSON.parse($redis.get(session_key))
       @current_user ||= User.find_by(id: session_value["user_id"])
 
-    elsif cookies_key = cookies[:cookies_key]
-      puts "****************<<#{cookies_key}>>*************"
-
+    elsif cookies_key = cookies.signed[:cookies_key]
       cookies_value = JSON.parse($redis.get(cookies_key))
 
       user = User.find_by(id: cookies_value["user_id"])
