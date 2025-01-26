@@ -22,12 +22,3 @@ group :development, :test do
   gem "factory_bot_rails"
   gem "rubocop-rails-omakase", require: false
 end
-
-group :development do
-  gem "web-console"
-end
-
-group :test do
-  gem "capybara"
-  gem "selenium-webdriver"
-end
