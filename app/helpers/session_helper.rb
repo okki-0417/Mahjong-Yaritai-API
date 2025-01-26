@@ -17,7 +17,12 @@ module SessionHelper
       user_id: user.id,
       remember_token: user.remember_token
     }.to_json)
-    cookies.permanent.signed[:cookies_key] = :hello_cookies
+
+    cookies.permanent.signed[:cookies_key] = {
+      value: "hello_cookies",
+      domain: ENV.fetch("FRONTEND_DOMAIN"),
+      secure: Rails.env.production?,
+    }
   end
 
   def current_user

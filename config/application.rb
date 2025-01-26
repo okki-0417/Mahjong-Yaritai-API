@@ -17,6 +17,6 @@ module DefaultApp
 
     config.autoload_lib(ignore: %w[assets tasks])
 
-    config.hosts << "mahjong-yaritai.com"
+    config.hosts << ENV.fetch("HOST_DOMAIN")
   end
 end
