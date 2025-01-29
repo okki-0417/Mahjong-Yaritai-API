@@ -1,4 +1,4 @@
-tmp/*
+tmp/
+log/
 .env
 .env.sample
-log/*
