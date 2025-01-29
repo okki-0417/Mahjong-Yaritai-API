@@ -127,4 +127,5 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_03_103607) do
   add_foreign_key "thread_comments", "thread_comments"
   add_foreign_key "what_to_discard_problem_comments", "what_to_discard_problem_comments", column: "reply_to_comment_id"
   add_foreign_key "what_to_discard_problem_comments", "what_to_discard_problems"
+  add_foreign_key "what_to_discard_problems", "users"
 end

@@ -1,34 +1,22 @@
 default: &default
   adapter: mysql2
   encoding: utf8mb4
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  username: <%= ENV.fetch("DB_USERNAME") %>
-  password: <%= ENV.fetch("DB_PASSWORD") %>
-  host: <%= ENV.fetch("DB_HOST") %>
+  pool: 5
 
 development:
   <<: *default
-  database: <%= ENV.fetch("DB_NAME") %>
+  database: <%= ENV.fetch("DATABASE_NAME") %>
+  username: <%= ENV.fetch("DATABASE_USER") %>
+  password: <%= ENV.fetch("DATABASE_PASSWORD") %>
+  host: <%= ENV.fetch("DATABASE_HOST") %>
 
 test:
   <<: *default
-  database: <%= ENV.fetch("DB_NAME") %>_test
+  database: <%= ENV.fetch("DATABASE_NAME") %>_test
 
 production:
   primary: &primary_production
     <<: *default
-    database: default_app_production
-    username: default_app
-    password: <%= ENV["DEFAULT_APP_DATABASE_PASSWORD"] %>
-  cache:
-    <<: *primary_production
-    database: default_app_production_cache
-    migrations_paths: db/cache_migrate
-  queue:
-    <<: *primary_production
-    database: default_app_production_queue
-    migrations_paths: db/queue_migrate
-  cable:
-    <<: *primary_production
-    database: default_app_production_cable
-    migrations_paths: db/cable_migrate
+    database: <%= ENV.fetch("DATABASE_NAME") %>
+    username: <%= ENV.fetch("DATABASE_USER") %>
+    password: <%= ENV.fetch("DATABASE_PASSWORD") %>

@@ -14,7 +14,7 @@ services:
 
   app:
     build:
-      context: ./api
+      context: ./
       dockerfile: .docker/app/Dockerfile
     environment:
       DATABASE_HOST: db_container
@@ -23,7 +23,7 @@ services:
       DATABASE_PASSWORD: password
       REDIS_URL: redis://redis:6379
     volumes:
-      - ./api:/rails
+      - ./:/rails
     ports:
       - 3001:3001
     depends_on:
@@ -38,24 +38,14 @@ services:
     depends_on:
       - db
 
-  sidekiq:
-    container_name: sidekiq_container
-    build:
-      context: ./api
-      dockerfile: .docker/sidekiq/Dockerfile
-    environment:
-      REDIS_URL: redis://redis:6379
-    depends_on:
-      - redis
-
-  # web:
+  # sidekiq:
+  #   container_name: sidekiq_container
   #   build:
-  #     context: ./frontend
-  #     dockerfile: ./Dockerfile
-  #   volumes:
-  #       - ./frontend:/frontend
-  #   ports:
-  #     - 5173:5173
+  #     dockerfile: .docker/sidekiq/Dockerfile
+  #   environment:
+  #     REDIS_URL: redis://redis:6379
+  #   depends_on:
+  #     - redis
 
 volumes:
   db_data:
