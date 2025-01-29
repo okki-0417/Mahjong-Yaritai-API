@@ -1,29 +1,22 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
 * Ruby version
+```
+3.3.4
+```
 
-* System dependencies
-
-* Configuration
-
-* Database creation
+* Debug
+```
+docker exec -it app bash
+```
 
 * Database initialization
+```
+This image is depend on db image.
+```
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
+* Build & Run
 ```
 docker build -f ./.docker/app/Dockerfile -t app .
-docker run -d --name app -p 3001:3001  --env-file .env app
+docker run -d --rm --name app -p 3001:3001  --env-file .env app
 ```
