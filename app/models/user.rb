@@ -7,7 +7,7 @@ class User < ApplicationRecord
 
   has_secure_password
 
-  has_one_attached :avatar
+  # has_one_attached :avatar
   has_many :reports, dependent: :destroy
   has_many :created_threads, class_name: :ForumThread, dependent: :destroy
   has_many :created_what_to_discard_problems, class_name: :WhatToDiscardProblem, dependent: :destroy

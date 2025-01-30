@@ -2,39 +2,73 @@
 
 require "rails_helper"
 
-RSpec.describe "SessionHelper", type: :helper do
+RSpec.describe SessionHelper, type: :helper do
   let(:user) { FactoryBot.create(:user) }
+  let(:session_data) { { user_id: user.id }.to_json }
+  let(:cookies_data) { { user_id: user.id, remember_token: user.remember_token }.to_json }
 
   describe "current_user" do
-    context "sessionもcookieも空の場合" do
-      it "nilを返すこと" do
-        expect(helper.current_user).to be_nil
+    before { allow(controller).to receive(:reset_session).and_return(nil) }
+
+    subject { helper.current_user }
+
+    context "sessionが空の場合" do
+      before { session[:session_key] = nil }
+
+      context "cookiesが空の場合" do
+        before { cookies.signed[:cookies_key] = nil }
+
+        it "nilを返すこと" do
+          expect(subject).to be_nil
+        end
+      end
+
+      context "cookiesが入っている場合" do
+        context "無効な値の場合" do
+          before {
+            cookies.signed[:cookies_key] = "xxx"
+            allow($redis).to receive(:get).and_return(nil)
+          }
+
+          it "nilを返すこと" do
+            expect(subject).to be_nil
+          end
+        end
+
+        context "有効な値の場合" do
+          before {
+            cookies.signed[:cookies_key] = "hello_cookies"
+            allow($redis).to receive(:get).and_return(cookies_data)
+            allow_any_instance_of(User).to receive(:authenticated?).and_return(true)
+          }
+
+          it "ユーザーを返すこと" do
+            expect(subject).to eq user
+          end
+        end
       end
     end
 
-    context "sessionにユーザーIDが入っている場合" do
-      before { session[:user_id] = user.id }
+    context "sessionが入っている場合" do
+      context "無効な値の場合" do
+        before {
+          session[:session_key] = "xxx"
+          allow($redis).to receive(:get).and_return(nil)
+        }
 
-      it "ユーザーを返すこと" do
-        expect(helper.current_user).to eq(user)
-      end
-    end
-
-    context "cookiesにユーザーIDとremember_tokenが入っている場合" do
-      before do
-        remember_token = SecureRandom.urlsafe_base64(64)
-        cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST : BCrypt::Engine.cost
-        remember_digest = BCrypt::Password.create(remember_token, cost:)
-        user.update_attribute(:remember_digest, remember_digest)
-        user.reload
-
-        # TODO: requestスペックにしてcookiesの問題を解消する
-        allow(helper.cookies.signed).to receive(:[]).with(:user_id).and_return(user.id)
-        allow(helper.cookies).to receive(:[]).with(:remember_token).and_return(remember_token)
+        it "nilを返すこと" do
+          expect(subject).to be_nil
+        end
       end
 
-      it "ユーザーを返すこと" do
-        # expect(helper.current_user).to eq(user)
+      context "有効な値の場合" do
+        before {
+          session[:session_key] = "hello_session"
+          allow($redis).to receive(:get).and_return(session_data)
+        }
+        it "ユーザーを返すこと" do
+          expect(subject).to eq user
+        end
       end
     end
   end
