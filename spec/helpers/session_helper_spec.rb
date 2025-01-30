@@ -7,16 +7,35 @@ RSpec.describe SessionHelper, type: :helper do
   let(:session_data) { { user_id: user.id }.to_json }
   let(:cookies_data) { { user_id: user.id, remember_token: user.remember_token }.to_json }
 
-  describe "current_user" do
-    before {
-      module SessionHelper
-        def reset_session; end
-      end
-      helper.extend(SessionHelper)
-    }
+  before {
+    module SessionHelper
+      def reset_session; end
+    end
+    helper.extend(SessionHelper)
+  }
 
-    before { allow(helper).to receive(:reset_session).and_return(nil) }
+  describe "#login" do
+    let(:user) { FactoryBot.create(:user) }
+    let(:session_key) { :hello_session }
 
+    subject { helper.login(user )}
+
+    it "sessionにキーが入ること" do
+      expect { subject }.to change { session[:session_key] }
+    end
+  end
+
+  describe "#remember" do
+    let(:user) { FactoryBot.create(:user) }
+
+    subject { helper.remember(user) }
+
+    it "cookiesにキーが入ること" do
+      expect { subject }.to change { cookies.signed[:cookies_key] }
+    end
+  end
+
+  describe "#current_user" do
     subject { helper.current_user }
 
     context "sessionが空の場合" do
@@ -77,6 +96,19 @@ RSpec.describe SessionHelper, type: :helper do
           expect(subject).to eq user
         end
       end
+    end
+  end
+
+  describe "#forget" do
+    let(:user) { FactoryBot.create(:user) }
+
+    before { cookies[:cookies_key] = "hello_session" }
+
+    subject { helper.forget(user) }
+
+    it "cookiesが削除されること" do
+      subject
+      expect(cookies[:session_key]).to be_nil
     end
   end
 end
