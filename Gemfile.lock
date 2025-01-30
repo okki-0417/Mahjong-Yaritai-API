@@ -193,11 +193,7 @@ GEM
     psych (5.2.2)
       date
       stringio
-<<<<<<< HEAD
-    puma (6.5.0)
-=======
     puma (6.6.0)
->>>>>>> 535bbb4 (進捗)
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (3.1.8)
@@ -305,12 +301,8 @@ GEM
       ffi (~> 1.12)
       logger
     securerandom (0.4.1)
-<<<<<<< HEAD
-    sidekiq (7.3.7)
-=======
     sidekiq (7.3.8)
       base64
->>>>>>> 535bbb4 (進捗)
       connection_pool (>= 2.3.0)
       logger
       rack (>= 2.2.4)

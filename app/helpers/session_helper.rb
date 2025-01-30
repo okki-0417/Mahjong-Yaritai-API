@@ -4,7 +4,7 @@ module SessionHelper
   include ActionController::Cookies
 
   def login(user)
-    controller.reset_session
+    reset_session
 
     $redis.set(:hello_session, { user_id: user.id }.to_json)
 
@@ -30,7 +30,7 @@ module SessionHelper
     if session_key = session[:session_key]
       session_value = $redis.get(session_key)
 
-      return controller.reset_session unless session_value
+      return reset_session unless session_value
 
       parsed_session_value = JSON.parse(session_value)
       @current_user ||= User.find_by(id: parsed_session_value["user_id"])
@@ -38,7 +38,7 @@ module SessionHelper
     elsif cookies_key = cookies.signed[:cookies_key]
       cookies_value = $redis.get(cookies_key)
 
-      return controller.reset_session unless cookies_value
+      return reset_session unless cookies_value
       parsed_cookies_value = JSON.parse($redis.get(cookies_value))
       user = User.find_by(id: parsed_cookies_value["user_id"])
 
@@ -51,7 +51,7 @@ module SessionHelper
 
   def logout
     forget current_user
-    controller.reset_session
+    reset_session
     @current_user = nil
   end
 

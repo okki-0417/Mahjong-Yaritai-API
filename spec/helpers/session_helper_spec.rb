@@ -8,7 +8,14 @@ RSpec.describe SessionHelper, type: :helper do
   let(:cookies_data) { { user_id: user.id, remember_token: user.remember_token }.to_json }
 
   describe "current_user" do
-    before { allow(controller).to receive(:reset_session).and_return(nil) }
+    before {
+      module SessionHelper
+        def reset_session; end
+      end
+      helper.extend(SessionHelper)
+    }
+
+    before { allow(helper).to receive(:reset_session).and_return(nil) }
 
     subject { helper.current_user }
 
