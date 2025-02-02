@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe WhatToDiscardProblemComment, type: :model do
-  describe "validation" do
+  describe "validations" do
     let(:user) { FactoryBot.create(:user) }
     let(:what_to_discard_problem) { FactoryBot.create(:what_to_discard_problem) }
     let(:reply_to_comment) { FactoryBot.create(:what_to_discard_problem_comment, what_to_discard_problem:) }

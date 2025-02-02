@@ -1,0 +1,18 @@
+<main>
+  <h1>ユーザー仮登録完了のお知らせ</h1>
+
+  <p>
+    仮登録ありがとうございます。<br />
+    まだ登録は完了していません。
+  </p>
+
+  <p>
+    こちらからのリンクから本登録をしてください。<br />
+    <%= link_to nil, "#{ENV.fetch("FRONTEND_DOMAIN")}/users/verification-confirmation?token=#{@token}" %>
+  </p>
+
+  <p>
+    仮登録から90分経過するとURLは無効となります。<br />
+    90分経過後ははじめからお手続きください。
+  </p>
+</main>

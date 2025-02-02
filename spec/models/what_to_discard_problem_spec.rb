@@ -3,7 +3,7 @@
 require "rails_helper"
 
 RSpec.describe WhatToDiscardProblem, type: :model do
-  describe "validation" do
+  describe "validations" do
     let(:round) { 1 }
     let(:turn) { 1 }
     let(:wind) { "東" }

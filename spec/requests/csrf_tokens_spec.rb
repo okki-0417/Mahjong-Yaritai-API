@@ -9,12 +9,12 @@ RSpec.describe "CsrfTokensController", type: :request do
     subject { get csrf_token_url }
 
     context "未ログインの場合" do
-      it_behaves_like :status, 401
+      it_behaves_like :response, 401
     end
 
     context "ログイン済みの場合" do
       include_context "logged_in"
-      it_behaves_like :status, 200
+      it_behaves_like :response, 200
     end
   end
 end

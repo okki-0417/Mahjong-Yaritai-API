@@ -57,7 +57,7 @@ RSpec.describe "WhatToDiscardProblems", type: :request do
     let(:tsumo) { "14" }
 
     context "未ログインの場合" do
-      it_behaves_like :status, 401
+      it_behaves_like :response, 401
     end
 
     context "ログイン済みの場合" do
@@ -70,18 +70,18 @@ RSpec.describe "WhatToDiscardProblems", type: :request do
           let(:hand4) { "1" }
           let(:hand5) { "1" }
 
-          it_behaves_like :status, 422
+          it_behaves_like :response, 422
         end
 
         context "空の値が含まれている場合" do
           let(:hand1) { "" }
 
-          it_behaves_like :status, 422
+          it_behaves_like :response, 422
         end
       end
 
       context "全ての値が正常に満たされている場合" do
-        it_behaves_like :status, 201
+        it_behaves_like :response, 201
       end
     end
   end

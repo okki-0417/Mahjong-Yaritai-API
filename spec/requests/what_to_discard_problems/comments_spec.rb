@@ -19,7 +19,7 @@ RSpec.describe "WhatToDiscardProblems::Comments", type: :request do
     }}
 
     context "未ログインの場合" do
-      it_behaves_like :status, 401
+      it_behaves_like :response, 401
     end
 
     context "ログイン済みの場合" do
@@ -29,13 +29,13 @@ RSpec.describe "WhatToDiscardProblems::Comments", type: :request do
         context "空の場合" do
           let(:content) { "" }
 
-          it_behaves_like :status, 422
+          it_behaves_like :response, 422
         end
 
         context "500文字よりも長い場合" do
           let(:content) { "a" * 501 }
 
-          it_behaves_like :status, 422
+          it_behaves_like :response, 422
         end
       end
 
@@ -43,7 +43,7 @@ RSpec.describe "WhatToDiscardProblems::Comments", type: :request do
         context "返信先のコメントが存在しない場合" do
           let(:reply_to_comment_id) { nil }
 
-          it_behaves_like :status, 201
+          it_behaves_like :response, 201
         end
 
         context "返信先のコメントが存在する場合" do
@@ -51,11 +51,11 @@ RSpec.describe "WhatToDiscardProblems::Comments", type: :request do
             let(:reply_to_comment) { FactoryBot.create(:what_to_discard_problem_comment) }
             let(:reply_to_comment_id) { reply_to_comment.id }
 
-            it_behaves_like :status, 422
+            it_behaves_like :response, 422
           end
 
           context "正常に返信先のコメントを指定した場合" do
-            it_behaves_like :status, 201
+            it_behaves_like :response, 201
           end
         end
       end

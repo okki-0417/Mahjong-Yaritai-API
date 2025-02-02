@@ -6,7 +6,12 @@ Rails.application.routes.draw do
 
   get "/", to: "sessions#state"
 
-  resources :users, expect: [ :new ]
+  resources :users, only: %i[index create edit create update destroy]
+
+  namespace :users do
+    resource :verification, only: %i[create]
+    resource :verification_confirmation, only: %i[show]
+  end
 
   resource :session, only: [ :new, :create, :destroy ] do
     collection do
@@ -26,6 +31,10 @@ Rails.application.routes.draw do
 
   resources :what_to_discard_problems do
     resources :comments, module: :what_to_discard_problems
+  end
+
+  if Rails.env.development?
+    mount LetterOpenerWeb::Engine, at: "/letter_opener"
   end
 
   # resource :redis, only: %i[show]

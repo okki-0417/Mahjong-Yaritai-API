@@ -4,6 +4,8 @@ class UsersController < ApplicationController
   before_action :reject_logged_in_user, only: [ :create ]
   before_action :restrict_to_logged_in_user, only: [ :index, :show, :update, :destroy ]
 
+  before_create :check_email_session_expiration
+
   def index
     users = User.all
     render json: { users: }, status: :ok
@@ -15,7 +17,7 @@ class UsersController < ApplicationController
     if user.save
       login user
       remember user
-      render json: { user: }, status: :created
+      head :created
     else
       render json: { errors: user.errors.full_messages.map { |message| { message: } } }, status: :unprocessable_entity
     end
@@ -42,5 +44,12 @@ class UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(:name, :email, :password, :password_confirmation)
+  end
+
+  def check_email_session_expiration
+    user = User.find_by(email: session[:verify_email])
+    return if user
+
+    errors.add(:email, :session_invalid)
   end
 end
