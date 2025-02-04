@@ -18,6 +18,8 @@ module DefaultApp
 
     config.autoload_lib(ignore: %w[assets tasks])
 
+    config.autoload_paths << Rails.root.join("app/forms")
+
     config.hosts << "mahjong-yaritai.com"
   end
 end

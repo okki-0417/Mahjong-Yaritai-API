@@ -29,13 +29,13 @@ RSpec.describe "Users::VerificationConfirmationsController", type: :request do
         let(:session_values) { { token: "token" } }
         before { allow(session_double).to receive(:[]).with(:token).and_return("token") }
 
-        context "バリデーションに通らない場合" do
+        context "フォームのバリデーションに通らない場合" do
           before { allow_any_instance_of(User::VerificationConfirmationForm).to receive(:valid?).and_return(false) }
 
           it_behaves_like :response, 422
         end
 
-        context "バリデーションに通る場合" do
+        context "フォームのバリデーションに通る場合" do
           let(:temp_user) { FactoryBot.create(:temp_user) }
 
           before {
@@ -43,7 +43,6 @@ RSpec.describe "Users::VerificationConfirmationsController", type: :request do
               :valid? => true,
               temp_user:,
             )
-
             allow(session_double).to receive(:delete)
             allow(session_double).to receive(:[]=).with(:email, temp_user.email)
             allow(session_double).to receive(:[]=).with(:verification_session_expired_at, temp_user.expired_at)

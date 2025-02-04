@@ -6,12 +6,10 @@ Rails.application.routes.draw do
 
   get "/", to: "sessions#state"
 
-  resources :users, only: %i[index create edit create update destroy]
+  resource :authorization_session, only: %i[create]
+  resource :authorization, only: %i[create]
 
-  namespace :users do
-    resource :verification, only: %i[create]
-    resource :verification_confirmation, only: %i[show]
-  end
+  resources :users, only: %i[index create edit create update destroy]
 
   resource :session, only: [ :new, :create, :destroy ] do
     collection do

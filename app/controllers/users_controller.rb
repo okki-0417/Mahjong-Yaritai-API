@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
-  before_action :reject_logged_in_user, only: [ :create ]
   before_action :restrict_to_logged_in_user, only: [ :index, :show, :update, :destroy ]
-
-  before_create :check_email_session_expiration
 
   def index
     users = User.all
@@ -12,14 +9,19 @@ class UsersController < ApplicationController
   end
 
   def create
-    user = User.new(user_params)
+    authorization_id = redis_get(session[:authorization_id_key])
+    authorization = Authorization.find_by(id: authorization_id&.to_i)
+
+    user = User.new(
+      email: authorization&.email,
+      **user_params,
+    )
 
     if user.save
-      login user
-      remember user
-      head :created
+      session.delete(:authorization_id_key)
+      render json: { user: { id: user.id, name: user.name } }, status: :created
     else
-      render json: { errors: user.errors.full_messages.map { |message| { message: } } }, status: :unprocessable_entity
+      render json: { errors: user.errors.full_messages.map{ |message|  { message: } } }, status: :unprocessable_entity
     end
   end
 
@@ -44,12 +46,5 @@ class UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(:name, :email, :password, :password_confirmation)
-  end
-
-  def check_email_session_expiration
-    user = User.find_by(email: session[:verify_email])
-    return if user
-
-    errors.add(:email, :session_invalid)
   end
 end

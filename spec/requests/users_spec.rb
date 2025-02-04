@@ -48,29 +48,39 @@ RSpec.describe "Users", type: :request do
   end
 
   describe "create" do
-    subject { post users_url, params: {
-      user: {
-        name: "test_user",
-        email: "test@test.com",
-        password: "password",
-        password_confirmation: "password"
-      }
-    }}
+    let(:name) { "test_name" }
+    let(:password) { "test_password" }
+    let(:password_confirmation) { password }
 
-    context "未ログインの場合" do
-      it "ユーザーを作成・ログイン処理して201を返すこと" do
-        expect { subject }.to change { User.count }.by(1)
-        expect(response).to have_http_status(201)
-        expect(logged_in?).to eq true
-      end
+    subject { post users_url,
+      params: {
+        user: {
+          name:,
+          password:,
+          password_confirmation:,
+        }
+      }
+    }
+
+    context "Authorizationが存在しない場合" do
+      before { allow_any_instance_of(UsersController).to receive(:redis_get).and_return(nil) }
+
+      it_behaves_like :response, 422
     end
 
-    context "ログイン済みの場合" do
-      include_context "logged_in"
+    context "Authorizationが存在する場合" do
+      let(:authorization) { FactoryBot.create(:authorization) }
 
-      it "403を返すこと" do
-        subject
-        expect(response).to have_http_status(403)
+      before { allow(Authorization).to receive(:find_by).and_return(authorization) }
+
+      context "モデルのバリデーションに通らない場合" do
+        before { allow_any_instance_of(User).to receive(:save).and_return(false) }
+
+        it_behaves_like :response, 422
+      end
+
+      context "モデルのバリデーションに通る場合" do
+        it_behaves_like :response, 201
       end
     end
   end

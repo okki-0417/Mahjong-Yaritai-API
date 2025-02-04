@@ -8,7 +8,7 @@
 
   <p>
     こちらからのリンクから本登録をしてください。<br />
-    <%= link_to nil, "#{ENV.fetch("FRONTEND_DOMAIN")}/users/verification-confirmation?token=#{@token}" %>
+    <%= link_to "新規登録", "#{ENV.fetch("FRONTEND_DOMAIN")}/users/new?token=#{CGI.escape(@token)}" %>
   </p>
 
   <p>
