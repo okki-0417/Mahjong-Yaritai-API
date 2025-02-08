@@ -1,4 +1,4 @@
-require 'redis'
+require 'redis-rails'
 require 'redis-clustering' if Rails.env.production?
 
 if Rails.env.production?

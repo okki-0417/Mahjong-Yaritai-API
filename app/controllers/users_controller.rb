@@ -9,8 +9,7 @@ class UsersController < ApplicationController
   end
 
   def create
-    authorization_id = redis_get(session[:authorization_id_key])
-    authorization = Authorization.find_by(id: authorization_id&.to_i)
+    authorization = Authorization.find_by(id: session[:authorization_id]&.to_i)
 
     user = User.new(
       email: authorization&.email,
@@ -19,6 +18,9 @@ class UsersController < ApplicationController
 
     if user.save
       session.delete(:authorization_id_key)
+      login(user)
+      remember(user)
+
       render json: { user: { id: user.id, name: user.name } }, status: :created
     else
       render json: { errors: user.errors.full_messages.map{ |message|  { message: } } }, status: :unprocessable_entity

@@ -5,8 +5,7 @@ class AuthorizationsController < ApplicationController
     authorization = Authorization.find_by(token: params[:token])
 
     if authorization && !authorization.expired?
-      $redis.set(:authorization_id_key, authorization.id)
-      session[:authorization_id] = :authorization_id_key
+      session[:authorization_id] = authorization.id
 
       head :no_content
     else

@@ -6,7 +6,7 @@ gem "puma", ">= 5.0"
 gem "jbuilder"
 gem "rack-cors"
 gem "bcrypt"
-gem 'redis'
+gem 'redis-rails'
 gem "sidekiq"
 gem "bootsnap", require: false
 gem "kamal", require: false

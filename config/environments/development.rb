@@ -10,6 +10,15 @@ Rails.application.configure do
     url: ENV.fetch("REDIS_URL")
   }
 
+  config.middleware.use ActionDispatch::Cookies
+  config.middleware.use ActionDispatch::Session::RedisStore
+
+  config.session_store :redis_store,
+                        servers: [ENV.fetch("REDIS_URL")],
+                        expire_after: 20.years,
+                        key: "_api_app_session",
+                        secure: true
+
   config.log_level = :debug
   config.log_tags = [:request_id]
 

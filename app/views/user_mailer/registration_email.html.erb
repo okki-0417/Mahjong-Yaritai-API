@@ -7,12 +7,15 @@
   </p>
 
   <p>
-    こちらからのリンクから本登録をしてください。<br />
-    <%= link_to "新規登録", "#{ENV.fetch("FRONTEND_DOMAIN")}/users/new?token=#{CGI.escape(@token)}" %>
+    以下の認証コードを入力して認証を完了させてください。
   </p>
 
+  <div style="margin-top: 12px;">
+    <%= @token %>
+  </div>
+
   <p>
-    仮登録から90分経過するとURLは無効となります。<br />
-    90分経過後ははじめからお手続きください。
+    仮登録から15分経過するとURLは無効となります。<br />
+    15分経過後は、はじめからお手続きください。
   </p>
 </main>

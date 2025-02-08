@@ -39,7 +39,7 @@ module SessionHelper
       cookies_value = $redis.get(cookies_key)
 
       return reset_session unless cookies_value
-      parsed_cookies_value = JSON.parse($redis.get(cookies_value))
+      parsed_cookies_value = JSON.parse(cookies_value)
       user = User.find_by(id: parsed_cookies_value["user_id"])
 
       if user && user.authenticated?(parsed_cookies_value["remember_token"])

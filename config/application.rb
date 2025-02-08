@@ -12,13 +12,13 @@ module DefaultApp
     config.i18n.default_locale = :ja
 
     config.api_only = true
-    config.middleware.use ActionDispatch::Cookies
-    config.middleware.use ActionDispatch::Session::CookieStore
     config.action_dispatch.cookies_same_site_protection = :none
 
     config.autoload_lib(ignore: %w[assets tasks])
 
-    config.autoload_paths << Rails.root.join("app/forms")
+    Dir[Rails.root.join("app/*")].each do |path|
+      config.autoload_paths << path if File.directory?(path)
+    end
 
     config.hosts << "mahjong-yaritai.com"
   end
