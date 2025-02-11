@@ -12,6 +12,9 @@ Rails.application.configure do
 
   config.active_storage.service = :test
 
+  config.middleware.use ActionDispatch::Cookies
+  config.middleware.use ActionDispatch::Session::CookieStore
+
   config.action_mailer.delivery_method = :test
   config.action_mailer.default_options = { from: "example.com" }
   config.action_mailer.default_url_options = { host: "example.com" }

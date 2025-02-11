@@ -12,10 +12,9 @@ RSpec.shared_examples :invalid do |status|
   end
 end
 
-RSpec.shared_examples :error_added do |attribute, type|
+RSpec.shared_examples :error_added do |attribute, type, options = {}|
   it "エラーが追加されていること" do
     subject.valid?
-    expect(subject.errors).to be_added(attribute, type)
+    expect(subject.errors).to be_added(attribute, type, **options)
   end
-
 end

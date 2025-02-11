@@ -3,17 +3,42 @@
 require "rails_helper"
 
 RSpec.describe "WhatToDiscardProblems::Comments", type: :request do
-  let(:current_user) { FactoryBot.create(:user) }
+  describe "#index" do
+    let(:what_to_discard_problem) { FactoryBot.create(:what_to_discard_problem) }
+    let(:what_to_discard_problem_id) { 0 }
+
+    subject { get what_to_discard_problem_comments_url(what_to_discard_problem_id:) }
+
+    context "投稿が存在しない場合" do
+      it_behaves_like :response, 404
+    end
+
+    context "投稿が存在する場合" do
+      let(:what_to_discard_problem_id) { what_to_discard_problem.id }
+
+      context "コメントが存在しない場合" do
+        it_behaves_like :response, 200
+      end
+
+      context "コメントが存在する場合" do
+        let!(:what_to_discard_problem_comment) { FactoryBot.create(:what_to_discard_problem_comment, what_to_discard_problem_id:) }
+
+        it_behaves_like :response, 200
+      end
+    end
+  end
+
 
   describe "#create" do
-    let(:what_to_discard_problem) { FactoryBot.create(:what_to_discard_problem) }
-    let(:reply_to_comment) { FactoryBot.create(:what_to_discard_problem_comment, what_to_discard_problem_id: what_to_discard_problem.id) }
-    let(:reply_to_comment_id) { reply_to_comment.id }
-    let(:content) { "a" * 500 }
+    let(:current_user) { FactoryBot.create(:user) }
+    let(:what_to_discard_problem_id) { FactoryBot.create(:what_to_discard_problem).id }
 
-    subject { post what_to_discard_problem_comments_url(what_to_discard_problem_id: what_to_discard_problem.id), params: {
+    let(:content) { nil }
+    let(:parent_comment_id) { 0 }
+
+    subject { post what_to_discard_problem_comments_url(what_to_discard_problem_id:), params: {
       what_to_discard_problem_comment: {
-        reply_to_comment_id:,
+        parent_comment_id:,
         content:
       }
     }}
@@ -25,39 +50,17 @@ RSpec.describe "WhatToDiscardProblems::Comments", type: :request do
     context "ログイン済みの場合" do
       include_context "logged_in"
 
-      context "contentが不正な値の場合" do
-        context "空の場合" do
-          let(:content) { "" }
+      context "モデルのバリデーションに通らない場合" do
+        before { allow_any_instance_of(WhatToDiscardProblem::Comment).to receive(:save).and_return(false) }
 
-          it_behaves_like :response, 422
-        end
-
-        context "500文字よりも長い場合" do
-          let(:content) { "a" * 501 }
-
-          it_behaves_like :response, 422
-        end
+        it_behaves_like :response, 422
       end
 
-      context "contentが正常な値の場合" do
-        context "返信先のコメントが存在しない場合" do
-          let(:reply_to_comment_id) { nil }
+      context "モデルのバリデーションに通る場合" do
+        let(:content) { "a" * 500 }
+        let(:parent_comment_id) { FactoryBot.create(:what_to_discard_problem_comment, what_to_discard_problem_id:).id }
 
-          it_behaves_like :response, 201
-        end
-
-        context "返信先のコメントが存在する場合" do
-          context "その問題に存在しないコメントidを返信先に指定した場合" do
-            let(:reply_to_comment) { FactoryBot.create(:what_to_discard_problem_comment) }
-            let(:reply_to_comment_id) { reply_to_comment.id }
-
-            it_behaves_like :response, 422
-          end
-
-          context "正常に返信先のコメントを指定した場合" do
-            it_behaves_like :response, 201
-          end
-        end
+        it_behaves_like :response, 201
       end
     end
   end

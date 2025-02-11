@@ -29,6 +29,7 @@ Rails.application.routes.draw do
 
   resources :what_to_discard_problems do
     resources :comments, module: :what_to_discard_problems
+    resources :likes, module: :what_to_discard_problems, only: %i[index create destroy]
   end
 
   if Rails.env.development?

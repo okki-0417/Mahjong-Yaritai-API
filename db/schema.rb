@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_02_02_090230) do
+ActiveRecord::Schema[7.2].define(version: 2025_02_11_040332) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -87,14 +87,24 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_02_090230) do
 
   create_table "what_to_discard_problem_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.bigint "reply_to_comment_id"
+    t.bigint "parent_comment_id"
     t.string "content", limit: 500, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "what_to_discard_problem_id", null: false
-    t.index ["reply_to_comment_id"], name: "index_what_to_discard_problem_comments_on_reply_to_comment_id"
+    t.index ["parent_comment_id"], name: "index_what_to_discard_problem_comments_on_parent_comment_id"
     t.index ["user_id"], name: "index_what_to_discard_problem_comments_on_user_id"
     t.index ["what_to_discard_problem_id"], name: "idx_on_what_to_discard_problem_id_8fc9afad9a"
+  end
+
+  create_table "what_to_discard_problem_likes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "what_to_discard_problem_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "what_to_discard_problem_id"], name: "idx_on_user_id_what_to_discard_problem_id_1ad936df20", unique: true
+    t.index ["user_id"], name: "index_what_to_discard_problem_likes_on_user_id"
+    t.index ["what_to_discard_problem_id"], name: "idx_on_what_to_discard_problem_id_6b58ad1bc5"
   end
 
   create_table "what_to_discard_problems", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -132,7 +142,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_02_02_090230) do
   add_foreign_key "reports", "users"
   add_foreign_key "thread_comments", "forum_threads"
   add_foreign_key "thread_comments", "thread_comments"
-  add_foreign_key "what_to_discard_problem_comments", "what_to_discard_problem_comments", column: "reply_to_comment_id"
+  add_foreign_key "what_to_discard_problem_comments", "what_to_discard_problem_comments", column: "parent_comment_id"
   add_foreign_key "what_to_discard_problem_comments", "what_to_discard_problems"
+  add_foreign_key "what_to_discard_problem_likes", "users"
+  add_foreign_key "what_to_discard_problem_likes", "what_to_discard_problems"
   add_foreign_key "what_to_discard_problems", "users"
 end

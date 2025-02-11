@@ -5,8 +5,25 @@ class WhatToDiscardProblemsController < ApplicationController
 
   def index
     problems = WhatToDiscardProblem.all
+                                   .preload(:user)
+                                   .order(created_at: :desc)
+                                   .limit(10)
 
-    render json: { what_to_discard_problems: problems }, status: :ok
+    render json: {
+      what_to_discard_problems: problems.map do |problem|
+        problem.as_json(
+          include: {
+            user: { only: [:id, :name] }
+          }
+        ).merge({
+          likes: {
+            what_to_discard_problem_id: problem.id,
+            count: problem.likes.length,
+            current_user_like_id: problem.likes.find_by(user_id: current_user&.id)&.id,
+          }
+        })
+      end
+    }
   end
 
   def create
