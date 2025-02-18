@@ -23,3 +23,4 @@ production:
     database: <%= ENV.fetch("DATABASE_NAME") %>
     username: <%= ENV.fetch("DATABASE_ROOT") %>
     password: <%= ENV.fetch("DATABASE_ROOT_PASSWORD") %>
+    host: <%= ENV.fetch("DATABASE_HOST") %>
