@@ -33,7 +33,7 @@ class WhatToDiscardProblems::CommentsController < WhatToDiscardProblems::BaseCon
     if comment.save
       render json: { what_to_discard_problem_comment: comment }, status: :created
     else
-      render json: { errors: comment.errors.full_messages.map { |message| { message: } } }, status: :unprocessable_entity
+      render json: validation_error_json(comment), status: :unprocessable_entity
     end
   end
 

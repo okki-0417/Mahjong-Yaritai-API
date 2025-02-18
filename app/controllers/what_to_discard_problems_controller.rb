@@ -32,7 +32,7 @@ class WhatToDiscardProblemsController < ApplicationController
     if problem.save
       render json: { what_to_discard_problem: problem }, status: :created
     else
-      render json: { errors: problem.errors.full_messages.map { |message| { message: } } }, status: :unprocessable_entity
+      render json: validation_error_json(problem), status: :unprocessable_entity
     end
   end
 

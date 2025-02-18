@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module SessionHelper
+module Authenticatable
   include ActionController::Cookies
 
   def login(user)
@@ -62,13 +62,5 @@ module SessionHelper
 
   def logged_in?
     current_user.present?
-  end
-
-  def reject_logged_in_user
-    render json: { errors: [ { message:  "Already logged in" } ] }, status: :forbidden if logged_in?
-  end
-
-  def restrict_to_logged_in_user
-    render json: { errors: [ message: "Not logged in" ] }, status: :unauthorized unless logged_in?
   end
 end
