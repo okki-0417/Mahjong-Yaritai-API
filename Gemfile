@@ -7,15 +7,18 @@ gem "jbuilder"
 gem "rack-cors"
 gem "bcrypt"
 
-gem "redis"
-gem "redis-activesupport"
-gem "redis-clustering"
+gem "redis-rails"
+gem "redis-store"
 
 gem "sidekiq"
 gem "bootsnap", require: false
 gem "kamal", require: false
 gem "image_processing", "~> 1.2"
-gem 'dotenv-rails'
+gem "dotenv-rails"
+
+group :production do
+  gem "redis-clustering"
+end
 
 group :development do
   gem "letter_opener_web"

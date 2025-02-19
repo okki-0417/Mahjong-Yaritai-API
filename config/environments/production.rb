@@ -15,13 +15,7 @@ Rails.application.configure do
                           {
                             host: ENV.fetch("REDIS_URL"),
                             port: 6379,
-                            role: :master,
                           },
-                          {
-                            host: ENV.fetch("REDIS_URL"),
-                            port: 6379,
-                            role: :replica,
-                          }
                         ],
                         cluster: true,
                         expire_after: 20.years,
@@ -39,6 +33,8 @@ Rails.application.configure do
   config.cache_store = :redis_cache_store, {
     url: ENV.fetch("REDIS_URL")
   }
+
+  config.active_storage.draw_routes = false
 
   config.action_mailer.default_url_options = { host: ENV.fetch("HOST_NAME") }
 
