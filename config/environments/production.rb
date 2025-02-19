@@ -11,7 +11,19 @@ Rails.application.configure do
   config.middleware.use ActionDispatch::Session::RedisStore
 
   config.session_store :redis_store,
-                        servers: [ENV.fetch("REDIS_URL")],
+                        servers: [
+                          {
+                            host: ENV.fetch("REDIS_URL"),
+                            port: 6379,
+                            role: :master,
+                          },
+                          {
+                            host: ENV.fetch("REDIS_URL"),
+                            port: 6379,
+                            role: :replica,
+                          }
+                        ],
+                        cluster: true,
                         expire_after: 20.years,
                         key: "_api_app_session",
                         secure: true

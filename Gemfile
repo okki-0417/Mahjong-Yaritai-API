@@ -6,16 +6,16 @@ gem "puma", ">= 5.0"
 gem "jbuilder"
 gem "rack-cors"
 gem "bcrypt"
-gem 'redis-rails'
+
+gem "redis"
+gem "redis-activesupport"
+gem "redis-clustering"
+
 gem "sidekiq"
 gem "bootsnap", require: false
 gem "kamal", require: false
 gem "image_processing", "~> 1.2"
 gem 'dotenv-rails'
-
-group :production do
-  gem "redis-clustering"
-end
 
 group :development do
   gem "letter_opener_web"
