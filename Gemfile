@@ -13,7 +13,7 @@ gem "redis-store"
 gem "sidekiq"
 gem "bootsnap", require: false
 gem "kamal", require: false
-gem "image_processing", "~> 1.2"
+gem "image_processing", "~> 1.14"
 gem "dotenv-rails"
 
 group :production do
