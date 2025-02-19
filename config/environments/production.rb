@@ -6,6 +6,16 @@ Rails.application.configure do
   config.consider_all_requests_local = false
   config.action_controller.perform_caching = true
   config.public_file_server.headers = { "cache-control" => "public, max-age=#{1.year.to_i}" }
+
+  config.middleware.use ActionDispatch::Cookies
+  config.middleware.use ActionDispatch::Session::RedisStore
+
+  config.session_store :redis_store,
+                        servers: [ENV.fetch("REDIS_URL")],
+                        expire_after: 20.years,
+                        key: "_api_app_session",
+                        secure: true
+
   config.assume_ssl = true
   config.force_ssl = true
   config.log_tags = [ :request_id ]
