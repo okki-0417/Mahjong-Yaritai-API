@@ -7,7 +7,7 @@ gem "jbuilder"
 gem "rack-cors"
 gem "bcrypt"
 
-gem "redis"
+gem "redis-rails"
 gem "redis-store"
 
 gem "sidekiq"

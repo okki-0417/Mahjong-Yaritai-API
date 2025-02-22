@@ -12,10 +12,7 @@ Rails.application.configure do
 
   config.session_store :redis_store,
                         servers: [
-                          {
-                            host: "clustercfg.mahjong-yaritai.fggao1.apne1.cache.amazonaws.com:6379",
-                            port: 6379,
-                          },
+                          ENV.fetch("REDIS_URL")
                         ],
                         cluster: true,
                         expire_after: 20.years,
