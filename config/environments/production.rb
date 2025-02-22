@@ -13,7 +13,7 @@ Rails.application.configure do
   config.session_store :redis_store,
                         servers: [
                           {
-                            host: ENV.fetch("REDIS_URL"),
+                            host: "clustercfg.mahjong-yaritai.fggao1.apne1.cache.amazonaws.com:6379",
                             port: 6379,
                           },
                         ],
@@ -22,6 +22,12 @@ Rails.application.configure do
                         key: "_api_app_session",
                         secure: true
 
+  config.cache_store = :redis_cache_store, {
+    urls: [
+      ENV.fetch("REDIS_URL")
+    ]
+  }
+
   config.assume_ssl = true
   config.force_ssl = true
   config.log_tags = [ :request_id ]
@@ -29,10 +35,6 @@ Rails.application.configure do
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
   config.silence_healthcheck_path = "/up"
   config.active_support.report_deprecations = false
-
-  config.cache_store = :redis_cache_store, {
-    url: ENV.fetch("REDIS_URL")
-  }
 
   config.active_storage.draw_routes = false
 

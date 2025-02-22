@@ -8,6 +8,7 @@ Bundler.require(*Rails.groups)
 module DefaultApp
   class Application < Rails::Application
     config.load_defaults 7.2
+    config.time_zone = "Tokyo"
 
     config.i18n.default_locale = :ja
 
