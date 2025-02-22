@@ -25,6 +25,9 @@ Rails.application.configure do
     ]
   }
 
+  config.hosts << "10.0.1.136:3001"
+  config.hosts << "18.177.116.156"
+
   config.assume_ssl = true
   config.force_ssl = true
   config.log_tags = [ :request_id ]
