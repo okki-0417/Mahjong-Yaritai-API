@@ -7,10 +7,10 @@ FactoryBot.define do
     turn  { 2 }
     wind  { "東" }
     dora  { 1 }
-    point_east { 250 }
-    point_south { 250 }
-    point_west { 250 }
-    point_north { 250 }
+    point_east { 25000 }
+    point_south { 25000 }
+    point_west { 25000 }
+    point_north { 25000 }
     hand1 { 1 }
     hand2 { 2 }
     hand3 { 3 }

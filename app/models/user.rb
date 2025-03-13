@@ -11,7 +11,8 @@ class User < ApplicationRecord
   has_many :reports, dependent: :destroy
   has_many :created_threads, class_name: :ForumThread, dependent: :destroy
   has_many :created_what_to_discard_problems, class_name: :WhatToDiscardProblem, dependent: :destroy
-  has_many :created_what_to_discard_problem_comments, class_name: :WhatToDiscardProblemComment, dependent: :destroy
+  has_many :created_what_to_discard_problem_comments, class_name: "WhatToDiscardProblem::Comment", dependent: :destroy
+  has_many :created_what_to_discard_problem_likes, class_name: "WhatToDiscardProblem::Like", dependent: :destroy
 
   attr_accessor :remember_token
 

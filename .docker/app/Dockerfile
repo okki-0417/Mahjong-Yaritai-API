@@ -23,8 +23,12 @@ COPY Gemfile Gemfile.lock ./
 RUN bundle install --jobs=4 --retry=3 --path /usr/local/bundle && \
     rm -rf ~/.bundle/ /usr/local/bundle/ruby/*/cache /usr/local/bundle/ruby/*/bundler/gems/*/.git
 
+COPY entrypoint.sh /usr/bin/
+RUN chmod +x /usr/bin/entrypoint.sh
+ENTRYPOINT ["entrypoint.sh"]
+
 EXPOSE 3001
 
 COPY . .
 
-CMD ["sh", "-c", "rm -f tmp/pids/server.pid && bin/rails server -b 0.0.0.0 -p 3001"]
+CMD ["bin/rails", "server", "-b", "0.0.0.0", "-p", "3001"]

@@ -5,13 +5,18 @@ class WhatToDiscardProblemsController < ApplicationController
 
   def index
     problems = WhatToDiscardProblem.all
-                                   .preload(:user)
+                                   .preload(:user, :likes)
                                    .order(created_at: :desc)
                                    .limit(10)
+
+    like_ids_by_problem = current_user&.created_what_to_discard_problem_likes
+                                      &.pluck(:what_to_discard_problem_id, :id)
+                                      &.to_h || {}
 
     render json: {
       what_to_discard_problems: problems.map do |problem|
         problem.as_json(
+          except: %i[hand],
           include: {
             user: { only: [:id, :name] }
           }
@@ -19,8 +24,12 @@ class WhatToDiscardProblemsController < ApplicationController
           likes: {
             what_to_discard_problem_id: problem.id,
             count: problem.likes.length,
-            current_user_like_id: problem.likes.find_by(user_id: current_user&.id)&.id,
-          }
+            current_user_like_id: like_ids_by_problem[problem.id],
+          },
+
+          hands: (1..13).map do |i|
+            { value: problem.send("hand#{i}") }
+          end
         })
       end
     }

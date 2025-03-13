@@ -9,7 +9,11 @@ class UsersController < ApplicationController
   end
 
   def create
+    Rails.logger.debug("**********************[#{session}]*******************")
+
     authorization = Authorization.find_by(id: session[:authorization_id]&.to_i)
+
+    Rails.logger.debug("**********************[#{authorization}]*******************")
 
     user = User.new(
       email: authorization&.email,
