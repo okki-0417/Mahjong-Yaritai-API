@@ -9,7 +9,7 @@ class WhatToDiscardProblem::Comment < ApplicationRecord
   validates :content, presence: true, length: { maximum: 500 }
   validate :check_parent_comment_association
 
-  scope :parent_comments, -> { where(parent_comment_id: nil) }
+  scope :parents, -> { where(parent_comment_id: nil) }
 
   private
 

@@ -6,7 +6,7 @@ class WhatToDiscardProblems::CommentsController < WhatToDiscardProblems::BaseCon
   def index
     parent_comments = WhatToDiscardProblem.find(params[:what_to_discard_problem_id])
                                           .comments
-                                          .parent_comments
+                                          .parents
                                           .preload(:user, :replies)
                                           .order(created_at: :asc)
                                           .limit(5)
