@@ -18,7 +18,7 @@ class WhatToDiscardProblemsController < ApplicationController
         problem.as_json(
           except: %i[hand],
           include: {
-            user: { only: [:id, :name] }
+            user: { only: [:id, :name, :comments_count] }
           }
         ).merge({
           likes: {
