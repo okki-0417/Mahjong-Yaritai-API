@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_04_13_081230) do
+ActiveRecord::Schema[7.2].define(version: 2025_04_15_154443) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -144,7 +144,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_13_081230) do
   add_foreign_key "reports", "users"
   add_foreign_key "thread_comments", "forum_threads"
   add_foreign_key "thread_comments", "thread_comments"
-  add_foreign_key "what_to_discard_problem_comments", "what_to_discard_problem_comments", column: "parent_comment_id"
+  add_foreign_key "what_to_discard_problem_comments", "what_to_discard_problem_comments", column: "parent_comment_id", on_delete: :nullify
   add_foreign_key "what_to_discard_problem_comments", "what_to_discard_problems"
   add_foreign_key "what_to_discard_problem_likes", "users"
   add_foreign_key "what_to_discard_problem_likes", "what_to_discard_problems"

@@ -9,7 +9,6 @@ class WhatToDiscardProblems::CommentsController < WhatToDiscardProblems::BaseCon
                                           .parents
                                           .preload(:user, :replies)
                                           .order(created_at: :asc)
-                                          .limit(5)
 
     render json: {
       what_to_discard_problem_comments: parent_comments.as_json(

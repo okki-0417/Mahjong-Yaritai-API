@@ -31,17 +31,14 @@ RSpec.describe "WhatToDiscardProblems::Comments", type: :request do
 
   describe "#create" do
     let(:current_user) { FactoryBot.create(:user) }
-    let(:what_to_discard_problem_id) { FactoryBot.create(:what_to_discard_problem).id }
-
-    let(:content) { nil }
-    let(:parent_comment_id) { 0 }
 
     subject { post what_to_discard_problem_comments_url(what_to_discard_problem_id:), params: {
       what_to_discard_problem_comment: {
-        parent_comment_id:,
-        content:
+        parent_comment_id: nil,
+        content: "a" * 10,
       }
     }}
+    let(:what_to_discard_problem_id) { FactoryBot.create(:what_to_discard_problem).id }
 
     context "未ログインの場合" do
       it_behaves_like :response, 401
@@ -57,9 +54,6 @@ RSpec.describe "WhatToDiscardProblems::Comments", type: :request do
       end
 
       context "モデルのバリデーションに通る場合" do
-        let(:content) { "a" * 500 }
-        let(:parent_comment_id) { FactoryBot.create(:what_to_discard_problem_comment, what_to_discard_problem_id:).id }
-
         it_behaves_like :response, 201
       end
     end
