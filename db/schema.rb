@@ -122,6 +122,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_16_022636) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["tile_id"], name: "index_what_to_discard_problem_votes_on_tile_id"
+    t.index ["user_id", "what_to_discard_problem_id"], name: "idx_on_user_id_what_to_discard_problem_id_ba7da3c2b5", unique: true
     t.index ["user_id"], name: "index_what_to_discard_problem_votes_on_user_id"
     t.index ["what_to_discard_problem_id"], name: "idx_on_what_to_discard_problem_id_619294c3a6"
   end

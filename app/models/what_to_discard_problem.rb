@@ -4,6 +4,7 @@ class WhatToDiscardProblem < ApplicationRecord
   belongs_to :user
   has_many :comments, class_name: "WhatToDiscardProblem::Comment", dependent: :destroy
   has_many :likes, class_name: "WhatToDiscardProblem::Like", dependent: :destroy
+  has_many :votes, class_name: "WhatToDiscardProblem::Vote", dependent: :destroy
 
   validates :round, presence: true
   validates :turn, presence: true

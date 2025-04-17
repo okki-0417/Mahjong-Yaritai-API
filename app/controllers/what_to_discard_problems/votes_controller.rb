@@ -6,7 +6,11 @@ class WhatToDiscardProblems::VotesController < WhatToDiscardProblems::BaseContro
     vote = current_user.created_what_to_discard_problem_votes.new(what_to_discard_problem_id: params[:what_to_discard_problem_id], **vote_params)
 
     if vote.save
-      render json: { what_to_discard_problem_vote: vote }, status: :created
+      render json: { what_to_discard_problem_vote: vote.as_json(
+        include: {
+          tile: { only: %i[name] }
+        }
+      ) }, status: :created
     else
       render json: validation_error_json(vote), status: :unprocessable_entity
     end

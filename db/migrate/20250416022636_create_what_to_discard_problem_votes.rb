@@ -6,5 +6,7 @@ class CreateWhatToDiscardProblemVotes < ActiveRecord::Migration[7.2]
       t.references :what_to_discard_problem, foreign_key: true, null: false
       t.timestamps
     end
+
+    add_index :what_to_discard_problem_votes, [:user_id, :what_to_discard_problem_id], unique: true
   end
 end

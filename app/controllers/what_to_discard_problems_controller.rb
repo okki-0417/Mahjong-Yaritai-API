@@ -13,16 +13,28 @@ class WhatToDiscardProblemsController < ApplicationController
                                       &.pluck(:what_to_discard_problem_id, :id)
                                       &.to_h || {}
 
+    vote_ids = problems.votes.pluck(:what_to_discard_problem_id, :user_id)
+
+
+    vote_ids_by_problem = current_user&.created_what_to_discard_problem_likes
+                                      &.pluck(:what_to_discard_problem_id, :id)
+                                      &.to_h || {}
+
     render json: {
       what_to_discard_problems: problems.map do |problem|
         problem.as_json(
           except: %i[hand],
           include: {
-            user: { only: [:id, :name, :comments_count] }
+            user: { only: %i[id name comments_count] },
           }
         ).merge({
           likes: {
             what_to_discard_problem_id: problem.id,
+            count: problem.likes.length,
+            current_user_like_id: like_ids_by_problem[problem.id],
+          },
+
+          votes: {
             count: problem.likes.length,
             current_user_like_id: like_ids_by_problem[problem.id],
           },
