@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_04_15_154443) do
+ActiveRecord::Schema[7.2].define(version: 2025_04_16_022636) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -75,6 +75,14 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_15_154443) do
     t.index ["thread_comment_id"], name: "index_thread_comments_on_thread_comment_id"
   end
 
+  create_table "tiles", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "suit", null: false
+    t.integer "ordinal_number_in_suit", null: false
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", limit: 20, null: false
     t.string "email", limit: 64, null: false
@@ -105,6 +113,17 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_15_154443) do
     t.index ["user_id", "what_to_discard_problem_id"], name: "idx_on_user_id_what_to_discard_problem_id_1ad936df20", unique: true
     t.index ["user_id"], name: "index_what_to_discard_problem_likes_on_user_id"
     t.index ["what_to_discard_problem_id"], name: "idx_on_what_to_discard_problem_id_6b58ad1bc5"
+  end
+
+  create_table "what_to_discard_problem_votes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "tile_id", null: false
+    t.bigint "what_to_discard_problem_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tile_id"], name: "index_what_to_discard_problem_votes_on_tile_id"
+    t.index ["user_id"], name: "index_what_to_discard_problem_votes_on_user_id"
+    t.index ["what_to_discard_problem_id"], name: "idx_on_what_to_discard_problem_id_619294c3a6"
   end
 
   create_table "what_to_discard_problems", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -148,5 +167,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_15_154443) do
   add_foreign_key "what_to_discard_problem_comments", "what_to_discard_problems"
   add_foreign_key "what_to_discard_problem_likes", "users"
   add_foreign_key "what_to_discard_problem_likes", "what_to_discard_problems"
+  add_foreign_key "what_to_discard_problem_votes", "tiles"
+  add_foreign_key "what_to_discard_problem_votes", "users"
+  add_foreign_key "what_to_discard_problem_votes", "what_to_discard_problems"
   add_foreign_key "what_to_discard_problems", "users"
 end
