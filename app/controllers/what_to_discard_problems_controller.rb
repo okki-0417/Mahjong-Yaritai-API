@@ -13,10 +13,7 @@ class WhatToDiscardProblemsController < ApplicationController
                                       &.pluck(:what_to_discard_problem_id, :id)
                                       &.to_h || {}
 
-    vote_ids = problems.votes.pluck(:what_to_discard_problem_id, :user_id)
-
-
-    vote_ids_by_problem = current_user&.created_what_to_discard_problem_likes
+    vote_ids_by_problem = current_user&.created_what_to_discard_problem_votes
                                       &.pluck(:what_to_discard_problem_id, :id)
                                       &.to_h || {}
 
@@ -35,8 +32,9 @@ class WhatToDiscardProblemsController < ApplicationController
           },
 
           votes: {
-            count: problem.likes.length,
-            current_user_like_id: like_ids_by_problem[problem.id],
+            what_to_discard_problem_id: problem.id,
+            count: problem.votes.length,
+            current_user_like_id: vote_ids_by_problem[problem.id],
           },
 
           hands: (1..13).map do |i|

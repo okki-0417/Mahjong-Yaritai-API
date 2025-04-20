@@ -2,7 +2,7 @@
 
 require "factory_bot_rails"
 
-FactoryBot.create(:user, name: "ohki", email:  "ouki_murai@ostance.com")
+user = FactoryBot.create(:user, name: "ohki", email:  "ouki_murai@ostance.com")
 
 [
   {suit: "manzu", ordinal_number_in_suit: 1, name: "一萬"},
@@ -42,3 +42,9 @@ FactoryBot.create(:user, name: "ohki", email:  "ouki_murai@ostance.com")
 ].each do |obj|
   FactoryBot.create(:tile, obj)
 end
+
+
+problem = FactoryBot.create(:what_to_discard_problem, user:)
+FactoryBot.create(:what_to_discard_problem_like, what_to_discard_problem_id: problem.id, user:)
+FactoryBot.create(:what_to_discard_problem_vote, what_to_discard_problem_id: problem.id, user:)
+FactoryBot.create(:what_to_discard_problem_comment, what_to_discard_problem_id: problem.id, user:)
