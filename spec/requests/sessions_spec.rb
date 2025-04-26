@@ -40,38 +40,18 @@ RSpec.describe "Sessions", type: :request do
     end
   end
 
+  describe "#show" do
+    subject { get session_url }
+
+    it_behaves_like :response, 200
+  end
+
   describe "#destroy" do
     subject { delete session_url }
 
     context "既にログインしている場合" do
       it "204を返すこと" do
         subject
-      end
-    end
-  end
-
-  describe "#state" do
-    subject { get state_session_url }
-
-    context "未ログインの場合" do
-      it "falseを返すこと" do
-        subject
-        expect(response).to have_http_status(200)
-
-        parsed_body = JSON.parse(response.body, symbolize_names: true)
-        expect(parsed_body).to eq(auth: false)
-      end
-    end
-
-    context "ログイン済みの場合" do
-      include_context "logged_in"
-
-      it "trueを返すこと" do
-        subject
-        expect(response).to have_http_status(200)
-
-        parsed_body = JSON.parse(response.body, symbolize_names: true)
-        expect(parsed_body).to eq(auth: true)
       end
     end
   end

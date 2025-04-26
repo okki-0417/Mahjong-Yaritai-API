@@ -11,11 +11,7 @@ Rails.application.routes.draw do
 
   resources :users, only: %i[index create edit create update destroy]
 
-  resource :session, only: [ :new, :create, :destroy ] do
-    collection do
-      get :state
-    end
-  end
+  resource :session, only: %i[show create destroy]
 
   resource :csrf_token, only: [ :show ]
 
