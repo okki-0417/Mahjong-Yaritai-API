@@ -30,7 +30,27 @@ class WhatToDiscardProblems::CommentsController < WhatToDiscardProblems::BaseCon
                                   .new(**comment_params, user_id: current_user.id,)
 
     if comment.save
-      render json: { what_to_discard_problem_comment: comment }, status: :created
+      parent_comments = WhatToDiscardProblem.find(params[:what_to_discard_problem_id])
+                                          .comments
+                                          .parents
+                                          .preload(:user, :replies)
+                                          .order(created_at: :asc)
+
+      render json: {
+        what_to_discard_problem_comments: {
+          comments: parent_comments.as_json(
+            only: [:id, :content, :created_at],
+            include: {
+              user: { only: [:id, :name] },
+              replies: {
+                only: [:id, :content, :created_at],
+                include: { user: { only: [:id, :name] } }
+              }
+            }
+          ),
+          total_count: comment.what_to_discard_problem.comments_count
+        }
+      }, status: :created
     else
       render json: validation_error_json(comment), status: :unprocessable_entity
     end

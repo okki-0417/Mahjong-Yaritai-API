@@ -3,6 +3,15 @@
 require "rails_helper"
 
 RSpec.describe "WhatToDiscardProblems::Like", type: :request do
+  describe "#index" do
+    subject { get what_to_discard_problem_likes_url(what_to_discard_problem_id:) }
+    let(:what_to_discard_problem_id) { create(:what_to_discard_problem).id }
+
+    context "ログイン/未ログインの場合" do
+      it_behaves_like :response, 200
+    end
+  end
+
   describe "#create" do
     let(:current_user) { FactoryBot.create(:user) }
     let(:what_to_discard_problem_id) { FactoryBot.create(:what_to_discard_problem).id }

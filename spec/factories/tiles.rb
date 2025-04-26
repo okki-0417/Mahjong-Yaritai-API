@@ -2,8 +2,8 @@
 
 FactoryBot.define do
   factory :tile do
-    suit { "manzu" }
-    ordinal_number_in_suit { 1 }
-    name { "一筒" }
+    sequence(:suit) { |n| n % 3 }
+    sequence(:ordinal_number_in_suit) { |n| n % 9 + 1 }
+    name { "テスト" }
   end
 end

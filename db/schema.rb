@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_04_16_022636) do
+ActiveRecord::Schema[7.2].define(version: 2025_04_21_015612) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -76,7 +76,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_16_022636) do
   end
 
   create_table "tiles", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "suit", null: false
+    t.integer "suit", null: false
     t.integer "ordinal_number_in_suit", null: false
     t.string "name", null: false
     t.datetime "created_at", null: false
@@ -131,30 +131,46 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_16_022636) do
     t.string "round", null: false
     t.integer "turn", null: false
     t.string "wind", null: false
-    t.integer "dora", null: false
     t.integer "point_east", null: false
     t.integer "point_south", null: false
     t.integer "point_west", null: false
     t.integer "point_north", null: false
-    t.integer "hand1", null: false
-    t.integer "hand2", null: false
-    t.integer "hand3", null: false
-    t.integer "hand4", null: false
-    t.integer "hand5", null: false
-    t.integer "hand6", null: false
-    t.integer "hand7", null: false
-    t.integer "hand8", null: false
-    t.integer "hand9", null: false
-    t.integer "hand10", null: false
-    t.integer "hand11", null: false
-    t.integer "hand12", null: false
-    t.integer "hand13", null: false
-    t.string "tsumo", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.integer "comments_count", default: 0, null: false
     t.integer "likes_count", default: 0, null: false
+    t.bigint "dora_id", null: false
+    t.bigint "tsumo_id", null: false
+    t.bigint "hand1_id", null: false
+    t.bigint "hand2_id", null: false
+    t.bigint "hand3_id", null: false
+    t.bigint "hand4_id", null: false
+    t.bigint "hand5_id", null: false
+    t.bigint "hand6_id", null: false
+    t.bigint "hand7_id", null: false
+    t.bigint "hand8_id", null: false
+    t.bigint "hand9_id", null: false
+    t.bigint "hand10_id", null: false
+    t.bigint "hand11_id", null: false
+    t.bigint "hand12_id", null: false
+    t.bigint "hand13_id", null: false
+    t.integer "votes_count", default: 0, null: false
+    t.index ["dora_id"], name: "index_what_to_discard_problems_on_dora_id"
+    t.index ["hand10_id"], name: "index_what_to_discard_problems_on_hand10_id"
+    t.index ["hand11_id"], name: "index_what_to_discard_problems_on_hand11_id"
+    t.index ["hand12_id"], name: "index_what_to_discard_problems_on_hand12_id"
+    t.index ["hand13_id"], name: "index_what_to_discard_problems_on_hand13_id"
+    t.index ["hand1_id"], name: "index_what_to_discard_problems_on_hand1_id"
+    t.index ["hand2_id"], name: "index_what_to_discard_problems_on_hand2_id"
+    t.index ["hand3_id"], name: "index_what_to_discard_problems_on_hand3_id"
+    t.index ["hand4_id"], name: "index_what_to_discard_problems_on_hand4_id"
+    t.index ["hand5_id"], name: "index_what_to_discard_problems_on_hand5_id"
+    t.index ["hand6_id"], name: "index_what_to_discard_problems_on_hand6_id"
+    t.index ["hand7_id"], name: "index_what_to_discard_problems_on_hand7_id"
+    t.index ["hand8_id"], name: "index_what_to_discard_problems_on_hand8_id"
+    t.index ["hand9_id"], name: "index_what_to_discard_problems_on_hand9_id"
+    t.index ["tsumo_id"], name: "index_what_to_discard_problems_on_tsumo_id"
     t.index ["user_id"], name: "index_what_to_discard_problems_on_user_id"
   end
 
@@ -171,5 +187,20 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_16_022636) do
   add_foreign_key "what_to_discard_problem_votes", "tiles"
   add_foreign_key "what_to_discard_problem_votes", "users"
   add_foreign_key "what_to_discard_problem_votes", "what_to_discard_problems"
+  add_foreign_key "what_to_discard_problems", "tiles", column: "dora_id"
+  add_foreign_key "what_to_discard_problems", "tiles", column: "hand10_id"
+  add_foreign_key "what_to_discard_problems", "tiles", column: "hand11_id"
+  add_foreign_key "what_to_discard_problems", "tiles", column: "hand12_id"
+  add_foreign_key "what_to_discard_problems", "tiles", column: "hand13_id"
+  add_foreign_key "what_to_discard_problems", "tiles", column: "hand1_id"
+  add_foreign_key "what_to_discard_problems", "tiles", column: "hand2_id"
+  add_foreign_key "what_to_discard_problems", "tiles", column: "hand3_id"
+  add_foreign_key "what_to_discard_problems", "tiles", column: "hand4_id"
+  add_foreign_key "what_to_discard_problems", "tiles", column: "hand5_id"
+  add_foreign_key "what_to_discard_problems", "tiles", column: "hand6_id"
+  add_foreign_key "what_to_discard_problems", "tiles", column: "hand7_id"
+  add_foreign_key "what_to_discard_problems", "tiles", column: "hand8_id"
+  add_foreign_key "what_to_discard_problems", "tiles", column: "hand9_id"
+  add_foreign_key "what_to_discard_problems", "tiles", column: "tsumo_id"
   add_foreign_key "what_to_discard_problems", "users"
 end

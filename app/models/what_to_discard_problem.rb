@@ -5,41 +5,47 @@ class WhatToDiscardProblem < ApplicationRecord
   has_many :comments, class_name: "WhatToDiscardProblem::Comment", dependent: :destroy
   has_many :likes, class_name: "WhatToDiscardProblem::Like", dependent: :destroy
   has_many :votes, class_name: "WhatToDiscardProblem::Vote", dependent: :destroy
+  belongs_to :dora, class_name: :Tile
+  belongs_to :hand1, class_name: :Tile
+  belongs_to :hand2, class_name: :Tile
+  belongs_to :hand3, class_name: :Tile
+  belongs_to :hand4, class_name: :Tile
+  belongs_to :hand5, class_name: :Tile
+  belongs_to :hand6, class_name: :Tile
+  belongs_to :hand7, class_name: :Tile
+  belongs_to :hand8, class_name: :Tile
+  belongs_to :hand9, class_name: :Tile
+  belongs_to :hand10, class_name: :Tile
+  belongs_to :hand11, class_name: :Tile
+  belongs_to :hand12, class_name: :Tile
+  belongs_to :hand13, class_name: :Tile
+  belongs_to :tsumo, class_name: :Tile
 
   validates :round, presence: true
   validates :turn, presence: true
   validates :wind, presence: true
-  validates :dora, presence: true
   validates :point_east, presence: true
   validates :point_south, presence: true
   validates :point_west, presence: true
   validates :point_north, presence: true
-  validates :hand1, presence: true
-  validates :hand2, presence: true
-  validates :hand3, presence: true
-  validates :hand4, presence: true
-  validates :hand5, presence: true
-  validates :hand6, presence: true
-  validates :hand7, presence: true
-  validates :hand8, presence: true
-  validates :hand9, presence: true
-  validates :hand10, presence: true
-  validates :hand11, presence: true
-  validates :hand12, presence: true
-  validates :hand13, presence: true
-  validates :tsumo, presence: true
 
-  validate :check_no_more_than_four_duplicated_tiles
+  validate :confirm_no_more_than_four_duplicated_tiles
+
+  def hand_ids
+    [hand1_id, hand2_id, hand3_id, hand4_id, hand5_id, hand6_id, hand7_id, hand8_id, hand9_id, hand10_id, hand11_id, hand12_id, hand13_id, tsumo_id]
+  end
+
+  def voted_by?(user)
+    votes.exists?(user_id: user.id)
+  end
 
   private
 
-  def check_no_more_than_four_duplicated_tiles
-    tiles = [ hand1, hand2, hand3, hand4, hand5, hand6, hand7, hand8, hand9, hand10, hand11, hand12, hand13, tsumo ]
-    counts = tiles.tally
-    duplicates = counts.select { |_, count| count > 4 }
+  def confirm_no_more_than_four_duplicated_tiles
+    counts = hand_ids.tally
 
-    return unless duplicates.any?
+    return if counts.all? { |_, count| count <= 4 }
 
-    errors.add(:base, :too_many_duplicates)
+    errors.add(:base, :too_many_duplicated_tiles)
   end
 end

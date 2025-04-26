@@ -6,24 +6,24 @@ FactoryBot.define do
     round { "東一" }
     turn  { 2 }
     wind  { "東" }
-    dora  { 1 }
+    association(:dora, factory: :tile)
     point_east { 25000 }
     point_south { 25000 }
     point_west { 25000 }
     point_north { 25000 }
-    hand1 { 1 }
-    hand2 { 2 }
-    hand3 { 3 }
-    hand4 { 4 }
-    hand5 { 5 }
-    hand6 { 6 }
-    hand7 { 7 }
-    hand8 { 8 }
-    hand9 { 9 }
-    hand10 { 10 }
-    hand11 { 11 }
-    hand12 { 12 }
-    hand13 { 13 }
-    tsumo { 14 }
+    association(:hand1, factory: :tile)
+    association(:hand2, factory: :tile)
+    association(:hand3, factory: :tile)
+    association(:hand4, factory: :tile)
+    association(:hand5, factory: :tile)
+    association(:hand6, factory: :tile)
+    association(:hand7, factory: :tile)
+    association(:hand8, factory: :tile)
+    association(:hand9, factory: :tile)
+    association(:hand10 , factory: :tile)
+    association(:hand11 , factory: :tile)
+    association(:hand12 , factory: :tile)
+    association(:hand13 , factory: :tile)
+    association(:tsumo , factory: :tile)
   end
 end
