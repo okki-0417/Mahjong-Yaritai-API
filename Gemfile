@@ -15,6 +15,7 @@ gem "bootsnap", require: false
 gem "kamal", require: false
 gem "image_processing", "~> 1.2"
 gem "dotenv-rails"
+gem "kaminari"
 
 group :production do
   gem "redis-clustering"

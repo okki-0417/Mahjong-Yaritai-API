@@ -4,37 +4,42 @@ class WhatToDiscardProblemsController < ApplicationController
   before_action :restrict_to_logged_in_user, only: %i[create destroy]
 
   def index
-    problems = WhatToDiscardProblem.all
-                                   .preload(:user)
+    problems = WhatToDiscardProblem.preload(:user)
                                    .order(created_at: :desc)
-                                   .limit(10)
+                                   .page(params[:page])
+                                   .per(10)
 
     render json: {
-      what_to_discard_problems: problems.map do |problem|
-        problem.as_json(
-          only: %i[
-            id
-            round
-            turn
-            wind
-            point_east
-            point_west
-            point_south
-            point_north
-            created_at
-            likes_count
-            comments_count
-            votes_count
-            dora_id
-            tsumo_id
-          ],
-          include: {
-            user: { only: %i[id name] },
-          }
-        ).merge({
-          hand_ids: problem.hand_ids,
-        })
-      end
+      what_to_discard_problems: {
+        data: problems.map do |problem|
+                problem.as_json(
+                  only: %i[
+                    id
+                    round
+                    turn
+                    wind
+                    point_east
+                    point_west
+                    point_south
+                    point_north
+                    created_at
+                    likes_count
+                    comments_count
+                    votes_count
+                    dora_id
+                    tsumo_id
+                  ],
+                  include: {
+                    user: { only: %i[id name] },
+                  }
+                ).merge({
+                  hand_ids: problem.hand_ids,
+                })
+              end,
+        pagination: {
+          next_page: problems.next_page,
+        }
+      }
     }
   end
 
