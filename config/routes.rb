@@ -23,7 +23,7 @@ Rails.application.routes.draw do
     resources :threads_comments
   end
 
-  resources :what_to_discard_problems do
+  resources :what_to_discard_problems, only: %i[index create destroy] do
     resources :comments, module: :what_to_discard_problems
     resources :likes, module: :what_to_discard_problems, only: %i[index create destroy]
     resources :votes, module: :what_to_discard_problems, only: %i[index create destroy]

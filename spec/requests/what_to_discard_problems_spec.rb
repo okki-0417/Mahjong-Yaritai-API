@@ -11,50 +11,50 @@ RSpec.describe "WhatToDiscardProblems", type: :request do
         round:,
         turn:,
         wind:,
-        dora:,
+        dora_id:,
         point_east:,
         point_south:,
         point_west:,
         point_north:,
-        hand1:,
-        hand2:,
-        hand3:,
-        hand4:,
-        hand5:,
-        hand6:,
-        hand7:,
-        hand8:,
-        hand9:,
-        hand10:,
-        hand11:,
-        hand12:,
-        hand13:,
-        tsumo:
+        hand1_id:,
+        hand2_id:,
+        hand3_id:,
+        hand4_id:,
+        hand5_id:,
+        hand6_id:,
+        hand7_id:,
+        hand8_id:,
+        hand9_id:,
+        hand10_id:,
+        hand11_id:,
+        hand12_id:,
+        hand13_id:,
+        tsumo_id:
       }
     }}
 
     let(:round) { "東一" }
-    let(:turn) { "1" }
+    let(:turn) { 1 }
     let(:wind) { "東" }
-    let(:dora) { "1" }
-    let(:point_east) { "250" }
-    let(:point_south) { "250" }
-    let(:point_west) { "250" }
-    let(:point_north) { "250" }
-    let(:hand1) { "1" }
-    let(:hand2) { "2" }
-    let(:hand3) { "3" }
-    let(:hand4) { "4" }
-    let(:hand5) { "5" }
-    let(:hand6) { "6" }
-    let(:hand7) { "7" }
-    let(:hand8) { "8" }
-    let(:hand9) { "9" }
-    let(:hand10) { "10" }
-    let(:hand11) { "11" }
-    let(:hand12) { "12" }
-    let(:hand13) { "13" }
-    let(:tsumo) { "14" }
+    let(:dora_id) { 1 }
+    let(:point_east) { 25000 }
+    let(:point_south) { 25000 }
+    let(:point_west) { 25000 }
+    let(:point_north) { 25000 }
+    let(:hand1_id) { 1 }
+    let(:hand2_id) { 2 }
+    let(:hand3_id) { 3 }
+    let(:hand4_id) { 4 }
+    let(:hand5_id) { 5 }
+    let(:hand6_id) { 6 }
+    let(:hand7_id) { 7 }
+    let(:hand8_id) { 8 }
+    let(:hand9_id) { 9 }
+    let(:hand10_id) { 10 }
+    let(:hand11_id) { 11 }
+    let(:hand12_id) { 12 }
+    let(:hand13_id) { 13 }
+    let(:tsumo_id) { 14 }
 
     context "未ログインの場合" do
       it_behaves_like :response, 401
@@ -82,6 +82,31 @@ RSpec.describe "WhatToDiscardProblems", type: :request do
 
       context "全ての値が正常に満たされている場合" do
         it_behaves_like :response, 201
+      end
+    end
+  end
+
+  describe "#destroy" do
+    subject { delete what_to_discard_problem_url(what_to_discard_problem) }
+
+    let(:what_to_discard_problem) { create(:what_to_discard_problem, user: current_user) }
+    let(:current_user) { create(:user) }
+
+    context "未ログインの場合" do
+      it_behaves_like :response, 401
+    end
+
+    context "ログイン済みの場合" do
+      include_context "logged_in"
+
+      context "削除に失敗した場合" do
+        before { allow_any_instance_of(WhatToDiscardProblem).to receive(:destroy).and_return(false) }
+
+        it_behaves_like :response, 422
+      end
+
+      context "削除に成功した場合" do
+        it_behaves_like :response, 204
       end
     end
   end

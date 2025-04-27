@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class WhatToDiscardProblemsController < ApplicationController
-  before_action :restrict_to_logged_in_user, only: [ :create ]
+  before_action :restrict_to_logged_in_user, only: %i[create destroy]
 
   def index
     problems = WhatToDiscardProblem.all
@@ -48,10 +48,14 @@ class WhatToDiscardProblemsController < ApplicationController
     end
   end
 
-  def show
-    problem = WhatToDiscardProblem.find(params[:id])
+  def destroy
+    problem = current_user.created_what_to_discard_problems.find(params[:id])
 
-    render json: { what_to_discard_problem: problem }, status: :ok
+    if problem.destroy
+      render json: {}, status: :no_content
+    else
+      render json: {}, status: :unprocessable_entity
+    end
   end
 
   private
@@ -61,25 +65,25 @@ class WhatToDiscardProblemsController < ApplicationController
       :round,
       :turn,
       :wind,
-      :dora,
+      :dora_id,
       :point_east,
       :point_south,
       :point_west,
       :point_north,
-      :hand1,
-      :hand2,
-      :hand3,
-      :hand4,
-      :hand5,
-      :hand6,
-      :hand7,
-      :hand8,
-      :hand9,
-      :hand10,
-      :hand11,
-      :hand12,
-      :hand13,
-      :tsumo
+      :hand1_id,
+      :hand2_id,
+      :hand3_id,
+      :hand4_id,
+      :hand5_id,
+      :hand6_id,
+      :hand7_id,
+      :hand8_id,
+      :hand9_id,
+      :hand10_id,
+      :hand11_id,
+      :hand12_id,
+      :hand13_id,
+      :tsumo_id
     )
   end
 end
