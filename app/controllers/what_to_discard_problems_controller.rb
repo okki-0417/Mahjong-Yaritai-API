@@ -12,20 +12,21 @@ class WhatToDiscardProblemsController < ApplicationController
     render json: {
       what_to_discard_problems: problems.map do |problem|
         problem.as_json(
-          except: %i[
-            hand1_id
-            hand2_id
-            hand3_id
-            hand4_id
-            hand5_id
-            hand6_id
-            hand7_id
-            hand8_id
-            hand9_id
-            hand10_id
-            hand11_id
-            hand12_id
-            hand13_id
+          only: %i[
+            id
+            round
+            turn
+            wind
+            point_east
+            point_west
+            point_south
+            point_north
+            created_at
+            likes_count
+            comments_count
+            votes_count
+            dora_id
+            tsumo_id
           ],
           include: {
             user: { only: %i[id name] },

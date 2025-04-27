@@ -7,7 +7,6 @@ class WhatToDiscardProblems::VotesController < WhatToDiscardProblems::BaseContro
     problem = WhatToDiscardProblem.find(params[:what_to_discard_problem_id])
     votes = problem.votes
     each_tile_vote_count = votes.pluck(:tile_id).tally
-    current_user_vote = logged_in? ? votes.find_by(user_id: current_user&.id) : nil
 
     vote_results = problem.hand_ids.map do |tile_id|
       {
@@ -19,10 +18,6 @@ class WhatToDiscardProblems::VotesController < WhatToDiscardProblems::BaseContro
     render json: { what_to_discard_problem_votes: {
       results: vote_results,
       total_count: problem.votes_count,
-      current_user_vote: {
-        id: current_user_vote&.id,
-        tile_id: current_user_vote&.tile_id
-      }
     } }, status: :ok
   end
 
