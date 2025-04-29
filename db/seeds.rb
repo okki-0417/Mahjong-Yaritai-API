@@ -81,7 +81,7 @@ end
     hand10_id: 13,
     hand11_id: 14,
     hand12_id: 24,
-    hand13_id: 15,
+    hand13_id: 25,
     tsumo_id: 13,
   },
   {
