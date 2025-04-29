@@ -43,8 +43,116 @@ user = FactoryBot.create(:user, name: "ohki", email:  "ouki_murai@ostance.com")
   FactoryBot.create(:tile, obj)
 end
 
+[
+  {
+    round: "東四",
+    turn: 12,
+    wind: "東",
+    dora_id: 12,
+    hand1_id: 2,
+    hand2_id: 3,
+    hand3_id: 11,
+    hand4_id: 12,
+    hand5_id: 13,
+    hand6_id: 14,
+    hand7_id: 15,
+    hand8_id: 16,
+    hand9_id: 17,
+    hand10_id: 20,
+    hand11_id: 21,
+    hand12_id: 21,
+    hand13_id: 22,
+    tsumo_id: 21,
+  },
+  {
+    round: "東一",
+    turn: 7,
+    wind: "東",
+    dora_id: 11,
+    hand1_id: 1,
+    hand2_id: 2,
+    hand3_id: 4,
+    hand4_id: 5,
+    hand5_id: 6,
+    hand6_id: 7,
+    hand7_id: 9,
+    hand8_id: 11,
+    hand9_id: 12,
+    hand10_id: 13,
+    hand11_id: 14,
+    hand12_id: 24,
+    hand13_id: 15,
+    tsumo_id: 13,
+  },
+  {
+    round: "南四",
+    turn: 8,
+    wind: "南",
+    dora_id: 25 ,
+    hand1_id: 2,
+    hand2_id: 3,
+    hand3_id: 3,
+    hand4_id: 4,
+    hand5_id: 5,
+    hand6_id: 11,
+    hand7_id: 13,
+    hand8_id: 15,
+    hand9_id: 23,
+    hand10_id: 23,
+    hand11_id: 23,
+    hand12_id: 24,
+    hand13_id: 25,
+    tsumo_id: 13,
+  },
+  {
+    round: "東二",
+    turn: 7,
+    wind: "東",
+    dora_id: 11,
+    hand1_id: 3,
+    hand2_id: 5,
+    hand3_id: 7,
+    hand4_id: 7,
+    hand5_id: 8,
+    hand6_id: 10,
+    hand7_id: 12,
+    hand8_id: 15,
+    hand9_id: 16,
+    hand10_id: 17,
+    hand11_id: 22,
+    hand12_id: 23,
+    hand13_id: 24,
+    tsumo_id: 13,
+  },
+  {
+    round: "南一",
+    turn: 6,
+    wind: "西",
+    dora_id: 25,
+    hand1_id: 2,
+    hand2_id: 3,
+    hand3_id: 9,
+    hand4_id: 10,
+    hand5_id: 11,
+    hand6_id: 12,
+    hand7_id: 13,
+    hand8_id: 15,
+    hand9_id: 17,
+    hand10_id: 19,
+    hand11_id: 20,
+    hand12_id: 22,
+    hand13_id: 24,
+    tsumo_id: 14,
+  },
+].map do |obj|
+  FactoryBot.create(:what_to_discard_problem, **obj)
+end
 
 problem = FactoryBot.create(:what_to_discard_problem, user:, dora_id: 1, hand1_id: 1, hand2_id: 2, hand3_id: 3, hand4_id: 4, hand5_id: 5, hand6_id: 6, hand7_id: 7, hand8_id: 8, hand9_id: 9, hand10_id: 10, hand11_id: 11, hand12_id: 12, hand13_id: 13, tsumo_id: 14)
+
 FactoryBot.create(:what_to_discard_problem_like, what_to_discard_problem_id: problem.id, user:)
 FactoryBot.create(:what_to_discard_problem_comment, what_to_discard_problem_id: problem.id, user:)
-FactoryBot.create(:what_to_discard_problem_vote, what_to_discard_problem_id: problem.id, user:, tile_id: 1)
+
+(1..50).each do |i|
+  FactoryBot.create(:what_to_discard_problem_vote, what_to_discard_problem_id: problem.id, tile_id: rand(1..14))
+end
