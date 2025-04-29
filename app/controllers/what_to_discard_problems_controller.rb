@@ -47,7 +47,36 @@ class WhatToDiscardProblemsController < ApplicationController
     problem = current_user.created_what_to_discard_problems.new(problem_params)
 
     if problem.save
-      render json: { what_to_discard_problem: problem }, status: :created
+      render json: {
+        what_to_discard_problem: {
+          data: problem.as_json(
+            only: %i[
+              id
+              round
+              turn
+              wind
+              point_east
+              point_west
+              point_south
+              point_north
+              created_at
+              likes_count
+              comments_count
+              votes_count
+              dora_id
+              tsumo_id
+            ],
+            include: {
+              user: { only: %i[id name] },
+            }
+            ).merge({
+              hand_ids: problem.hand_ids,
+            }),
+          pagination: {
+            next_page: problems.next_page,
+          }
+        }
+      }, status: :created
     else
       render json: validation_error_json(problem), status: :unprocessable_entity
     end
