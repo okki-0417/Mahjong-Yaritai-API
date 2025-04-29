@@ -18,7 +18,7 @@ class Authorization < ApplicationRecord
   end
 
   def check_email_uniqueness
-    return unless User.find_by(email:)
+    return unless User.exists?(email:)
 
     errors.add(:email, :taken)
   end

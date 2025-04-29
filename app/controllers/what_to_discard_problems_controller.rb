@@ -7,7 +7,7 @@ class WhatToDiscardProblemsController < ApplicationController
     problems = WhatToDiscardProblem.preload(:user)
                                    .order(created_at: :desc)
                                    .page(params[:page])
-                                   .per(10)
+                                   .per(3)
 
     render json: {
       what_to_discard_problems: {

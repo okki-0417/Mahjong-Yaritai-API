@@ -6,43 +6,35 @@ module Authenticatable
   def login(user)
     reset_session
 
-    $redis.set(:hello_session, { user_id: user.id }.to_json)
-
-    session[:session_key] = :hello_session
+    session[:user_id] = user.id
   end
 
   def remember(user)
     user.remember
 
-    $redis.set(:hello_cookies, {
-      user_id: user.id,
-      remember_token: user.remember_token
-    }.to_json)
+    cookies.permanent.signed[:user_id] = {
+      value: user.id,
+      secure: true,
+      httponly: true,
+    }
 
-    cookies.permanent.signed[:cookies_key] = {
-      value: :hello_cookies,
+    cookies.permanent.signed[:remember_token] = {
+      value: user.remember_token,
       secure: true,
       httponly: true,
     }
   end
 
   def current_user
-    if session_key = session[:session_key]
-      session_value = $redis.get(session_key)
+    if user_id = session[:user_id]
+      @current_user ||= User.find_by(id: user_id)
 
-      return reset_session unless session_value
+    elsif user_id = cookies.signed[:user_id]
+      return unless remember_token = cookies.signed[:remember_token]
 
-      parsed_session_value = JSON.parse(session_value)
-      @current_user ||= User.find_by(id: parsed_session_value["user_id"])
+      user = User.find_by(id: user_id)
 
-    elsif cookies_key = cookies.signed[:cookies_key]
-      cookies_value = $redis.get(cookies_key)
-
-      return reset_session unless cookies_value
-      parsed_cookies_value = JSON.parse(cookies_value)
-      user = User.find_by(id: parsed_cookies_value["user_id"])
-
-      if user && user.authenticated?(parsed_cookies_value["remember_token"])
+      if user && user.authenticated?(remember_token)
         login user
         @current_user = user
       end
@@ -57,7 +49,8 @@ module Authenticatable
 
   def forget(user)
     user.forget
-    cookies.delete(:cookies_key)
+    cookies.delete(:user_id)
+    cookies.delete(:remember_token)
   end
 
   def logged_in?
