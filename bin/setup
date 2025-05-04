@@ -13,7 +13,7 @@ FileUtils.chdir APP_ROOT do
   system "bin/rails db:create"
   system "bin/rails db:migrate"
 
-  puts "\n== Seeds =="
+  puts "\n== Seeds ちょっと時間かかる=="
   system "bin/rails db:seed"
   puts "\n== end =="
 

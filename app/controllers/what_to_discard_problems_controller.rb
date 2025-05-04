@@ -29,11 +29,13 @@ class WhatToDiscardProblemsController < ApplicationController
                     dora_id
                     tsumo_id
                   ],
-                  include: {
-                    user: { only: %i[id name] },
-                  }
                 ).merge({
                   hand_ids: problem.hand_ids,
+                  user: problem.user.as_json(
+                    only: %i[id name]
+                  ).merge(
+                    avatar_url: problem.user.avatar.attached? ? url_for(problem.user.avatar) : nil
+                  ),
                 })
               end,
         pagination: {

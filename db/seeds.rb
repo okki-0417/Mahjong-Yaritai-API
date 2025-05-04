@@ -148,7 +148,7 @@ end
   FactoryBot.create(:what_to_discard_problem, **obj)
 end
 
-problem = FactoryBot.create(:what_to_discard_problem, user:, dora_id: 1, hand1_id: 1, hand2_id: 2, hand3_id: 3, hand4_id: 4, hand5_id: 5, hand6_id: 6, hand7_id: 7, hand8_id: 8, hand9_id: 9, hand10_id: 10, hand11_id: 11, hand12_id: 12, hand13_id: 13, tsumo_id: 14)
+problem = FactoryBot.create(:what_to_discard_problem, user:, dora_id: 11, hand1_id: 3, hand2_id: 4, hand3_id: 5, hand4_id: 7, hand5_id: 7, hand6_id: 9, hand7_id: 10, hand8_id: 10, hand9_id: 10, hand10_id: 14, hand11_id: 16, hand12_id: 18, hand13_id: 24, tsumo_id: 25)
 
 FactoryBot.create(:what_to_discard_problem_like, what_to_discard_problem_id: problem.id, user:)
 FactoryBot.create(:what_to_discard_problem_comment, what_to_discard_problem_id: problem.id, user:)
