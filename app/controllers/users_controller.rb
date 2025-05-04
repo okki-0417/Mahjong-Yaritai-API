@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
-  before_action :restrict_to_logged_in_user, only: [ :index, :show, :update, :destroy ]
+  before_action :restrict_to_logged_in_user, only: %i[index update destroy ]
 
   def index
     users = User.all
@@ -9,11 +9,7 @@ class UsersController < ApplicationController
   end
 
   def create
-    Rails.logger.debug("**********************[#{session}]*******************")
-
     authorization = Authorization.find_by(id: session[:authorization_id]&.to_i)
-
-    Rails.logger.debug("**********************[#{authorization}]*******************")
 
     user = User.new(
       email: authorization&.email,
@@ -32,14 +28,24 @@ class UsersController < ApplicationController
   end
 
   def show
-    render json: { user: current_user, avatar: current_user&.avatar }, status: :ok
+    user = User.find(params[:id])
+
+    render json: {
+      user: user.as_json(only: %i[name]).merge(
+        avatar_url: user.avatar.attached? ? url_for(user.avatar) : nil
+      )
+    }, status: :ok
   end
 
   def update
-    if current_user.update(user_params)
-      render json: current_user, status: :ok
+    if current_user.update(user_update_params)
+      render json: {
+        user: current_user.as_json(only: %i[name]).merge(
+          avatar_url: current_user.avatar.attached? ? url_for(current_user.avatar) : nil
+        )
+      }, status: :ok
     else
-      render json: { errors: current_user.errors.full_messages.map{ |message|  { message: } } }, status: :unprocessable_entity
+      render validation_error_json(current_user), status: :unprocessable_entity
     end
   end
 
@@ -52,5 +58,11 @@ class UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(:name, :email, :password, :password_confirmation)
+  end
+
+  def user_update_params
+    puts "*******************#{params}"
+
+    params.require(:user).permit(:name, :avatar)
   end
 end

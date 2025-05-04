@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   resource :authorization_session, only: %i[create]
   resource :authorization, only: %i[create]
 
-  resources :users, only: %i[index create edit create update destroy]
+  resources :users
 
   resource :session, only: %i[show create destroy]
 

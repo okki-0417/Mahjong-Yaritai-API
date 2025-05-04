@@ -3,48 +3,27 @@
 require "rails_helper"
 
 RSpec.describe "Users", type: :request do
-  include SessionHelper
-
-  let(:current_user) { FactoryBot.create(:user) }
+  let(:current_user) { create(:user) }
 
   describe "index" do
     subject { get users_url }
 
     context "未ログインの場合" do
-      it "401を返すこと" do
-        subject
-        expect(response).to have_http_status(401)
-      end
+      it_behaves_like :response, 401
     end
 
     context "ログイン済みの場合" do
       include_context "logged_in"
 
-      it "200を返すこと" do
-        subject
-        expect(response).to have_http_status(200)
-      end
+      it_behaves_like :response, 200
     end
   end
 
   describe "show" do
-    subject { get user_url(current_user) }
+    subject { get user_url(user) }
+    let(:user) { create(:user) }
 
-    context "未ログインの場合" do
-      it "401を返すこと" do
-        subject
-        expect(response).to have_http_status(401)
-      end
-    end
-
-    context "ログイン済みの場合" do
-      include_context "logged_in"
-
-      it "200を返すこと" do
-        subject
-        expect(response).to have_http_status(200)
-      end
-    end
+    it_behaves_like :response, 200
   end
 
   describe "create" do
@@ -69,7 +48,7 @@ RSpec.describe "Users", type: :request do
     end
 
     context "Authorizationが存在する場合" do
-      let(:authorization) { FactoryBot.create(:authorization) }
+      let(:authorization) { create(:authorization) }
 
       before { allow(Authorization).to receive(:find_by).and_return(authorization) }
 
