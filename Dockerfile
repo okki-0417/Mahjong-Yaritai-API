@@ -20,7 +20,7 @@ RUN apt-get update -qq && \
 
 COPY Gemfile Gemfile.lock ./
 
-RUN bundle install --jobs=4 --retry=3 --path /usr/local/bundle && \
+RUN bundle install --jobs=10 --retry=3 --path /usr/local/bundle && \
     rm -rf ~/.bundle/ /usr/local/bundle/ruby/*/cache /usr/local/bundle/ruby/*/bundler/gems/*/.git
 
 COPY entrypoint.sh /usr/bin/
