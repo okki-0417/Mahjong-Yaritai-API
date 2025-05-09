@@ -3,11 +3,6 @@
 class UsersController < ApplicationController
   before_action :restrict_to_logged_in_user, only: %i[index update destroy ]
 
-  def index
-    users = User.all
-    render json: { users: }, status: :ok
-  end
-
   def create
     authorization = Authorization.find_by(id: session[:authorization_id]&.to_i)
 
@@ -61,8 +56,6 @@ class UsersController < ApplicationController
   end
 
   def user_update_params
-    puts "*******************#{params}"
-
     params.require(:user).permit(:name, :avatar)
   end
 end

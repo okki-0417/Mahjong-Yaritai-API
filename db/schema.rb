@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_04_21_015612) do
+ActiveRecord::Schema[7.2].define(version: 2025_04_16_022636) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -46,35 +46,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_21_015612) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "forum_threads", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.string "topic", limit: 100, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_forum_threads_on_user_id"
-  end
-
-  create_table "reports", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "content_name", limit: 100, null: false
-    t.string "reference", limit: 1000
-    t.string "description", limit: 1000
-    t.bigint "user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_reports_on_user_id"
-  end
-
-  create_table "thread_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "forum_thread_id", null: false
-    t.bigint "thread_comment_id", default: 0
-    t.string "content", limit: 1000
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["created_at"], name: "index_thread_comments_on_created_at"
-    t.index ["forum_thread_id"], name: "index_thread_comments_on_forum_thread_id"
-    t.index ["thread_comment_id"], name: "index_thread_comments_on_thread_comment_id"
-  end
-
   create_table "tiles", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "suit", null: false
     t.integer "ordinal_number_in_suit", null: false
@@ -87,19 +58,19 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_21_015612) do
     t.string "name", limit: 20, null: false
     t.string "email", limit: 64, null: false
     t.string "password_digest"
+    t.string "remember_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "remember_digest"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
   create_table "what_to_discard_problem_comments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "what_to_discard_problem_id", null: false
     t.bigint "user_id", null: false
     t.bigint "parent_comment_id"
     t.string "content", limit: 500, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "what_to_discard_problem_id", null: false
     t.index ["parent_comment_id"], name: "index_what_to_discard_problem_comments_on_parent_comment_id"
     t.index ["user_id"], name: "index_what_to_discard_problem_comments_on_user_id"
     t.index ["what_to_discard_problem_id"], name: "idx_on_what_to_discard_problem_id_8fc9afad9a"
@@ -128,20 +99,15 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_21_015612) do
   end
 
   create_table "what_to_discard_problems", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
     t.string "round", null: false
     t.integer "turn", null: false
     t.string "wind", null: false
-    t.integer "point_east", null: false
-    t.integer "point_south", null: false
-    t.integer "point_west", null: false
-    t.integer "point_north", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
-    t.integer "comments_count", default: 0, null: false
-    t.integer "likes_count", default: 0, null: false
     t.bigint "dora_id", null: false
-    t.bigint "tsumo_id", null: false
+    t.bigint "point_east_id", null: false
+    t.bigint "point_south_id", null: false
+    t.bigint "point_west_id", null: false
+    t.bigint "point_north_id", null: false
     t.bigint "hand1_id", null: false
     t.bigint "hand2_id", null: false
     t.bigint "hand3_id", null: false
@@ -155,7 +121,12 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_21_015612) do
     t.bigint "hand11_id", null: false
     t.bigint "hand12_id", null: false
     t.bigint "hand13_id", null: false
+    t.string "tsumo", null: false
+    t.integer "comments_count", default: 0, null: false
+    t.integer "likes_count", default: 0, null: false
     t.integer "votes_count", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["dora_id"], name: "index_what_to_discard_problems_on_dora_id"
     t.index ["hand10_id"], name: "index_what_to_discard_problems_on_hand10_id"
     t.index ["hand11_id"], name: "index_what_to_discard_problems_on_hand11_id"
@@ -170,17 +141,17 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_21_015612) do
     t.index ["hand7_id"], name: "index_what_to_discard_problems_on_hand7_id"
     t.index ["hand8_id"], name: "index_what_to_discard_problems_on_hand8_id"
     t.index ["hand9_id"], name: "index_what_to_discard_problems_on_hand9_id"
-    t.index ["tsumo_id"], name: "index_what_to_discard_problems_on_tsumo_id"
+    t.index ["point_east_id"], name: "index_what_to_discard_problems_on_point_east_id"
+    t.index ["point_north_id"], name: "index_what_to_discard_problems_on_point_north_id"
+    t.index ["point_south_id"], name: "index_what_to_discard_problems_on_point_south_id"
+    t.index ["point_west_id"], name: "index_what_to_discard_problems_on_point_west_id"
     t.index ["user_id"], name: "index_what_to_discard_problems_on_user_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "forum_threads", "users"
-  add_foreign_key "reports", "users"
-  add_foreign_key "thread_comments", "forum_threads"
-  add_foreign_key "thread_comments", "thread_comments"
-  add_foreign_key "what_to_discard_problem_comments", "what_to_discard_problem_comments", column: "parent_comment_id", on_delete: :nullify
+  add_foreign_key "what_to_discard_problem_comments", "users"
+  add_foreign_key "what_to_discard_problem_comments", "what_to_discard_problem_comments", column: "parent_comment_id"
   add_foreign_key "what_to_discard_problem_comments", "what_to_discard_problems"
   add_foreign_key "what_to_discard_problem_likes", "users"
   add_foreign_key "what_to_discard_problem_likes", "what_to_discard_problems"
@@ -201,6 +172,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_21_015612) do
   add_foreign_key "what_to_discard_problems", "tiles", column: "hand7_id"
   add_foreign_key "what_to_discard_problems", "tiles", column: "hand8_id"
   add_foreign_key "what_to_discard_problems", "tiles", column: "hand9_id"
-  add_foreign_key "what_to_discard_problems", "tiles", column: "tsumo_id"
+  add_foreign_key "what_to_discard_problems", "tiles", column: "point_east_id"
+  add_foreign_key "what_to_discard_problems", "tiles", column: "point_north_id"
+  add_foreign_key "what_to_discard_problems", "tiles", column: "point_south_id"
+  add_foreign_key "what_to_discard_problems", "tiles", column: "point_west_id"
   add_foreign_key "what_to_discard_problems", "users"
 end
