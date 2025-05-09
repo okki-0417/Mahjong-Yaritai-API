@@ -103,11 +103,11 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_16_022636) do
     t.string "round", null: false
     t.integer "turn", null: false
     t.string "wind", null: false
+    t.integer "point_east", null: false
+    t.integer "point_south", null: false
+    t.integer "point_west", null: false
+    t.integer "point_north", null: false
     t.bigint "dora_id", null: false
-    t.bigint "point_east_id", null: false
-    t.bigint "point_south_id", null: false
-    t.bigint "point_west_id", null: false
-    t.bigint "point_north_id", null: false
     t.bigint "hand1_id", null: false
     t.bigint "hand2_id", null: false
     t.bigint "hand3_id", null: false
@@ -121,7 +121,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_16_022636) do
     t.bigint "hand11_id", null: false
     t.bigint "hand12_id", null: false
     t.bigint "hand13_id", null: false
-    t.string "tsumo", null: false
+    t.bigint "tsumo_id", null: false
     t.integer "comments_count", default: 0, null: false
     t.integer "likes_count", default: 0, null: false
     t.integer "votes_count", default: 0, null: false
@@ -141,10 +141,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_16_022636) do
     t.index ["hand7_id"], name: "index_what_to_discard_problems_on_hand7_id"
     t.index ["hand8_id"], name: "index_what_to_discard_problems_on_hand8_id"
     t.index ["hand9_id"], name: "index_what_to_discard_problems_on_hand9_id"
-    t.index ["point_east_id"], name: "index_what_to_discard_problems_on_point_east_id"
-    t.index ["point_north_id"], name: "index_what_to_discard_problems_on_point_north_id"
-    t.index ["point_south_id"], name: "index_what_to_discard_problems_on_point_south_id"
-    t.index ["point_west_id"], name: "index_what_to_discard_problems_on_point_west_id"
+    t.index ["tsumo_id"], name: "index_what_to_discard_problems_on_tsumo_id"
     t.index ["user_id"], name: "index_what_to_discard_problems_on_user_id"
   end
 
@@ -172,9 +169,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_16_022636) do
   add_foreign_key "what_to_discard_problems", "tiles", column: "hand7_id"
   add_foreign_key "what_to_discard_problems", "tiles", column: "hand8_id"
   add_foreign_key "what_to_discard_problems", "tiles", column: "hand9_id"
-  add_foreign_key "what_to_discard_problems", "tiles", column: "point_east_id"
-  add_foreign_key "what_to_discard_problems", "tiles", column: "point_north_id"
-  add_foreign_key "what_to_discard_problems", "tiles", column: "point_south_id"
-  add_foreign_key "what_to_discard_problems", "tiles", column: "point_west_id"
+  add_foreign_key "what_to_discard_problems", "tiles", column: "tsumo_id"
   add_foreign_key "what_to_discard_problems", "users"
 end
