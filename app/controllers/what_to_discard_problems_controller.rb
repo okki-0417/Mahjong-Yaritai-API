@@ -9,76 +9,14 @@ class WhatToDiscardProblemsController < ApplicationController
                                    .page(params[:page])
                                    .per(3)
 
-    render json: {
-      what_to_discard_problems: {
-        data: problems.map do |problem|
-                problem.as_json(
-                  only: %i[
-                    id
-                    round
-                    turn
-                    wind
-                    point_east
-                    point_west
-                    point_south
-                    point_north
-                    created_at
-                    likes_count
-                    comments_count
-                    votes_count
-                    dora_id
-                    tsumo_id
-                  ],
-                ).merge({
-                  hand_ids: problem.hand_ids,
-                  user: problem.user.as_json(
-                    only: %i[id name]
-                  ).merge(
-                    avatar_url: problem.user.avatar.attached? ? url_for(problem.user.avatar) : nil
-                  ),
-                })
-              end,
-        pagination: {
-          next_page: problems.next_page,
-        }
-      }
-    }
+    render json: problems, each_serializer: WhatToDiscardProblemSerializer, meta: pagination_data(problems), status: :ok
   end
 
   def create
     problem = current_user.created_what_to_discard_problems.new(problem_params)
 
     if problem.save
-      render json: {
-        what_to_discard_problem: {
-          data: problem.as_json(
-            only: %i[
-              id
-              round
-              turn
-              wind
-              point_east
-              point_west
-              point_south
-              point_north
-              created_at
-              likes_count
-              comments_count
-              votes_count
-              dora_id
-              tsumo_id
-            ],
-            include: {
-              user: { only: %i[id name] },
-            }
-            ).merge({
-              hand_ids: problem.hand_ids,
-            }),
-          pagination: {
-            next_page: problems.next_page,
-          }
-        }
-      }, status: :created
+      render json: problem, serializer: WhatToDiscardProblemSerializer, status: :created
     else
       render json: validation_error_json(problem), status: :unprocessable_entity
     end
