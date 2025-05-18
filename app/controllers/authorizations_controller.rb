@@ -7,10 +7,16 @@ class AuthorizationsController < ApplicationController
     if authorization && !authorization.expired?
       session[:authorization_id] = authorization.id
 
-      head :no_content
+      head :ok
     else
       return render json: {}, status: :unprocessable_entity
     end
+  end
+
+  def show
+    authorization = Authorization.find_by(id: session[:authorization_id]&.to_i)
+
+    render json: { authorized: authorization.present? }, status: :ok
   end
 
   private

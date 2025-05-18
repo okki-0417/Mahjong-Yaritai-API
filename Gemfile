@@ -7,6 +7,8 @@ gem "jbuilder"
 gem "rack-cors"
 gem "bcrypt"
 
+gem "graphql"
+
 gem "redis-rails"
 gem "redis-store"
 

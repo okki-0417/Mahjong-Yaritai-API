@@ -1,10 +1,11 @@
 # require "sidekiq/web"
 
 Rails.application.routes.draw do
+  post "/graphql", to: "graphql#execute"
   get "/", to: "sessions#show"
 
   resource :authorization_session, only: %i[create]
-  resource :authorization, only: %i[create]
+  resource :authorization, only: %i[create show]
 
   resources :users, only: %i[show create update destroy]
 
@@ -22,6 +23,8 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  post "/graphql", to: "graphql#execute"
 
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"

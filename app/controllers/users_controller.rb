@@ -12,7 +12,6 @@ class UsersController < ApplicationController
     )
 
     if user.save
-      session.delete(:authorization_id_key)
       login(user)
       remember(user)
 

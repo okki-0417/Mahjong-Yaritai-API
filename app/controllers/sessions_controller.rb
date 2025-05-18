@@ -10,7 +10,11 @@ class SessionsController < ApplicationController
     if user && user.authenticate(session_params[:password])
       login user
       remember user
-      render json: { user: user.as_json(only: %i[id]) }, status: :created
+
+      render json: { session: {
+          is_logged_in: logged_in?,
+          user_id: current_user.id
+        } }, status: :created
     else
       render json: { errors: [ { message: "Not authorized" } ] }, status: :unprocessable_entity
     end
