@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 gem "rails", "7.2.1"
-gem "mysql2", "~> 0.5"
+gem "pg"
 gem "puma", ">= 5.0"
 gem "jbuilder"
 gem "rack-cors"
@@ -19,10 +19,6 @@ gem "image_processing", "~> 1.2"
 gem "dotenv-rails"
 gem "kaminari"
 gem "active_model_serializers"
-
-group :production do
-  gem "redis-clustering"
-end
 
 group :development do
   gem "letter_opener_web"

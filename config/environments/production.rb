@@ -10,6 +10,8 @@ Rails.application.configure do
   config.middleware.use ActionDispatch::Cookies
   config.middleware.use ActionDispatch::Session::RedisStore
 
+  config.active_storage.service = :local
+
   config.session_store :redis_store,
                         servers: [
                           ENV.fetch("REDIS_URL")

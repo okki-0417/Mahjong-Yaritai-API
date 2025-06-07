@@ -4,15 +4,13 @@ class WhatToDiscardProblems::LikesController < WhatToDiscardProblems::BaseContro
   before_action :restrict_to_logged_in_user, only: %i[create destroy]
 
   def index
-    problem = WhatToDiscardProblem.find(params[:what_to_discard_problem_id])
-    likes = problem.likes
-
-    current_user_like_id = likes.find_by(user_id: current_user&.id)&.id
+    likes = WhatToDiscardProblem.find(params[:what_to_discard_problem_id]).likes
+    is_current_user_liked = likes.exists?(user_id: current_user&.id)
 
     render json: {
       what_to_discard_problem_likes: {
         count: likes.size,
-        current_user_like_id:,
+        is_current_user_liked:,
       }
     }, status: 200
   end
@@ -25,25 +23,24 @@ class WhatToDiscardProblems::LikesController < WhatToDiscardProblems::BaseContro
 
     if like.save
       render json: {
-        what_to_discard_problem_likes: {
-          count: like.what_to_discard_problem.likes_count,
-          current_user_like_id: like.id,
+        what_to_discard_problem_like: {
+          myLike: like,
         }
       }, status: :created
     else
-      puts like.errors.full_messages
       render json: validation_error_json(like), status: :unprocessable_entity
     end
   end
 
   def destroy
-    like = WhatToDiscardProblem::Like.find_by!(
-      user_id: current_user.id,
-      what_to_discard_problem_id: params[:what_to_discard_problem_id]
-    )
+    like = current_user.created_what_to_discard_problem_likes.find_by!(what_to_discard_problem_id: params[:what_to_discard_problem_id])
 
     like.destroy
 
-    head :no_content
+    render json: {
+      what_to_discard_problem_like: {
+        myLike: nil
+      }
+    }, status: :no_content
   end
 end

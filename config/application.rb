@@ -5,7 +5,7 @@ require 'dotenv/load'
 
 Bundler.require(*Rails.groups)
 
-module DefaultApp
+module MahjongYaritaiApp
   class Application < Rails::Application
     config.active_record.query_log_tags_enabled = true
     config.active_record.query_log_tags = [

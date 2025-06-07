@@ -3,6 +3,8 @@ class UserSerializer < ActiveModel::Serializer
     id
     name
     avatar_url
+    created_at
+    updated_at
   ]
 
   def avatar_url

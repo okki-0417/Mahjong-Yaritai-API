@@ -8,8 +8,6 @@ class User < ApplicationRecord
   has_secure_password
 
   has_one_attached :avatar
-  has_many :reports, dependent: :destroy
-  has_many :created_threads, class_name: :ForumThread, dependent: :destroy
   has_many :created_what_to_discard_problems, class_name: :WhatToDiscardProblem, dependent: :destroy
   has_many :created_what_to_discard_problem_comments, class_name: "WhatToDiscardProblem::Comment", dependent: :destroy
   has_many :created_what_to_discard_problem_likes, class_name: "WhatToDiscardProblem::Like", dependent: :destroy
@@ -33,7 +31,6 @@ class User < ApplicationRecord
 
   private
 
-  # TODO:
   def self.digest(string)
     cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST : BCrypt::Engine.cost
     BCrypt::Password.create(string, cost:)

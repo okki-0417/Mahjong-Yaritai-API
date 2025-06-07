@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
-  before_action :restrict_to_logged_in_user, only: %i[index update destroy ]
+  before_action :restrict_to_logged_in_user, only: %i[update destroy]
 
   def create
     authorization = Authorization.find_by(id: session[:authorization_id]&.to_i)
@@ -24,20 +24,12 @@ class UsersController < ApplicationController
   def show
     user = User.find(params[:id])
 
-    render json: {
-      user: user.as_json(only: %i[name]).merge(
-        avatar_url: user.avatar.attached? ? url_for(user.avatar) : nil
-      )
-    }, status: :ok
+    render json: user, serializer: UserSerializer, status: :ok
   end
 
   def update
     if current_user.update(user_update_params)
-      render json: {
-        user: current_user.as_json(only: %i[name]).merge(
-          avatar_url: current_user.avatar.attached? ? url_for(current_user.avatar) : nil
-        )
-      }, status: :ok
+      render json: current_user, serializer: UserSerializer, status: :ok
     else
       render validation_error_json(current_user), status: :unprocessable_entity
     end

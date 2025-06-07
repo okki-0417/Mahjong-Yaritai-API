@@ -15,6 +15,7 @@ RUN apt-get update -qq && \
     git \
     default-libmysqlclient-dev \
     pkg-config \
+    libpq-dev \
     libyaml-dev && \
     rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
