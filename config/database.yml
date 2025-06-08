@@ -6,21 +6,21 @@ default: &default
 development:
   <<: *default
   database: <%= ENV.fetch("DATABASE_NAME") %>
-  username: <%= ENV.fetch("DATABASE_ROOT") %>
-  password: <%= ENV.fetch("DATABASE_ROOT_PASSWORD") %>
+  username: <%= ENV.fetch("DATABASE_USER") %>
+  password: <%= ENV.fetch("DATABASE_PASSWORD") %>
   host: <%= ENV.fetch("DATABASE_HOST") %>
 
 test:
   <<: *default
   database: <%= ENV.fetch("DATABASE_NAME") %>_test
-  username: <%= ENV.fetch("DATABASE_ROOT") %>
-  password: <%= ENV.fetch("DATABASE_ROOT_PASSWORD") %>
+  username: <%= ENV.fetch("DATABASE_USER") %>
+  password: <%= ENV.fetch("DATABASE_PASSWORD") %>
   host: <%= ENV.fetch("DATABASE_HOST") %>
 
 production:
   primary: &primary_production
     <<: *default
     database: <%= ENV.fetch("DATABASE_NAME") %>
-    username: <%= ENV.fetch("DATABASE_ROOT") %>
-    password: <%= ENV.fetch("DATABASE_ROOT_PASSWORD") %>
+    username: <%= ENV.fetch("DATABASE_USER") %>
+    password: <%= ENV.fetch("DATABASE_PASSWORD") %>
     host: <%= ENV.fetch("DATABASE_HOST") %>
