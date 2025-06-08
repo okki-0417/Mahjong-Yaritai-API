@@ -29,7 +29,5 @@ module MahjongYaritaiApp
     Dir[Rails.root.join("app/*")].each do |path|
       config.autoload_paths << path if File.directory?(path)
     end
-
-    config.hosts << "mahjong-yaritai.com"
   end
 end

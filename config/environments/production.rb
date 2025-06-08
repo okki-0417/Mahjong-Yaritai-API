@@ -27,6 +27,7 @@ Rails.application.configure do
     ]
   }
 
+  config.hosts << ENV.fetch("HOST_NAME")
   config.hosts << "10.0.1.136:3001"
   config.hosts << "18.177.116.156"
 
