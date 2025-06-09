@@ -1,4 +1,5 @@
 require "active_support/core_ext/integer/time"
+require "custom_logger"
 
 Rails.application.configure do
   config.enable_reloading = false
@@ -26,6 +27,12 @@ Rails.application.configure do
       ENV.fetch("REDIS_URL")
     ]
   }
+
+  config.middleware.insert_before Rails::Rack::Logger, Rack::ConditionalLogger do |env|
+    env["PATH_INFO"] !~ %r{^/up}
+  end
+
+  MahjongYaritaiApp::Application.config.middleware.swap Rails::Rack::Logger, CustomLoggers
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
