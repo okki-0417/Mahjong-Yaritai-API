@@ -51,7 +51,7 @@ Rails.application.configure do
   config.assume_ssl = true
   config.force_ssl = true
   config.log_tags = [ :request_id ]
-  config.logger = ActiveSupport::TaggedLogging.new(ActiveSupport::Logger.new('log/production.log'))
+  config.logger = ActiveSupport::TaggedLogging.new(ActiveSupport::Logger.new(STDOUT))
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
   config.active_support.report_deprecations = false
 
