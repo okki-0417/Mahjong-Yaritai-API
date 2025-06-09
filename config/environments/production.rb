@@ -28,7 +28,7 @@ Rails.application.configure do
     ]
   }
 
-  MahjongYaritaiApp::Application.config.middleware.swap Rails::Rack::Logger, CustomLoggers
+  MahjongYaritaiApp::Application.config.middleware.swap Rails::Rack::Logger, CustomLogger
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
