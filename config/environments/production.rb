@@ -28,10 +28,6 @@ Rails.application.configure do
     ]
   }
 
-  config.middleware.insert_before Rails::Rack::Logger, Rack::ConditionalLogger do |env|
-    env["PATH_INFO"] !~ %r{^/up}
-  end
-
   MahjongYaritaiApp::Application.config.middleware.swap Rails::Rack::Logger, CustomLoggers
 
   config.action_mailer.delivery_method = :smtp
