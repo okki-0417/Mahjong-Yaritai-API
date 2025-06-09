@@ -1,7 +1,8 @@
 require_relative "boot"
 
 require "rails/all"
-require 'dotenv/load'
+require "dotenv/load"
+require "custom_logger"
 
 Bundler.require(*Rails.groups)
 
@@ -22,9 +23,10 @@ module MahjongYaritaiApp
     config.i18n.default_locale = :ja
 
     config.middleware.insert_before Rails::Rack::Logger, Rack::ConditionalLogger do |env|
-      env['PATH_INFO'] !~ %r{^/up}
+      env["PATH_INFO"] !~ %r{^/up}
     end
 
+    MahjongYaritaiApp::Application.config.middleware.swap Rails::Rack::Logger, CustomLogger
 
     config.api_only = true
     config.action_dispatch.cookies_same_site_protection = :none

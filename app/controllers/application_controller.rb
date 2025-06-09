@@ -6,6 +6,10 @@ class ApplicationController < ActionController::API
   include Rails.application.routes.url_helpers
   include ActionController::RequestForgeryProtection
 
+  before_action do
+    Rails.logger.info "User-Agent: #{request.user_agent}"
+  end
+
   def reject_logged_in_user
     render json: { errors: [ { message:  "Already logged in." } ] }, status: :forbidden if logged_in?
   end
