@@ -21,6 +21,8 @@ module MahjongYaritaiApp
 
     config.i18n.default_locale = :ja
 
+    config.silence_healthcheck_path = "/up"
+
     config.api_only = true
     config.action_dispatch.cookies_same_site_protection = :none
 
