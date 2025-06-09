@@ -2,6 +2,7 @@
 
 class AuthorizationSessionsController < ApplicationController
   def create
+    Rails.logger.info(authorization_session_params)
     authorization = Authorization.new(authorization_session_params)
 
     if authorization.save
@@ -12,7 +13,7 @@ class AuthorizationSessionsController < ApplicationController
 
       head :created
     else
-      render json: {}, status: :unprocessable_entity
+      render json: { error: authorization.errors }, status: :unprocessable_entity
     end
   end
 
