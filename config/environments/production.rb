@@ -27,6 +27,20 @@ Rails.application.configure do
     ]
   }
 
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address:         "smtp.gmail.com",             # Gmail の SMTP サーバー
+    port:            587,                          # STARTTLS を使うポート
+    domain:          "mahjong-yaritai.com",        # 自分のドメイン名（正確に指定することが推奨）
+    user_name:       Rails.application.credentials.dig(:smtp, :user_name),
+    password:        Rails.application.credentials.dig(:smtp, :password),
+    authentication:  "plain",                      # 認証方式（通常は "plain" で問題なし）
+    enable_starttls: true,                         # STARTTLS を使用して暗号化
+    open_timeout:    5,
+    read_timeout:    5
+  }
+  config.action_mailer.default_url_options = { host: ENV.fetch("FRONTEND_HOST") }
+
   config.hosts << ENV.fetch("HOST_NAME")
   config.hosts << "10.0.1.136:3001"
   config.hosts << "18.177.116.156"
@@ -39,8 +53,6 @@ Rails.application.configure do
   config.active_support.report_deprecations = false
 
   config.active_storage.draw_routes = false
-
-  config.action_mailer.default_url_options = { host: ENV.fetch("HOST_NAME") }
 
   config.eager_load = true
   config.i18n.fallbacks = true
