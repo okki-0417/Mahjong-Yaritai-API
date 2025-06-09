@@ -35,8 +35,8 @@ Rails.application.configure do
     address:         "smtp.gmail.com",             # Gmail の SMTP サーバー
     port:            587,                          # STARTTLS を使うポート
     domain:          "mahjong-yaritai.com",        # 自分のドメイン名（正確に指定することが推奨）
-    user_name:       Rails.application.credentials.dig(:smtp, :user_name),
-    password:        Rails.application.credentials.dig(:smtp, :password),
+    user_name:       ENV.fetch("MAIL_ADDRESS"),
+    password:        ENV.fetch("MAIL_PASSWORD"),
     authentication:  "plain",                      # 認証方式（通常は "plain" で問題なし）
     enable_starttls: true,                         # STARTTLS を使用して暗号化
     open_timeout:    5,
