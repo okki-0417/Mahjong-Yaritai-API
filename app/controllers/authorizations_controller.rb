@@ -14,8 +14,8 @@ class AuthorizationsController < ApplicationController
   end
 
   def show
-    Rails.info("session[:authorization_id]: #{session[:authorization_id]}")
-    Rails.info("authorized?: #{Authorization.exists?(id: session[:authorization_id]&.to_i)}")
+    Rails.logger.info("session[:authorization_id]: #{session[:authorization_id]}")
+    Rails.logger.info("authorized?: #{Authorization.exists?(id: session[:authorization_id]&.to_i)}")
 
     render json: {
       authorized: Authorization.exists?(

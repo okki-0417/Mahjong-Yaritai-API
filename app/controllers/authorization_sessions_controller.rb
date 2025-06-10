@@ -2,7 +2,6 @@
 
 class AuthorizationSessionsController < ApplicationController
   def create
-    Rails.logger.info(authorization_session_params)
     authorization = Authorization.new(authorization_session_params)
 
     if authorization.save
