@@ -15,7 +15,10 @@ Rails.application.configure do
 
   config.session_store :redis_store,
                         servers: [
-                          ENV.fetch("REDIS_URL")
+                          {
+                            url: ENV.fetch("REDIS_URL"),
+                            logger: Rails.logger
+                          }
                         ],
                         key: "_mahjong_yaritai_session",
                         secure: true
@@ -48,9 +51,11 @@ Rails.application.configure do
 
   config.assume_ssl = true
   config.force_ssl = true
+
   config.log_tags = [ :request_id ]
   config.logger = ActiveSupport::TaggedLogging.new(ActiveSupport::Logger.new(STDOUT))
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
+
   config.active_support.report_deprecations = false
 
   config.active_storage.draw_routes = false

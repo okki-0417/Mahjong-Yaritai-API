@@ -21,10 +21,12 @@ class SessionsController < ApplicationController
   end
 
   def show
-    render json: { session: {
-      is_logged_in: logged_in?,
-      user_id: current_user&.id
-    } }, status: :ok
+    render json: {
+      session: {
+        is_logged_in: logged_in?,
+        user_id: current_user&.id
+      }
+    }, status: :ok
   end
 
   def destroy

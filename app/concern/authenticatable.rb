@@ -28,16 +28,16 @@ module Authenticatable
   def current_user
     if user_id = session[:user_id]
       @current_user ||= User.find_by(id: user_id)
-
     elsif user_id = cookies.signed[:user_id]
       return unless remember_token = cookies.signed[:remember_token]
 
       user = User.find_by(id: user_id)
+      return unless user&.authenticated?(remember_token)
 
-      if user && user.authenticated?(remember_token)
-        login user
-        @current_user = user
-      end
+      login user
+      @current_user = user
+    else
+      nil
     end
   end
 
