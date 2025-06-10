@@ -2,6 +2,8 @@
 
 Rails.application.routes.draw do
   post "/graphql", to: "graphql#execute"
+
+  get "/", to: "health_check#show"
   get "/up", to: "health_check#show"
 
   resource :authorization_session, only: %i[create]

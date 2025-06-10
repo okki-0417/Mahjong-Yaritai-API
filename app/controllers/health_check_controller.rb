@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class HealthCheckController < ApplicationController
-  rescue_from(Exception) { render head: 503 }
+  rescue_from(StandardError) { head :internal_server_error }
 
   def show
-    render json: {}, status: :ok
+    head :ok
   end
 end

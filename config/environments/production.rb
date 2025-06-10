@@ -17,9 +17,7 @@ Rails.application.configure do
                         servers: [
                           ENV.fetch("REDIS_URL")
                         ],
-                        cluster: true,
-                        expire_after: 20.years,
-                        key: "_api_app_session",
+                        key: "_mahjong_yaritai_session",
                         secure: true
 
   config.cache_store = :redis_cache_store, {
