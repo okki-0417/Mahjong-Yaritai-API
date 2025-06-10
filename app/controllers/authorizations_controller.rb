@@ -14,9 +14,14 @@ class AuthorizationsController < ApplicationController
   end
 
   def show
-    authorization = Authorization.find_by(id: session[:authorization_id]&.to_i)
+    Rails.info("session[:authorization_id]: #{session[:authorization_id]}")
+    Rails.info("authorized?: #{Authorization.exists?(id: session[:authorization_id]&.to_i)}")
 
-    render json: { authorized: authorization.present? }, status: :ok
+    render json: {
+      authorized: Authorization.exists?(
+        id: session[:authorization_id]&.to_i
+      )
+    }, status: :ok
   end
 
   private
