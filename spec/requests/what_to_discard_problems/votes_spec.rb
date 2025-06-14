@@ -3,17 +3,6 @@
 require "rails_helper"
 
 describe "WhatToDiscardProblems::VotesController", type: :request do
-  describe "#index" do
-    subject { get what_to_discard_problem_votes_url(what_to_discard_problem_id: what_to_discard_problem.id) }
-
-    let(:what_to_discard_problem) { create(:what_to_discard_problem) }
-    let!(:vote) { create(:what_to_discard_problem_vote, what_to_discard_problem:) }
-
-    context "ログイン済み/未ログインの場合" do
-      it_behaves_like :response, 200
-    end
-  end
-
   describe "#create" do
     subject { post what_to_discard_problem_votes_url(what_to_discard_problem_id:), params: {
       what_to_discard_problem_vote: {

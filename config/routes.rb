@@ -22,7 +22,7 @@ Rails.application.routes.draw do
       resources :replies, module: :comments, only: %i[index create destroy]
     end
     resources :likes, module: :what_to_discard_problems, only: %i[create destroy]
-    resources :votes, module: :what_to_discard_problems, only: %i[index create destroy]
+    resources :votes, module: :what_to_discard_problems, only: %i[create destroy]
 
     scope module: :what_to_discard_problems do
       namespace :votes do

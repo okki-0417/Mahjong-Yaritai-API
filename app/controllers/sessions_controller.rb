@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 class SessionsController < ApplicationController
-  before_action :reject_logged_in_user, only: [ :create ]
+  before_action :reject_logged_in_user, only: %i[create]
   before_action :restrict_to_logged_in_user, only: [ :destroy ]
 
   def create
-    user = User.find_by(email: session_params[:email])
+    user = User.find_by!(email: session_params[:email])
 
-    if user && user.authenticate(session_params[:password])
+    if user.authenticate(session_params[:password])
       login user
       remember user
 

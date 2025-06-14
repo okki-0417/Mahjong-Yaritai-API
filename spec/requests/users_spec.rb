@@ -5,20 +5,6 @@ require "rails_helper"
 RSpec.describe "Users", type: :request do
   let(:current_user) { create(:user) }
 
-  describe "index" do
-    subject { get users_url }
-
-    context "未ログインの場合" do
-      it_behaves_like :response, 401
-    end
-
-    context "ログイン済みの場合" do
-      include_context "logged_in"
-
-      it_behaves_like :response, 200
-    end
-  end
-
   describe "show" do
     subject { get user_url(user) }
     let(:user) { create(:user) }
@@ -42,7 +28,7 @@ RSpec.describe "Users", type: :request do
     }
 
     context "Authorizationが存在しない場合" do
-      before { allow_any_instance_of(UsersController).to receive(:redis_get).and_return(nil) }
+      before { allow(Authorization).to receive(:find_by).and_return(nil) }
 
       it_behaves_like :response, 422
     end

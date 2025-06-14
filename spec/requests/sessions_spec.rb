@@ -3,13 +3,18 @@
 require "rails_helper"
 
 RSpec.describe "Sessions", type: :request do
-  let(:current_user) { FactoryBot.create(:user) }
+  let(:current_user) { create(:user, password: "password", password_confirmation: "password") }
 
   describe "#create" do
-    subject { post session_url, params: {
-      email: current_user.email,
-      password: "password"
-    }}
+    subject do
+      post session_url, params: {
+        session: {
+          email: current_user.email,
+          password:,
+        },
+      }
+    end
+    let(:password) { "password" }
 
     context "ログイン済みの場合" do
       include_context "logged_in"
@@ -31,8 +36,10 @@ RSpec.describe "Sessions", type: :request do
       context "不正な値の場合" do
         it "422を返すこと" do
           post session_url, params: {
-            email: current_user.email,
-            password: "wrong_password"
+            session: {
+              email: current_user.email,
+              password: "wrong_password"
+            }
           }
           expect(response).to have_http_status(422)
         end

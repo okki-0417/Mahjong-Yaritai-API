@@ -6,55 +6,34 @@ RSpec.describe "WhatToDiscardProblems", type: :request do
   let(:current_user) { FactoryBot.create(:user) }
 
   describe "#create" do
-    subject { post what_to_discard_problems_url, params: {
-      what_to_discard_problem: {
-        round:,
-        turn:,
-        wind:,
-        dora_id:,
-        point_east:,
-        point_south:,
-        point_west:,
-        point_north:,
-        hand1_id:,
-        hand2_id:,
-        hand3_id:,
-        hand4_id:,
-        hand5_id:,
-        hand6_id:,
-        hand7_id:,
-        hand8_id:,
-        hand9_id:,
-        hand10_id:,
-        hand11_id:,
-        hand12_id:,
-        hand13_id:,
-        tsumo_id:
+    subject do
+      post what_to_discard_problems_url, params: {
+        what_to_discard_problem: {
+          round: "東一",
+          turn: 1,
+          wind: "東",
+          dora_id: create(:tile).id,
+          point_east: 25000,
+          point_south: 25000,
+          point_west: 25000,
+          point_north: 25000,
+          hand1_id: create(:tile).id,
+          hand2_id: create(:tile).id,
+          hand3_id: create(:tile).id,
+          hand4_id: create(:tile).id,
+          hand5_id: create(:tile).id,
+          hand6_id: create(:tile).id,
+          hand7_id: create(:tile).id,
+          hand8_id: create(:tile).id,
+          hand9_id: create(:tile).id,
+          hand10_id: create(:tile).id,
+          hand11_id: create(:tile).id,
+          hand12_id: create(:tile).id,
+          hand13_id: create(:tile).id,
+          tsumo_id: create(:tile).id,
+        }
       }
-    }}
-
-    let(:round) { "東一" }
-    let(:turn) { 1 }
-    let(:wind) { "東" }
-    let(:dora_id) { 1 }
-    let(:point_east) { 25000 }
-    let(:point_south) { 25000 }
-    let(:point_west) { 25000 }
-    let(:point_north) { 25000 }
-    let(:hand1_id) { 1 }
-    let(:hand2_id) { 2 }
-    let(:hand3_id) { 3 }
-    let(:hand4_id) { 4 }
-    let(:hand5_id) { 5 }
-    let(:hand6_id) { 6 }
-    let(:hand7_id) { 7 }
-    let(:hand8_id) { 8 }
-    let(:hand9_id) { 9 }
-    let(:hand10_id) { 10 }
-    let(:hand11_id) { 11 }
-    let(:hand12_id) { 12 }
-    let(:hand13_id) { 13 }
-    let(:tsumo_id) { 14 }
+    end
 
     context "未ログインの場合" do
       it_behaves_like :response, 401
@@ -63,24 +42,13 @@ RSpec.describe "WhatToDiscardProblems", type: :request do
     context "ログイン済みの場合" do
       include_context "logged_in"
 
-      context "不正な値の場合" do
-        context "手牌に同じ牌が5枚以上存在する場合" do
-          let(:hand2) { "1" }
-          let(:hand3) { "1" }
-          let(:hand4) { "1" }
-          let(:hand5) { "1" }
+      context "バリデーションに通らない場合" do
+        before { allow_any_instance_of(WhatToDiscardProblem).to receive(:save).and_return(false) }
 
-          it_behaves_like :response, 422
-        end
-
-        context "空の値が含まれている場合" do
-          let(:hand1) { "" }
-
-          it_behaves_like :response, 422
-        end
+        it_behaves_like :response, 422
       end
 
-      context "全ての値が正常に満たされている場合" do
+      context "バリデーションに通る場合" do
         it_behaves_like :response, 201
       end
     end

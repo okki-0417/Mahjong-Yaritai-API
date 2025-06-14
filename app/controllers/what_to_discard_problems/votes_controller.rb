@@ -3,8 +3,6 @@
 class WhatToDiscardProblems::VotesController < ApplicationController
   before_action :restrict_to_logged_in_user, only: %i[create destroy]
 
-  def index; end
-
   def create
     vote = current_user.created_what_to_discard_problem_votes.new(
       what_to_discard_problem_id: params[:what_to_discard_problem_id],
