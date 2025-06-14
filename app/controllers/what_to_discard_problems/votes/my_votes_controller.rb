@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class WhatToDiscardProblems::Votes::MyVotesController < WhatToDiscardProblems::BaseController
+class WhatToDiscardProblems::Votes::MyVotesController < ApplicationController
   def show
     return render json: { my_vote: { id: nil, tile_id: nil } }, status: :ok unless logged_in?
 

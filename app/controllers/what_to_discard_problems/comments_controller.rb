@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-class WhatToDiscardProblems::CommentsController < WhatToDiscardProblems::BaseController
-  before_action :restrict_to_logged_in_user, only: [ :create ]
+class WhatToDiscardProblems::CommentsController < ApplicationController
+  before_action :restrict_to_logged_in_user, only: %i[create destroy]
 
   def index
     parent_comments = WhatToDiscardProblem.find(params[:what_to_discard_problem_id])
                                           .comments
                                           .parents
-                                          .preload(:user, :replies)
+                                          .preload(:user)
                                           .order(created_at: :asc)
 
     render json: {
@@ -25,16 +25,18 @@ class WhatToDiscardProblems::CommentsController < WhatToDiscardProblems::BaseCon
   end
 
   def create
-    comment = WhatToDiscardProblem.find(params[:what_to_discard_problem_id])
-                                  .comments
-                                  .new(**comment_params, user_id: current_user.id,)
+    comment = current_user.created_what_to_discard_problem_comments
+                          .new(
+                            what_to_discard_problem_id: params[:what_to_discard_problem_id],
+                            **comment_params,
+                          )
 
     if comment.save
-      parent_comments = WhatToDiscardProblem.find(params[:what_to_discard_problem_id])
-                                          .comments
-                                          .parents
-                                          .preload(:user, :replies)
-                                          .order(created_at: :asc)
+      parent_comments = comment.what_to_discard_problem
+                               .comments
+                               .parents
+                               .preload(:user, :replies)
+                               .order(created_at: :asc)
 
       render json: {
         what_to_discard_problem_comments: {
@@ -54,6 +56,15 @@ class WhatToDiscardProblems::CommentsController < WhatToDiscardProblems::BaseCon
     else
       render json: validation_error_json(comment), status: :unprocessable_entity
     end
+  end
+
+  def destroy
+    comment = current_user.created_what_to_discard_problem_comments
+                          .find(params[:id])
+
+    comment.destroy!
+
+    head :no_content
   end
 
   private

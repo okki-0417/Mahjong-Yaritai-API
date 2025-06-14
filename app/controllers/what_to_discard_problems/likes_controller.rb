@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class WhatToDiscardProblems::LikesController < WhatToDiscardProblems::BaseController
+class WhatToDiscardProblems::LikesController < ApplicationController
   before_action :restrict_to_logged_in_user, only: %i[create destroy]
 
   def index
@@ -33,7 +33,7 @@ class WhatToDiscardProblems::LikesController < WhatToDiscardProblems::BaseContro
   end
 
   def destroy
-    like = current_user.created_what_to_discard_problem_likes.find_by!(what_to_discard_problem_id: params[:what_to_discard_problem_id])
+    like = current_user.created_what_to_discard_problem_likes.find(params[:id])
 
     like.destroy
 

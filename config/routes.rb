@@ -1,6 +1,9 @@
 # require "sidekiq/web"
 
 Rails.application.routes.draw do
+  mount Rswag::Ui::Engine => '/api-docs'
+  mount Rswag::Api::Engine => '/api-docs'
+
   post "/graphql", to: "graphql#execute"
 
   get "/", to: "health_check#show"
@@ -15,8 +18,10 @@ Rails.application.routes.draw do
   resource :csrf_token, only: [ :show ]
 
   resources :what_to_discard_problems, only: %i[index create destroy] do
-    resources :comments, module: :what_to_discard_problems
-    resources :likes, module: :what_to_discard_problems, only: %i[index create destroy]
+    resources :comments, module: :what_to_discard_problems, only: %i[index create destroy] do
+      resources :replies, module: :comments, only: %i[index create destroy]
+    end
+    resources :likes, module: :what_to_discard_problems, only: %i[create destroy]
     resources :votes, module: :what_to_discard_problems, only: %i[index create destroy]
 
     scope module: :what_to_discard_problems do

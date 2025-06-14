@@ -1,5 +1,6 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
+
 ENV['RAILS_ENV'] = 'test'
 require_relative '../config/environment'
 
@@ -17,8 +18,6 @@ RSpec.configure do |config|
   config.fixture_paths = [
     Rails.root.join('spec/fixtures')
   ]
-
-  config.default_formatter = "documentation"
 
   config.use_transactional_fixtures = true
 

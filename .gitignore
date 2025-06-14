@@ -3,3 +3,4 @@ log/
 .env
 spec/log.txt
 storage/
+node_modules

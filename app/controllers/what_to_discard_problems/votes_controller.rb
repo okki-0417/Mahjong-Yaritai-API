@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class WhatToDiscardProblems::VotesController < WhatToDiscardProblems::BaseController
+class WhatToDiscardProblems::VotesController < ApplicationController
   before_action :restrict_to_logged_in_user, only: %i[create destroy]
 
   def index; end

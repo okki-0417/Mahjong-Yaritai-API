@@ -1,0 +1,131 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/what_to_discard_problems/{what_to_discard_problem_id}/comments":
+    parameters:
+    - name: what_to_discard_problem_id
+      in: path
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: List Comments
+      tags:
+      - Comments
+      responses:
+        '200':
+          description: successful
+    post:
+      summary: Create Comment
+      tags:
+      - Comments
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+        '422':
+          description: unprocessable_entity
+        '201':
+          description: created
+  "/what_to_discard_problems/{what_to_discard_problem_id}/comments/{id}":
+    parameters:
+    - name: what_to_discard_problem_id
+      in: path
+      required: true
+      schema:
+        type: integer
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    delete:
+      summary: Delete Comment
+      tags:
+      - Comments
+      responses:
+        '401':
+          description: unauthorized
+        '204':
+          description: no_content
+  "/what_to_discard_problems/{what_to_discard_problem_id}/likes":
+    parameters:
+    - name: what_to_discard_problem_id
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      summary: Create Like
+      tags:
+      - Likes
+      operationId: createLike
+      responses:
+        '401':
+          description: not_logged_in
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  what_to_discard_problem_like:
+                    type: object
+                    required:
+                    - myLike
+                    properties:
+                      myLike:
+                        "$ref": "#/components/schemas/Like"
+        '422':
+          description: unprocessable_entity
+  "/what_to_discard_problems/{what_to_discard_problem_id}/likes/{id}":
+    parameters:
+    - name: what_to_discard_problem_id
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    delete:
+      summary: Delete Like
+      tags:
+      - Likes
+      operationId: deleteLike
+      responses:
+        '401':
+          description: not_logged_in
+        '204':
+          description: no_content
+servers:
+- url: http://murai.local:3001
+components:
+  schemas:
+    Like:
+      type: object
+      required:
+      - id
+      - user_id
+      - what_to_discard_problem_id
+      - created_at
+      - updated_at
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        what_to_discard_problem_id:
+          type: integer
+        created_at:
+          type: string
+          format: date_time
+        updated_at:
+          type: string
+          format: date_time

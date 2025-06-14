@@ -1,34 +1,34 @@
 source "https://rubygems.org"
 
-gem "rails", "7.2.1"
+gem "active_model_serializers"
+gem "bcrypt"
+gem "bootsnap", require: false
+gem "dotenv-rails"
+gem "graphql"
+gem "image_processing", "~> 1.2"
+gem "jbuilder"
+gem "kamal", require: false
+gem "kaminari"
 gem "pg"
 gem "puma", ">= 5.0"
-gem "jbuilder"
 gem "rack-cors"
-gem "bcrypt"
-
-gem "graphql"
-
+gem "rails", "7.2.1"
 gem "redis-rails"
 gem "redis-store"
-
+gem "rswag-api"
+gem "rswag-ui"
 gem "sidekiq"
-gem "bootsnap", require: false
-gem "kamal", require: false
-gem "image_processing", "~> 1.2"
-gem "dotenv-rails"
-gem "kaminari"
-gem "active_model_serializers"
 
 group :development do
+  gem "brakeman", require: false
   gem "letter_opener_web"
   gem "rubocop-rails-omakase", require: false
-  gem "brakeman", require: false
   gem "ruby-lsp"
 end
 
 group :development, :test do
-  gem "rspec-rails", "~> 7.0.0"
   gem "debug"
   gem "factory_bot_rails"
+  gem "rspec-rails", "~> 7.0.0"
+  gem "rswag-specs"
 end

@@ -1,60 +1,123 @@
-# frozen_string_literal: true
+require "swagger_helper"
 
-require "rails_helper"
+RSpec.describe "what_to_discard_problems/comments", type: :request do
 
-RSpec.describe "WhatToDiscardProblems::Comments", type: :request do
-  describe "#index" do
-    let(:what_to_discard_problem) { FactoryBot.create(:what_to_discard_problem) }
-    let(:what_to_discard_problem_id) { 0 }
+  path "/what_to_discard_problems/{what_to_discard_problem_id}/comments" do
+    parameter name: "what_to_discard_problem_id", in: :path, type: :string
 
-    subject { get what_to_discard_problem_comments_url(what_to_discard_problem_id:) }
+    get("List Comments") do
+      tags "WhatToDiscardProblem::Comment"
+      produces "application/json"
 
-    context "投稿が存在しない場合" do
-      it_behaves_like :response, 404
+      response(200, "successful") do
+        let(:what_to_discard_problem_id) { create(:what_to_discard_problem).id }
+
+        after do |example|
+          example.metadata[:response][:content] = {
+            "application/json" => {
+              example: JSON.parse(response.body, symbolize_names: true)
+            }
+          }
+        end
+        run_test!
+      end
     end
 
-    context "投稿が存在する場合" do
-      let(:what_to_discard_problem_id) { what_to_discard_problem.id }
+    post("Create Comment") do
+      tags "WhatToDiscardProblem::Comment"
+      consumes "application/json"
+      produces "application/json"
 
-      context "コメントが存在しない場合" do
-        it_behaves_like :response, 200
+      response(401, "unauthorized") do
+        let(:what_to_discard_problem_id) { create(:what_to_discard_problem).id }
+
+        parameter name: :params, in: :body
+        let(:params) do
+          {
+            what_to_discard_problem_comment:{
+              content: "comment_content",
+              parent_comment_id: nil
+            }
+          }
+        end
+
+        run_test!
       end
 
-      context "コメントが存在する場合" do
-        let!(:what_to_discard_problem_comment) { FactoryBot.create(:what_to_discard_problem_comment, what_to_discard_problem_id:) }
+      response(422, "unprocessable_entity") do
+        let(:current_user) { create(:user) }
+        include_context "logged_in_rswag"
 
-        it_behaves_like :response, 200
+        let(:what_to_discard_problem_id) { create(:what_to_discard_problem).id }
+
+        parameter name: :params, in: :body
+        let(:params) do
+          {
+            what_to_discard_problem_comment:{
+              content: "comment_content",
+              parent_comment_id: nil
+            }
+          }
+        end
+
+        before { allow_any_instance_of(WhatToDiscardProblem::Comment).to receive(:save).and_return(false) }
+
+        run_test!
+      end
+
+      response(201, "created") do
+        let(:current_user) { create(:user) }
+        include_context "logged_in_rswag"
+
+        let(:what_to_discard_problem_id) { create(:what_to_discard_problem).id }
+
+        parameter name: :params, in: :body
+        let(:params) do
+          {
+            what_to_discard_problem_comment:{
+              content: "comment_content",
+              parent_comment_id: nil
+            }
+          }
+        end
+
+        after do |example|
+          example.metadata[:response][:content] = {
+            "application/json" => {
+              example: JSON.parse(response.body, symbolize_names: true)
+            }
+          }
+        end
+        run_test!
       end
     end
   end
 
+  path "/what_to_discard_problems/{what_to_discard_problem_id}/comments/{id}" do
+    parameter name: "what_to_discard_problem_id", in: :path, type: :string
+    parameter name: "id", in: :path, type: :string
 
-  describe "#create" do
-    let(:current_user) { FactoryBot.create(:user) }
+    delete("Delete Comment") do
+      tags "WhatToDiscardProblem::Comment"
+      consumes "application/json"
 
-    subject { post what_to_discard_problem_comments_url(what_to_discard_problem_id:), params: {
-      what_to_discard_problem_comment: {
-        parent_comment_id: nil,
-        content: "a" * 10,
-      }
-    }}
-    let(:what_to_discard_problem_id) { FactoryBot.create(:what_to_discard_problem).id }
+      response(401, "unauthorized") do
+        let(:id) { create(:what_to_discard_problem_comment, what_to_discard_problem:).id }
+        let(:what_to_discard_problem_id) { what_to_discard_problem.id }
+        let(:what_to_discard_problem) { create(:what_to_discard_problem) }
 
-    context "未ログインの場合" do
-      it_behaves_like :response, 401
-    end
-
-    context "ログイン済みの場合" do
-      include_context "logged_in"
-
-      context "モデルのバリデーションに通らない場合" do
-        before { allow_any_instance_of(WhatToDiscardProblem::Comment).to receive(:save).and_return(false) }
-
-        it_behaves_like :response, 422
+        run_test!
       end
 
-      context "モデルのバリデーションに通る場合" do
-        it_behaves_like :response, 201
+      response(204, "no_content") do
+        let(:id) { create(:what_to_discard_problem_comment, what_to_discard_problem:, user: current_user).id }
+        let(:what_to_discard_problem_id) { what_to_discard_problem.id }
+        let(:what_to_discard_problem) { create(:what_to_discard_problem) }
+
+        let(:current_user) { create(:user) }
+        include_context "logged_in_rswag"
+
+        run_test!
       end
     end
   end
