@@ -23,11 +23,12 @@ RSpec.configure do |config|
         schemas: {
           Like: {
             type: :object,
-            required: %w[id user_id what_to_discard_problem_id created_at updated_at],
+            required: %w[id user_id likable_type likable_id created_at updated_at],
             properties: {
               id: { type: :integer },
               user_id: { type: :integer },
-              what_to_discard_problem_id: { type: :integer },
+              likable_type: { type: :string },
+              likable_id: { type: :integer },
               created_at: { type: :string, format: :date_time },
               updated_at: { type: :string, format: :date_time }
             }

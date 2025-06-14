@@ -58,7 +58,7 @@ RSpec.describe "what_to_discard_problems/likes", type: :request do
 
         let(:what_to_discard_problem_id) { create(:what_to_discard_problem).id }
 
-        before { allow_any_instance_of(WhatToDiscardProblem::Like).to receive(:save).and_return(false) }
+        before { allow_any_instance_of(Like).to receive(:save).and_return(false) }
 
         run_test!
       end
@@ -76,7 +76,7 @@ RSpec.describe "what_to_discard_problems/likes", type: :request do
 
       response(401, "not_logged_in") do
         let(:what_to_discard_problem_id) { what_to_discard_problem.id }
-        let(:id) { create(:what_to_discard_problem_like, what_to_discard_problem:).id }
+        let(:id) { create(:like, likable: what_to_discard_problem).id }
         let(:what_to_discard_problem) { create(:what_to_discard_problem) }
 
         run_test!
@@ -87,7 +87,7 @@ RSpec.describe "what_to_discard_problems/likes", type: :request do
         include_context "logged_in_rswag"
 
         let(:what_to_discard_problem_id) { what_to_discard_problem.id }
-        let!(:id) { create(:what_to_discard_problem_like, what_to_discard_problem:, user: current_user).id }
+        let!(:id) { create(:like, likable: what_to_discard_problem, user: current_user).id }
         let(:what_to_discard_problem) { create(:what_to_discard_problem) }
 
         run_test!

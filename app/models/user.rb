@@ -10,7 +10,7 @@ class User < ApplicationRecord
   has_one_attached :avatar
   has_many :created_what_to_discard_problems, class_name: :WhatToDiscardProblem, dependent: :destroy
   has_many :created_what_to_discard_problem_comments, class_name: "WhatToDiscardProblem::Comment", dependent: :destroy
-  has_many :created_what_to_discard_problem_likes, class_name: "WhatToDiscardProblem::Like", dependent: :destroy
+  has_many :likes, dependent: :destroy
   has_many :created_what_to_discard_problem_votes, class_name: "WhatToDiscardProblem::Vote", dependent: :destroy
 
   attr_accessor :remember_token

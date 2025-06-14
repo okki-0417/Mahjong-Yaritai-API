@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_04_16_022636) do
+ActiveRecord::Schema[7.2].define(version: 2025_06_14_040052) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -49,6 +49,15 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_16_022636) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "likes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "likable_type", null: false
+    t.bigint "likable_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_likes_on_user_id"
+  end
+
   create_table "tiles", force: :cascade do |t|
     t.integer "suit", null: false
     t.integer "ordinal_number_in_suit", null: false
@@ -77,16 +86,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_16_022636) do
     t.index ["parent_comment_id"], name: "index_what_to_discard_problem_comments_on_parent_comment_id"
     t.index ["user_id"], name: "index_what_to_discard_problem_comments_on_user_id"
     t.index ["what_to_discard_problem_id"], name: "idx_on_what_to_discard_problem_id_8fc9afad9a"
-  end
-
-  create_table "what_to_discard_problem_likes", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "what_to_discard_problem_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id", "what_to_discard_problem_id"], name: "idx_on_user_id_what_to_discard_problem_id_1ad936df20", unique: true
-    t.index ["user_id"], name: "index_what_to_discard_problem_likes_on_user_id"
-    t.index ["what_to_discard_problem_id"], name: "idx_on_what_to_discard_problem_id_6b58ad1bc5"
   end
 
   create_table "what_to_discard_problem_votes", force: :cascade do |t|
@@ -150,11 +149,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_16_022636) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "likes", "users"
   add_foreign_key "what_to_discard_problem_comments", "users"
   add_foreign_key "what_to_discard_problem_comments", "what_to_discard_problem_comments", column: "parent_comment_id"
   add_foreign_key "what_to_discard_problem_comments", "what_to_discard_problems"
-  add_foreign_key "what_to_discard_problem_likes", "users"
-  add_foreign_key "what_to_discard_problem_likes", "what_to_discard_problems"
   add_foreign_key "what_to_discard_problem_votes", "tiles"
   add_foreign_key "what_to_discard_problem_votes", "users"
   add_foreign_key "what_to_discard_problem_votes", "what_to_discard_problems"

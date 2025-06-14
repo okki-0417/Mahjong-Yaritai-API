@@ -30,7 +30,7 @@ module Types
     field :likes_count, Int, null: false
     field :comments_count, Int, null: false
     field :votes_count, Int, null: false
-    field :my_like, Types::WhatToDiscardProblem::LikeType
+    field :my_like, Types::LikeType
     field :my_vote, Types::WhatToDiscardProblem::VoteType
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
