@@ -52,6 +52,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_06_14_071607) do
   create_table "comments", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "parent_comment_id"
+    t.integer "replies_count", default: 0, null: false
     t.string "commentable_type", null: false
     t.bigint "commentable_id", null: false
     t.string "content", limit: 500, null: false
