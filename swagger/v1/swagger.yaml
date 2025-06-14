@@ -20,6 +20,7 @@ paths:
       summary: list replies
       tags:
       - WhatToDiscardProblem:Comment:Reply
+      operationId: getReplies
       responses:
         '200':
           description: successful
@@ -38,6 +39,7 @@ paths:
       summary: create reply
       tags:
       - WhatToDiscardProblem:Comment:Reply
+      operationId: createReply
       parameters: []
       responses:
         '401':
@@ -79,6 +81,7 @@ paths:
       summary: delete reply
       tags:
       - WhatToDiscardProblem:Comment:Reply
+      operationId: deleteReply
       responses:
         '401':
           description: unauthorized
@@ -92,9 +95,10 @@ paths:
       schema:
         type: string
     get:
-      summary: List Comments
+      summary: list comments
       tags:
       - WhatToDiscardProblem::Comment
+      operationId: getComments
       responses:
         '200':
           description: successful
@@ -103,16 +107,17 @@ paths:
               schema:
                 type: object
                 required:
-                - what_to_discard_problem_comments
+                - comments
                 properties:
-                  what_to_discard_problem_comments:
+                  comments:
                     type: array
                     items:
                       "$ref": "#/components/schemas/Comment"
     post:
-      summary: Create Comment
+      summary: create comment
       tags:
       - WhatToDiscardProblem::Comment
+      operationId: createComment
       parameters: []
       responses:
         '401':
@@ -126,9 +131,9 @@ paths:
               schema:
                 type: object
                 required:
-                - what_to_discard_problem_comment
+                - comment
                 properties:
-                  what_to_discard_problem_comment:
+                  comment:
                     "$ref": "#/components/schemas/Comment"
   "/what_to_discard_problems/{what_to_discard_problem_id}/comments/{id}":
     parameters:
@@ -146,6 +151,7 @@ paths:
       summary: Delete Comment
       tags:
       - WhatToDiscardProblem::Comment
+      operationId: deleteComment
       responses:
         '401':
           description: unauthorized
@@ -161,7 +167,7 @@ paths:
     post:
       summary: Create Like
       tags:
-      - Likes
+      - WhatToDiscardProblem::Like
       operationId: createLike
       responses:
         '401':
@@ -197,7 +203,7 @@ paths:
     delete:
       summary: Delete Like
       tags:
-      - Likes
+      - WhatToDiscardProblem::Like
       operationId: deleteLike
       responses:
         '401':
@@ -236,7 +242,7 @@ components:
       type: object
       required:
       - id
-      - user_id
+      - user
       - commentable_type
       - commentable_id
       - content
@@ -245,16 +251,39 @@ components:
       properties:
         id:
           type: integer
-        user_id:
-          type: integer
+        user:
+          "$ref": "#/components/schemas/User"
         parent_comment_id:
           type: integer
+          nullable: true
         commentable_type:
           type: string
         commentable_id:
           type: integer
         content:
           type: string
+        created_at:
+          type: string
+          format: date_time
+        updated_at:
+          type: string
+          format: date_time
+    User:
+      type: object
+      required:
+      - id
+      - name
+      - avatar_url
+      - created_at
+      - updated_at
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        avatar_url:
+          type: string
+          nullable: true
         created_at:
           type: string
           format: date_time

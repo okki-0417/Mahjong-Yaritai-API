@@ -7,7 +7,8 @@
     "lib": "lib"
   },
   "scripts": {
-    "generate:client": "openapi-generator-cli generate -i swagger/v1/swagger.yaml -g typescript-fetch -o ../frontend/api-client"
+    "generate:client": "openapi-generator-cli generate -i swagger/v1/swagger.yaml -g typescript-fetch -o ../frontend/api-client",
+    "generate:model": "openapi-generator-cli generate -i swagger/v1/swagger.yaml -g typescript-fetch -o ../frontend/api-client --global-property=apis,models"
   },
   "repository": {
     "type": "git",

@@ -35,16 +35,27 @@ RSpec.configure do |config|
           },
           Comment: {
             type: :object,
-            required: %w[id user_id commentable_type commentable_id content created_at updated_at],
+            required: %w[id user commentable_type commentable_id content created_at updated_at],
             properties: {
               id: { type: :integer },
-              user_id: { type: :integer },
-              parent_comment_id: { type: %i[integer null] },
+              user: { "$ref" => "#/components/schemas/User" },
+              parent_comment_id: { type: :integer, nullable: true },
               commentable_type: { type: :string },
               commentable_id: { type: :integer },
               content: { type: :string },
               created_at: { type: :string, format: :date_time },
               updated_at: { type: :string, format: :date_time }
+            }
+          },
+          User: {
+            type: :object,
+            required: %w[id name avatar_url created_at updated_at],
+            properties: {
+              id: { type: :integer },
+              name: { type: :string },
+              avatar_url: { type: :string, nullable: true },
+              created_at: { type: :string, format: :date_time },
+              updated_at: { type: :string, format: :date_time },
             }
           }
         }

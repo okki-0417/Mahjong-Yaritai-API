@@ -10,9 +10,7 @@ class WhatToDiscardProblems::CommentsController < ApplicationController
                                           .preload(:user)
                                           .order(created_at: :asc)
 
-    render json: {
-      what_to_discard_problem_comments: parent_comments
-    }, status: :ok
+    render json: parent_comments, each_serializer: CommentSerializer, status: :ok
   end
 
   def create
@@ -23,9 +21,7 @@ class WhatToDiscardProblems::CommentsController < ApplicationController
     )
 
     if comment.save
-      render json: {
-        what_to_discard_problem_comment: comment
-      }, status: :created
+      render json: comment, serializer: CommentSerializer, status: :created
     else
       render json: validation_error_json(comment), status: :unprocessable_entity
     end

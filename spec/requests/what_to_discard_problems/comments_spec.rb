@@ -17,9 +17,9 @@ RSpec.describe "what_to_discard_problems/comments", type: :request do
         before { create(:comment, commentable: what_to_discard_problem) }
 
         schema type: :object,
-          required: %w[what_to_discard_problem_comments],
+          required: %w[comments],
           properties: {
-            what_to_discard_problem_comments: {
+            comments: {
               type: :array,
               items: { "$ref" => "#/components/schemas/Comment" }
             }
@@ -96,11 +96,11 @@ RSpec.describe "what_to_discard_problems/comments", type: :request do
         end
 
         schema type: :object,
-          required: %w[what_to_discard_problem_comment],
+          required: %w[comment],
           properties: {
-            what_to_discard_problem_comment: {
-            "$ref" => "#/components/schemas/Comment",
-          }
+            comment: {
+              "$ref" => "#/components/schemas/Comment",
+            }
           }
 
         after do |example|
