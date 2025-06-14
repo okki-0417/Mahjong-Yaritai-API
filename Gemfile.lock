@@ -94,6 +94,7 @@ GEM
       activesupport
     childprocess (5.1.0)
       logger (~> 1.5)
+    coderay (1.1.3)
     concurrent-ruby (1.3.5)
     connection_pool (2.5.0)
     crass (1.0.6)
@@ -192,6 +193,7 @@ GEM
       net-pop
       net-smtp
     marcel (1.0.4)
+    method_source (1.1.0)
     mini_magick (4.13.2)
     mini_mime (1.1.5)
     minitest (5.25.4)
@@ -237,6 +239,9 @@ GEM
       prettyprint
     prettyprint (0.2.0)
     prism (1.4.0)
+    pry (0.15.2)
+      coderay (~> 1.1)
+      method_source (~> 1.0)
     psych (5.2.2)
       date
       stringio
@@ -432,6 +437,7 @@ DEPENDENCIES
   kaminari
   letter_opener_web
   pg
+  pry
   puma (>= 5.0)
   rack-cors
   rails (= 7.2.1)

@@ -29,6 +29,7 @@ end
 group :development, :test do
   gem "debug"
   gem "factory_bot_rails"
+  gem "pry"
   gem "rspec-rails", "~> 7.0.0"
   gem "rswag-specs"
 end
