@@ -16,7 +16,7 @@ class WhatToDiscardProblems::LikesController < ApplicationController
   end
 
   def create
-    like = current_user.likes.new(
+    like = current_user.created_likes.new(
       likable_type: WhatToDiscardProblem.name,
       likable_id: params[:what_to_discard_problem_id]
     )
@@ -33,7 +33,7 @@ class WhatToDiscardProblems::LikesController < ApplicationController
   end
 
   def destroy
-    like = current_user.likes.find(params[:id])
+    like = current_user.created_likes.find(params[:id])
 
     like.destroy
 
