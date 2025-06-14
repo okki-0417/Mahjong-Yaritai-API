@@ -2,9 +2,10 @@
 
 class WhatToDiscardProblem < ApplicationRecord
   belongs_to :user
-  has_many :comments, class_name: "WhatToDiscardProblem::Comment", dependent: :destroy
+  has_many :comments, as: :commentable, dependent: :destroy
   has_many :likes, as: :likable, dependent: :destroy
   has_many :votes, class_name: "WhatToDiscardProblem::Vote", dependent: :destroy
+
   belongs_to :dora, class_name: :Tile
   belongs_to :hand1, class_name: :Tile
   belongs_to :hand2, class_name: :Tile

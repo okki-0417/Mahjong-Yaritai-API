@@ -152,7 +152,7 @@ if Rails.env.development?
   problem = FactoryBot.create(:what_to_discard_problem, user:, dora_id: 11, hand1_id: 3, hand2_id: 4, hand3_id: 5, hand4_id: 7, hand5_id: 7, hand6_id: 9, hand7_id: 10, hand8_id: 10, hand9_id: 10, hand10_id: 14, hand11_id: 16, hand12_id: 18, hand13_id: 24, tsumo_id: 25)
 
   FactoryBot.create(:like, likable: problem, user:)
-  FactoryBot.create(:what_to_discard_problem_comment, what_to_discard_problem_id: problem.id, user:)
+  FactoryBot.create(:comment, commentable: problem, user:)
 
   (1..50).each do |i|
     FactoryBot.create(:what_to_discard_problem_vote, what_to_discard_problem_id: problem.id, tile_id: rand(1..14))

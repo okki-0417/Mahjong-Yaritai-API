@@ -25,14 +25,15 @@ class WhatToDiscardProblems::CommentsController < ApplicationController
   end
 
   def create
-    comment = current_user.created_what_to_discard_problem_comments
+    comment = current_user.created_comments
                           .new(
-                            what_to_discard_problem_id: params[:what_to_discard_problem_id],
+                            commentable_type: WhatToDiscardProblem.name,
+                            commentable_id: params[:what_to_discard_problem_id],
                             **comment_params,
                           )
 
     if comment.save
-      parent_comments = comment.what_to_discard_problem
+      parent_comments = comment.commentable
                                .comments
                                .parents
                                .preload(:user, :replies)
@@ -50,7 +51,7 @@ class WhatToDiscardProblems::CommentsController < ApplicationController
               }
             }
           ),
-          total_count: comment.what_to_discard_problem.comments_count
+          total_count: comment.commentable.comments_count
         }
       }, status: :created
     else
@@ -59,7 +60,7 @@ class WhatToDiscardProblems::CommentsController < ApplicationController
   end
 
   def destroy
-    comment = current_user.created_what_to_discard_problem_comments
+    comment = current_user.created_comments
                           .find(params[:id])
 
     comment.destroy!

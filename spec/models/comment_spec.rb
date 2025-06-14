@@ -2,10 +2,10 @@
 
 require "rails_helper"
 
-RSpec.describe WhatToDiscardProblem::Comment, type: :model do
+RSpec.describe Comment, type: :model do
   describe "validations" do
-    let(:user_id) { FactoryBot.create(:user).id }
-    let(:what_to_discard_problem_id) { FactoryBot.create(:what_to_discard_problem).id }
+    let(:user_id) { create(:user).id }
+    let(:commentable) { create(:what_to_discard_problem) }
     let(:parent_comment_id) { nil }
 
     let(:content) { nil }
@@ -13,7 +13,8 @@ RSpec.describe WhatToDiscardProblem::Comment, type: :model do
     subject {
       described_class.new(
         user_id:,
-        what_to_discard_problem_id:,
+        commentable_type: commentable.class.name,
+        commentable_id: commentable.id,
         parent_comment_id:,
         content:,
       )
@@ -50,7 +51,7 @@ RSpec.describe WhatToDiscardProblem::Comment, type: :model do
           end
 
           context "存在する親コメントを参照している場合" do
-            let(:parent_comment_id) { FactoryBot.create(:what_to_discard_problem_comment).id }
+            let(:parent_comment_id) { create(:comment) }
 
             it_behaves_like :valid
           end

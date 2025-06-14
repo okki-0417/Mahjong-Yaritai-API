@@ -60,7 +60,7 @@ RSpec.describe "what_to_discard_problems/comments", type: :request do
           }
         end
 
-        before { allow_any_instance_of(WhatToDiscardProblem::Comment).to receive(:save).and_return(false) }
+        before { allow_any_instance_of(Comment).to receive(:save).and_return(false) }
 
         run_test!
       end
@@ -102,7 +102,7 @@ RSpec.describe "what_to_discard_problems/comments", type: :request do
       consumes "application/json"
 
       response(401, "unauthorized") do
-        let(:id) { create(:what_to_discard_problem_comment, what_to_discard_problem:).id }
+        let(:id) { create(:comment, commentable: what_to_discard_problem).id }
         let(:what_to_discard_problem_id) { what_to_discard_problem.id }
         let(:what_to_discard_problem) { create(:what_to_discard_problem) }
 
@@ -110,7 +110,7 @@ RSpec.describe "what_to_discard_problems/comments", type: :request do
       end
 
       response(204, "no_content") do
-        let(:id) { create(:what_to_discard_problem_comment, what_to_discard_problem:, user: current_user).id }
+        let(:id) { create(:comment, commentable: what_to_discard_problem, user: current_user).id }
         let(:what_to_discard_problem_id) { what_to_discard_problem.id }
         let(:what_to_discard_problem) { create(:what_to_discard_problem) }
 
