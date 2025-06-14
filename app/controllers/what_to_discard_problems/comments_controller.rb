@@ -11,48 +11,20 @@ class WhatToDiscardProblems::CommentsController < ApplicationController
                                           .order(created_at: :asc)
 
     render json: {
-      what_to_discard_problem_comments: parent_comments.as_json(
-        only: [:id, :content, :created_at],
-        include: {
-          user: { only: [:id, :name] },
-          replies: {
-            only: [:id, :content, :created_at],
-            include: { user: { only: [:id, :name] } }
-          }
-        }
-      )
+      what_to_discard_problem_comments: parent_comments
     }, status: :ok
   end
 
   def create
-    comment = current_user.created_comments
-                          .new(
-                            commentable_type: WhatToDiscardProblem.name,
-                            commentable_id: params[:what_to_discard_problem_id],
-                            **comment_params,
-                          )
+    comment = current_user.created_comments.new(
+      commentable_type: WhatToDiscardProblem.name,
+      commentable_id: params[:what_to_discard_problem_id],
+      **comment_params,
+    )
 
     if comment.save
-      parent_comments = comment.commentable
-                               .comments
-                               .parents
-                               .preload(:user, :replies)
-                               .order(created_at: :asc)
-
       render json: {
-        what_to_discard_problem_comments: {
-          comments: parent_comments.as_json(
-            only: [:id, :content, :created_at],
-            include: {
-              user: { only: [:id, :name] },
-              replies: {
-                only: [:id, :content, :created_at],
-                include: { user: { only: [:id, :name] } }
-              }
-            }
-          ),
-          total_count: comment.commentable.comments_count
-        }
+        what_to_discard_problem_comment: comment
       }, status: :created
     else
       render json: validation_error_json(comment), status: :unprocessable_entity

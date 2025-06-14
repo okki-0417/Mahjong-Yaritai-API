@@ -4,24 +4,40 @@ info:
   title: API V1
   version: v1
 paths:
-  "/what_to_discard_problems/{what_to_discard_problem_id}/comments":
+  "/what_to_discard_problems/{what_to_discard_problem_id}/comments/{comment_id}/replies":
     parameters:
     - name: what_to_discard_problem_id
       in: path
       required: true
       schema:
-        type: integer
+        type: string
+    - name: comment_id
+      in: path
+      required: true
+      schema:
+        type: string
     get:
-      summary: List Comments
+      summary: list replies
       tags:
-      - Comments
+      - WhatToDiscardProblem:Comment:Reply
       responses:
         '200':
           description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - what_to_discard_problem_comment_replies
+                properties:
+                  what_to_discard_problem_comment_replies:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/Comment"
     post:
-      summary: Create Comment
+      summary: create reply
       tags:
-      - Comments
+      - WhatToDiscardProblem:Comment:Reply
       parameters: []
       responses:
         '401':
@@ -30,22 +46,106 @@ paths:
           description: unprocessable_entity
         '201':
           description: created
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - what_to_discard_problem_comment_reply
+                properties:
+                  what_to_discard_problem_comment_reply:
+                    "$ref": "#/components/schemas/Comment"
+  "/what_to_discard_problems/{what_to_discard_problem_id}/comments/{comment_id}/replies/{id}":
+    parameters:
+    - name: what_to_discard_problem_id
+      in: path
+      description: what_to_discard_problem_id
+      required: true
+      schema:
+        type: string
+    - name: comment_id
+      in: path
+      description: comment_id
+      required: true
+      schema:
+        type: string
+    - name: id
+      in: path
+      description: id
+      required: true
+      schema:
+        type: string
+    delete:
+      summary: delete reply
+      tags:
+      - WhatToDiscardProblem:Comment:Reply
+      responses:
+        '401':
+          description: unauthorized
+        '204':
+          description: no_content
+  "/what_to_discard_problems/{what_to_discard_problem_id}/comments":
+    parameters:
+    - name: what_to_discard_problem_id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: List Comments
+      tags:
+      - WhatToDiscardProblem::Comment
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - what_to_discard_problem_comments
+                properties:
+                  what_to_discard_problem_comments:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/Comment"
+    post:
+      summary: Create Comment
+      tags:
+      - WhatToDiscardProblem::Comment
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+        '422':
+          description: unprocessable_entity
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - what_to_discard_problem_comment
+                properties:
+                  what_to_discard_problem_comment:
+                    "$ref": "#/components/schemas/Comment"
   "/what_to_discard_problems/{what_to_discard_problem_id}/comments/{id}":
     parameters:
     - name: what_to_discard_problem_id
       in: path
       required: true
       schema:
-        type: integer
+        type: string
     - name: id
       in: path
       required: true
       schema:
-        type: integer
+        type: string
     delete:
       summary: Delete Comment
       tags:
-      - Comments
+      - WhatToDiscardProblem::Comment
       responses:
         '401':
           description: unauthorized
@@ -113,7 +213,8 @@ components:
       required:
       - id
       - user_id
-      - what_to_discard_problem_id
+      - likable_type
+      - likable_id
       - created_at
       - updated_at
       properties:
@@ -121,8 +222,39 @@ components:
           type: integer
         user_id:
           type: integer
-        what_to_discard_problem_id:
+        likable_type:
+          type: string
+        likable_id:
           type: integer
+        created_at:
+          type: string
+          format: date_time
+        updated_at:
+          type: string
+          format: date_time
+    Comment:
+      type: object
+      required:
+      - id
+      - user_id
+      - commentable_type
+      - commentable_id
+      - content
+      - created_at
+      - updated_at
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        parent_comment_id:
+          type: integer
+        commentable_type:
+          type: string
+        commentable_id:
+          type: integer
+        content:
+          type: string
         created_at:
           type: string
           format: date_time

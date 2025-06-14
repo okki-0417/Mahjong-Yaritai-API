@@ -6,7 +6,7 @@ RSpec.describe "what_to_discard_problems/likes", type: :request do
     parameter name: "what_to_discard_problem_id", in: :path, type: :string, required: true
 
     post "Create Like" do
-      tags "Likes"
+      tags "WhatToDiscardProblem::Like"
       operationId "createLike"
       consumes "application/json"
       produces "application/json"
@@ -70,7 +70,7 @@ RSpec.describe "what_to_discard_problems/likes", type: :request do
     parameter name: "id", in: :path, type: :string, required: true
 
     delete "Delete Like" do
-      tags "Likes"
+      tags "WhatToDiscardProblem::Like"
       operationId "deleteLike"
       produces "application/json"
 

@@ -35,7 +35,17 @@ RSpec.configure do |config|
           },
           Comment: {
             type: :object,
-            required: %w[id user_id what_to_discard_problem_id created_at updated_at],
+            required: %w[id user_id commentable_type commentable_id content created_at updated_at],
+            properties: {
+              id: { type: :integer },
+              user_id: { type: :integer },
+              parent_comment_id: { type: %i[integer null] },
+              commentable_type: { type: :string },
+              commentable_id: { type: :integer },
+              content: { type: :string },
+              created_at: { type: :string, format: :date_time },
+              updated_at: { type: :string, format: :date_time }
+            }
           }
         }
       }
