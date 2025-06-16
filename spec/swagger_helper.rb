@@ -35,11 +35,12 @@ RSpec.configure do |config|
           },
           Comment: {
             type: :object,
-            required: %w[id user commentable_type commentable_id content created_at updated_at],
+            required: %w[id user replies_count commentable_type commentable_id content created_at updated_at],
             properties: {
               id: { type: :integer },
               user: { "$ref" => "#/components/schemas/User" },
               parent_comment_id: { type: :integer, nullable: true },
+              replies_count: { type: :integer },
               commentable_type: { type: :string },
               commentable_id: { type: :integer },
               content: { type: :string },

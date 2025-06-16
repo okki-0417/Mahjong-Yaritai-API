@@ -243,6 +243,7 @@ components:
       required:
       - id
       - user
+      - replies_count
       - commentable_type
       - commentable_id
       - content
@@ -256,6 +257,8 @@ components:
         parent_comment_id:
           type: integer
           nullable: true
+        replies_count:
+          type: integer
         commentable_type:
           type: string
         commentable_id:

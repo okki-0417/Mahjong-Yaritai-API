@@ -4,7 +4,7 @@ class Comment < ApplicationRecord
   belongs_to :user
   belongs_to :commentable, polymorphic: true, counter_cache: true
   belongs_to :parent_comment, class_name: :Comment, foreign_key: :parent_comment_id, optional: true, counter_cache: true
-  has_many :replies, class_name: :Comment, foreign_key: :parent_comment_id
+  has_many :replies, class_name: :Comment, foreign_key: :parent_comment_id, dependent: :destroy
 
   validates :content, presence: true, length: { maximum: 500 }
   validate :check_parent_comment_association
