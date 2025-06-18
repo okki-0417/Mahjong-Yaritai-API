@@ -29,64 +29,12 @@ paths:
               schema:
                 type: object
                 required:
-                - what_to_discard_problem_comment_replies
+                - comments
                 properties:
-                  what_to_discard_problem_comment_replies:
+                  comments:
                     type: array
                     items:
                       "$ref": "#/components/schemas/Comment"
-    post:
-      summary: create reply
-      tags:
-      - WhatToDiscardProblem:Comment:Reply
-      operationId: createReply
-      parameters: []
-      responses:
-        '401':
-          description: unauthorized
-        '422':
-          description: unprocessable_entity
-        '201':
-          description: created
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                - what_to_discard_problem_comment_reply
-                properties:
-                  what_to_discard_problem_comment_reply:
-                    "$ref": "#/components/schemas/Comment"
-  "/what_to_discard_problems/{what_to_discard_problem_id}/comments/{comment_id}/replies/{id}":
-    parameters:
-    - name: what_to_discard_problem_id
-      in: path
-      description: what_to_discard_problem_id
-      required: true
-      schema:
-        type: string
-    - name: comment_id
-      in: path
-      description: comment_id
-      required: true
-      schema:
-        type: string
-    - name: id
-      in: path
-      description: id
-      required: true
-      schema:
-        type: string
-    delete:
-      summary: delete reply
-      tags:
-      - WhatToDiscardProblem:Comment:Reply
-      operationId: deleteReply
-      responses:
-        '401':
-          description: unauthorized
-        '204':
-          description: no_content
   "/what_to_discard_problems/{what_to_discard_problem_id}/comments":
     parameters:
     - name: what_to_discard_problem_id
