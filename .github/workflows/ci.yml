@@ -42,11 +42,11 @@ jobs:
 
     services:
       postgres:
-        image: postgres:17.0
+        image: postgres:14.0
         env:
-          DATABASE_USER: postgres
-          DATABASE_PASSWORD: password
-          DATABASE_NAME: database_test
+          POSTGRES_DATABASE: database
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
         ports:
           - 5432:5432
         options: >-
