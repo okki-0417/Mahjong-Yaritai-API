@@ -19,7 +19,7 @@ Rails.application.routes.draw do
 
   resources :what_to_discard_problems, only: %i[index create destroy] do
     resources :comments, module: :what_to_discard_problems, only: %i[index create destroy] do
-      resources :replies, module: :comments, only: %i[index create destroy]
+      resources :replies, module: :comments, only: %i[index]
     end
     resources :likes, module: :what_to_discard_problems, only: %i[create destroy]
     resources :votes, module: :what_to_discard_problems, only: %i[create destroy]

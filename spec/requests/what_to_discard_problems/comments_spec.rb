@@ -41,17 +41,30 @@ RSpec.describe "what_to_discard_problems/comments", type: :request do
       operationId "createComment"
       consumes "application/json"
       produces "application/json"
+      parameter name: :request_params, in: :body, schema: {
+        type: :object,
+        required: %w[what_to_discard_problem_comment],
+        properties: {
+          what_to_discard_problem_comment: {
+            type: :object,
+            required: %w[parent_comment_id content],
+            properties: {
+              parent_comment_id: { type: :string, nullable: true },
+              content: { type: :string },
+            }
+          }
+        }
+      }
 
       response(401, "unauthorized") do
         let(:what_to_discard_problem_id) { create(:what_to_discard_problem).id }
 
-        parameter name: :params, in: :body
-        let(:params) do
+        let(:request_params) do
           {
-            what_to_discard_problem_comment:{
-              content: "comment_content",
-              parent_comment_id: nil
-            }
+            what_to_discard_problem_comment: {
+              parent_comment_id: nil,
+              content: "content",
+            },
           }
         end
 
@@ -64,13 +77,12 @@ RSpec.describe "what_to_discard_problems/comments", type: :request do
 
         let(:what_to_discard_problem_id) { create(:what_to_discard_problem).id }
 
-        parameter name: :params, in: :body
-        let(:params) do
+        let(:request_params) do
           {
-            what_to_discard_problem_comment:{
-              content: "comment_content",
-              parent_comment_id: nil
-            }
+            what_to_discard_problem_comment: {
+              parent_comment_id: nil,
+              content: "content",
+            },
           }
         end
 
@@ -85,13 +97,12 @@ RSpec.describe "what_to_discard_problems/comments", type: :request do
 
         let(:what_to_discard_problem_id) { create(:what_to_discard_problem).id }
 
-        parameter name: :params, in: :body
-        let(:params) do
+        let(:request_params) do
           {
-            what_to_discard_problem_comment:{
-              content: "comment_content",
-              parent_comment_id: nil
-            }
+            what_to_discard_problem_comment: {
+              parent_comment_id: nil,
+              content: "content",
+            },
           }
         end
 

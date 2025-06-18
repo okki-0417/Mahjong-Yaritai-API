@@ -135,6 +135,25 @@ paths:
                 properties:
                   comment:
                     "$ref": "#/components/schemas/Comment"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - what_to_discard_problem_comment
+              properties:
+                what_to_discard_problem_comment:
+                  type: object
+                  required:
+                  - parent_comment_id
+                  - content
+                  properties:
+                    parent_comment_id:
+                      type: string
+                      nullable: true
+                    content:
+                      type: string
   "/what_to_discard_problems/{what_to_discard_problem_id}/comments/{id}":
     parameters:
     - name: what_to_discard_problem_id
