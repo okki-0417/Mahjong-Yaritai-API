@@ -24,6 +24,3 @@ Style/TrailingCommaInArrayLiteral:
 Style/MultilineMethodCallIndentation:
   EnforcedStyle: aligned
 
-Style/MethodCallWithArgsParentheses:
-  EnforcedStyle: require_parentheses
-
