@@ -41,8 +41,8 @@ module Resolvers
             next_page: problems.next_page,
             first_page: 1,
             last_page: problems.total_pages,
-          }
-        }
+          },
+        },
       }
     end
   end

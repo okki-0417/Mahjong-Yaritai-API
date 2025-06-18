@@ -10,7 +10,7 @@ module Paginationable
         next_page: pagination_records.next_page,
         first_page: 1,
         last_page: pagination_records.total_pages,
-      }
+      },
     }
   end
 end

@@ -8,7 +8,7 @@ RSpec.describe AuthorizationsController, type: :request do
       post authorization_url,
         params: {
           authorization: {
-            token:
+            token:,
           },
         }
     end

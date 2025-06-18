@@ -17,16 +17,16 @@ Rails.application.configure do
                         servers: [
                           {
                             url: ENV.fetch("REDIS_URL"),
-                            logger: Rails.logger
-                          }
+                            logger: Rails.logger,
+                          },
                         ],
                         key: "_mahjong_yaritai_session",
                         secure: true
 
   config.cache_store = :redis_cache_store, {
     urls: [
-      ENV.fetch("REDIS_URL")
-    ]
+      ENV.fetch("REDIS_URL"),
+    ],
   }
 
   MahjongYaritaiApp::Application.config.middleware.swap Rails::Rack::Logger, CustomLogger
@@ -41,7 +41,7 @@ Rails.application.configure do
     authentication:  "plain",                      # 認証方式（通常は "plain" で問題なし）
     enable_starttls: true,                         # STARTTLS を使用して暗号化
     open_timeout:    5,
-    read_timeout:    5
+    read_timeout:    5,
   }
   config.action_mailer.default_url_options = { host: ENV.fetch("FRONTEND_HOST") }
 

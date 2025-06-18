@@ -13,7 +13,7 @@ class SessionsController < ApplicationController
 
       render json: { session: {
           is_logged_in: logged_in?,
-          user_id: current_user.id
+          user_id: current_user.id,
         } }, status: :created
     else
       render json: { errors: [ { message: "Not authorized" } ] }, status: :unprocessable_entity
@@ -24,8 +24,8 @@ class SessionsController < ApplicationController
     render json: {
       session: {
         is_logged_in: logged_in?,
-        user_id: current_user&.id
-      }
+        user_id: current_user&.id,
+      },
     }, status: :ok
   end
 

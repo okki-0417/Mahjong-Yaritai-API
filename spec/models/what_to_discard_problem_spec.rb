@@ -21,7 +21,7 @@ RSpec.describe WhatToDiscardProblem, type: :model do
     let(:hand7_id) { create(:tile, suit: "manzu", ordinal_number_in_suit: 7, name: "七萬").id }
     let(:hand8_id) { create(:tile, suit: "manzu", ordinal_number_in_suit: 8, name: "八萬").id }
     let(:hand9_id) { create(:tile, suit: "manzu", ordinal_number_in_suit: 9, name: "九萬").id }
-    let(:hand10_id) { create(:tile, suit: "pinzu", ordinal_number_in_suit: 1 , name: "一筒").id }
+    let(:hand10_id) { create(:tile, suit: "pinzu", ordinal_number_in_suit: 1, name: "一筒").id }
     let(:hand11_id) { create(:tile, suit: "pinzu", ordinal_number_in_suit: 2, name: "二筒").id }
     let(:hand12_id) { create(:tile, suit: "pinzu", ordinal_number_in_suit: 3, name: "三筒").id }
     let(:hand13_id) { create(:tile, suit: "pinzu", ordinal_number_in_suit: 4, name: "四筒").id }

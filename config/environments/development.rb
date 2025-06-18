@@ -7,7 +7,7 @@ Rails.application.configure do
   config.consider_all_requests_local = true
 
   config.cache_store = :redis_cache_store, {
-    url: ENV.fetch("REDIS_URL")
+    url: ENV.fetch("REDIS_URL"),
   }
 
   config.middleware.use ActionDispatch::Cookies

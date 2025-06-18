@@ -23,7 +23,7 @@ RSpec.describe "Users", type: :request do
           name:,
           password:,
           password_confirmation:,
-        }
+        },
       }
     }
 
@@ -54,8 +54,8 @@ RSpec.describe "Users", type: :request do
     let(:updated_name) { "updated_name" }
     subject { patch user_url(current_user), params: {
       user: {
-        name: updated_name
-        }
+        name: updated_name,
+        },
     }}
 
     context "未ログインの場合" do

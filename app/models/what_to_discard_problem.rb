@@ -33,7 +33,8 @@ class WhatToDiscardProblem < ApplicationRecord
   validate :confirm_no_more_than_four_duplicated_tiles
 
   def hand_ids
-    [hand1_id, hand2_id, hand3_id, hand4_id, hand5_id, hand6_id, hand7_id, hand8_id, hand9_id, hand10_id, hand11_id, hand12_id, hand13_id, tsumo_id]
+    [hand1_id, hand2_id, hand3_id, hand4_id, hand5_id, hand6_id, hand7_id, hand8_id, hand9_id, hand10_id, hand11_id,
+hand12_id, hand13_id, tsumo_id,]
   end
 
   def voted_by?(user)

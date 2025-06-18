@@ -1,7 +1,6 @@
 require "swagger_helper"
 
 RSpec.describe "what_to_discard_problems/comments/replies", type: :request do
-
   path "/what_to_discard_problems/{what_to_discard_problem_id}/comments/{comment_id}/replies" do
     parameter name: "what_to_discard_problem_id", in: :path, type: :string
     parameter name: "comment_id", in: :path, type: :string
@@ -32,8 +31,8 @@ RSpec.describe "what_to_discard_problems/comments/replies", type: :request do
         after do |example|
           example.metadata[:response][:content] = {
             "application/json" => {
-              example: JSON.parse(response.body, symbolize_names: true)
-            }
+              example: JSON.parse(response.body, symbolize_names: true),
+            },
           }
         end
         run_test!

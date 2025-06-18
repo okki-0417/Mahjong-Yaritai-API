@@ -14,7 +14,7 @@ class Authorization < ApplicationRecord
   private
 
   def generate_token
-    self.token = SecureRandom.random_number(10 ** 6).to_s.rjust(6, '0')
+    self.token = SecureRandom.random_number(10 ** 6).to_s.rjust(6, "0")
   end
 
   def check_email_uniqueness

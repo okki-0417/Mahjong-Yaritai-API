@@ -7,7 +7,7 @@ shared_context "logged_in" do
         session: {
           email: current_user.email,
           password: "password",
-        }
+        },
       }
     end
   end

@@ -11,7 +11,7 @@ class WhatToDiscardProblems::LikesController < ApplicationController
       what_to_discard_problem_likes: {
         count: likes.size,
         is_current_user_liked:,
-      }
+      },
     }, status: 200
   end
 
@@ -25,7 +25,7 @@ class WhatToDiscardProblems::LikesController < ApplicationController
       render json: {
         what_to_discard_problem_like: {
           myLike: like,
-        }
+        },
       }, status: :created
     else
       render json: validation_error_json(like), status: :unprocessable_entity
@@ -39,8 +39,8 @@ class WhatToDiscardProblems::LikesController < ApplicationController
 
     render json: {
       what_to_discard_problem_like: {
-        myLike: nil
-      }
+        myLike: nil,
+      },
     }, status: :no_content
   end
 end

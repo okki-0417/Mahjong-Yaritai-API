@@ -20,11 +20,11 @@ FactoryBot.define do
     association(:hand7, factory: :tile)
     association(:hand8, factory: :tile)
     association(:hand9, factory: :tile)
-    association(:hand10 , factory: :tile)
-    association(:hand11 , factory: :tile)
-    association(:hand12 , factory: :tile)
-    association(:hand13 , factory: :tile)
-    association(:tsumo , factory: :tile)
+    association(:hand10, factory: :tile)
+    association(:hand11, factory: :tile)
+    association(:hand12, factory: :tile)
+    association(:hand13, factory: :tile)
+    association(:tsumo, factory: :tile)
 
     trait :dev do
       dora_id { 1 }

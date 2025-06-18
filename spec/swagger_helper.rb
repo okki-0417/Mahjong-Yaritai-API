@@ -11,13 +11,13 @@ RSpec.configure do |config|
       openapi: "3.0.1",
       info: {
         title: "API V1",
-        version: "v1"
+        version: "v1",
       },
       paths: {},
       servers: [
         {
           url: "http://murai.local:3001",
-        }
+        },
       ],
       components: {
         schemas: {
@@ -30,8 +30,8 @@ RSpec.configure do |config|
               likable_type: { type: :string },
               likable_id: { type: :integer },
               created_at: { type: :string, format: :date_time },
-              updated_at: { type: :string, format: :date_time }
-            }
+              updated_at: { type: :string, format: :date_time },
+            },
           },
           Comment: {
             type: :object,
@@ -45,8 +45,8 @@ RSpec.configure do |config|
               commentable_id: { type: :integer },
               content: { type: :string },
               created_at: { type: :string, format: :date_time },
-              updated_at: { type: :string, format: :date_time }
-            }
+              updated_at: { type: :string, format: :date_time },
+            },
           },
           User: {
             type: :object,
@@ -57,10 +57,10 @@ RSpec.configure do |config|
               avatar_url: { type: :string, nullable: true },
               created_at: { type: :string, format: :date_time },
               updated_at: { type: :string, format: :date_time },
-            }
-          }
-        }
-      }
-    }
+            },
+          },
+        },
+      },
+    },
   }
 end

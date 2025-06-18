@@ -31,7 +31,7 @@ RSpec.describe "WhatToDiscardProblems", type: :request do
           hand12_id: create(:tile).id,
           hand13_id: create(:tile).id,
           tsumo_id: create(:tile).id,
-        }
+        },
       }
     end
 

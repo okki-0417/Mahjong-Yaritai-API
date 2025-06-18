@@ -9,7 +9,7 @@ class GraphqlController < ApplicationController
     query = params[:query]
     operation_name = params[:operationName]
     context = {
-      current_user:
+      current_user:,
     }
     result = MahjongYaritaiAppSchema.execute(query, variables:, context:, operation_name:)
     # Rails.logger.debug("\n********************GraphQL result: #{result.to_json}**********************\n")

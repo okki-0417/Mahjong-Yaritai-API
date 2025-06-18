@@ -10,7 +10,7 @@ RSpec.describe "AuthorizationSessionsController", type: :request do
       params: {
         authorization_session: {
           email:,
-        }
+        },
       }
     }
 

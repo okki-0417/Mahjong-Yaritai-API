@@ -38,8 +38,8 @@ RSpec.describe "Sessions", type: :request do
           post session_url, params: {
             session: {
               email: current_user.email,
-              password: "wrong_password"
-            }
+              password: "wrong_password",
+            },
           }
           expect(response).to have_http_status(422)
         end

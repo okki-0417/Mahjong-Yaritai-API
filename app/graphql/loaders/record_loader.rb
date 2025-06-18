@@ -7,7 +7,6 @@ class Loaders::RecordLoader < GraphQL::Dataloader::Source
   end
 
   def fetch(keys)
-    @model.where(@column => keys).index_by(&@column)
-         .values_at(*keys)
+    @model.where(@column => keys).index_by(&@column).values_at(*keys)
   end
 end

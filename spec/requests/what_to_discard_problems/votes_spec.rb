@@ -6,8 +6,8 @@ describe "WhatToDiscardProblems::VotesController", type: :request do
   describe "#create" do
     subject { post what_to_discard_problem_votes_url(what_to_discard_problem_id:), params: {
       what_to_discard_problem_vote: {
-        tile_id:
-      }
+        tile_id:,
+      },
     } }
     let(:what_to_discard_problem_id) { create(:what_to_discard_problem).id }
     let(:tile_id) { create(:tile).id }
@@ -33,7 +33,8 @@ describe "WhatToDiscardProblems::VotesController", type: :request do
   end
 
   describe "#destroy" do
-    subject { delete what_to_discard_problem_vote_url(what_to_discard_problem_id: what_to_discard_problem.id, id: vote.id) }
+    subject {
+ delete what_to_discard_problem_vote_url(what_to_discard_problem_id: what_to_discard_problem.id, id: vote.id) }
 
     let(:what_to_discard_problem) { create(:what_to_discard_problem) }
     let(:vote) { create(:what_to_discard_problem_vote, what_to_discard_problem:, user: current_user) }

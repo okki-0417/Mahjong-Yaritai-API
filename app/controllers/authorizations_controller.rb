@@ -12,7 +12,7 @@ class AuthorizationsController < ApplicationController
 
       head :ok
     else
-      return render json: {}, status: :unprocessable_entity
+      render json: {}, status: :unprocessable_entity
     end
   end
 
@@ -23,7 +23,7 @@ class AuthorizationsController < ApplicationController
     render json: {
       authorized: Authorization.exists?(
         id: session[:authorization_id]&.to_i
-      )
+      ),
     }, status: :ok
   end
 

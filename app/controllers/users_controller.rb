@@ -17,7 +17,7 @@ class UsersController < ApplicationController
 
       render json: { user: { id: user.id, name: user.name } }, status: :created
     else
-      render json: { errors: user.errors.full_messages.map{ |message|  { message: } } }, status: :unprocessable_entity
+      render json: { errors: user.errors.full_messages.map { |message|  { message: } } }, status: :unprocessable_entity
     end
   end
 
