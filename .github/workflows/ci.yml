@@ -57,6 +57,9 @@ jobs:
 
     env:
       RAILS_ENV: test
+      DATABASE_NAME: database
+      DATABASE_USER: user
+      DATABASE_PASSWORD: root_password
       DATABASE_HOST: postgres
 
     steps:
