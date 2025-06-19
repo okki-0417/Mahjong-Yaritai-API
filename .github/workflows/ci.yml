@@ -37,51 +37,94 @@ jobs:
       - name: Lint code for consistent style
         run: bin/rubocop -f github
 
-  test:
+  build:
+    # Job name is Greeting
+    name: verify
+    # This job runs on Linux
     runs-on: ubuntu-latest
-
     services:
       postgres:
-        image: postgres:17.0
+        image: postgres:12
         ports:
           - 5432:5432
         env:
-          POSTGRES_HOST: postgres
-          POSTGRES_USER: user
+          POSTGRES_USER: postgres
           POSTGRES_PASSWORD: password
-          POSTGRES_DB: database_test
+          POSTGRES_DB: test
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-
-    env:
-      RAILS_ENV: test
-      DATABASE_NAME: database
-      DATABASE_USER: user
-      DATABASE_PASSWORD: password
-      DATABASE_HOST: postgres
+    container:
+      image: ruby:2.5.3
+      env:
+        RAILS_ENV: test
+        DATABASE_HOST: postgres
+        DATABASE_USER: postgres
+        DATABASE_PASSWORD: password
 
     steps:
-      - name: Install packages
-        run: sudo apt-get update && sudo apt-get install -y libvips libpq-dev
-
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: bundler set up
+        run: |
+          gem install bundler
+          bundle install
+      - name: install node
+        uses: actions/setup-node@v1
         with:
-          ruby-version: .ruby-version
-          bundler-cache: true
+          node-version: '12'
 
-      - name: Set up database
-        run: bin/rails db:prepare
+      - name: db migrate
+        run: |
+          bundle exec rails db:migrate
 
-      - name: Run RSpec
-        run: bundle exec rspec
+      - name: verify
+        run: |
+          bundle exec rubocop
+          bundle exec rspec
+  # test:
+  #   runs-on: ubuntu-latest
 
-      - name: Keep screenshots from failed system tests
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: screenshots
-          path: ${{ github.workspace }}/tmp/screenshots
-          if-no-files-found: ignore
+  #   services:
+  #     postgres:
+  #       image: postgres:17.0
+  #       ports:
+  #         - 5432:5432
+  #       env:
+  #         POSTGRES_HOST: postgres
+  #         POSTGRES_USER: user
+  #         POSTGRES_PASSWORD: password
+  #         POSTGRES_DB: database_test
+  #       options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+  #   env:
+  #     RAILS_ENV: test
+  #     DATABASE_NAME: database
+  #     DATABASE_USER: user
+  #     DATABASE_PASSWORD: password
+  #     DATABASE_HOST: postgres
+
+  #   steps:
+  #     - name: Install packages
+  #       run: sudo apt-get update && sudo apt-get install -y libvips libpq-dev
+
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+
+  #     - name: Set up Ruby
+  #       uses: ruby/setup-ruby@v1
+  #       with:
+  #         ruby-version: .ruby-version
+  #         bundler-cache: true
+
+  #     - name: Set up database
+  #       run: bin/rails db:prepare
+
+  #     - name: Run RSpec
+  #       run: bundle exec rspec
+
+  #     - name: Keep screenshots from failed system tests
+  #       uses: actions/upload-artifact@v4
+  #       if: failure()
+  #       with:
+  #         name: screenshots
+  #         path: ${{ github.workspace }}/tmp/screenshots
+  #         if-no-files-found: ignore
