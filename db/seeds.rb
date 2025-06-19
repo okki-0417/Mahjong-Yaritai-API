@@ -2,6 +2,8 @@
 
 require "factory_bot_rails"
 
+return if Rails.env.test?
+
 user = FactoryBot.create(:user, name: "murai", email:  "ouki.murai@gmail.com")
 
 if Rails.env.development?
