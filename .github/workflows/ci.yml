@@ -44,7 +44,7 @@ jobs:
       postgres:
         image: postgres:14.0
         env:
-          POSTGRES_DATABASE: database_test
+          POSTGRES_DB: database_test
           POSTGRES_USER: user
           POSTGRES_PASSWORD: password
         ports:
