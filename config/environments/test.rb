@@ -1,3 +1,9 @@
+Rails.logger.info "DATABASE_USER is #{ENV['DATABASE_USER']}"
+Rails.logger.info "DATABASE_HOST is #{ENV['DATABASE_HOST']}"
+Rails.logger.info "DATABASE_PASSWORD is #{ENV['DATABASE_PASSWORD']}"
+Rails.logger.info "DATABASE_NAME is #{ENV['DATABASE_NAME']}"
+
+
 Rails.application.configure do
   config.enable_reloading = false
   config.eager_load = ENV["CI"].present?
