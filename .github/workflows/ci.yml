@@ -57,20 +57,9 @@ jobs:
       DATABASE_USER: user
       DATABASE_PASSWORD: password
       DATABASE_NAME: database
+      MAIL_ADDRESS: test@test.com
 
     steps:
-      # - name: Wait for Postgres
-      #   run: |
-      #     for i in {1..15}; do
-      #       pg_isready -h postgres -U user && echo "Postgres is ready!" && exit 0
-      #       echo "Waiting for Postgres... ($i)"
-      #       sleep 2
-      #     done
-      #     echo "Postgres failed to start in time" >&2
-      #     exit 1
-      #   env:
-      #     PGPASSWORD: password
-
       - name: Checkout code
         uses: actions/checkout@v4
 
