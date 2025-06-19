@@ -53,7 +53,7 @@ jobs:
 
     env:
       RAILS_ENV: test
-      DATABASE_HOST: postgres
+      DATABASE_HOST: localhost
       DATABASE_USER: user
       DATABASE_PASSWORD: password
       DATABASE_NAME: database
