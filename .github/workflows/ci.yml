@@ -68,7 +68,8 @@ jobs:
             done
             echo "Postgres failed to start in time" >&2
             exit 1
-          env:
+        env:
+          PGPASSWORD: password
 
       - name: Checkout code
         uses: actions/checkout@v4
