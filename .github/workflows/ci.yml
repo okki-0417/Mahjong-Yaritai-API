@@ -74,7 +74,7 @@ jobs:
       - name: Check PostgreSQL connection
         run: |
           echo "Checking if host 'postgres' is reachable..."
-          apt-get update && apt-get install -y postgresql-client
+          sudo apt-get update && sudo apt-get install -y postgresql-client
           PGPASSWORD=password psql -h postgres -U user -d test -c '\l'
 
 
