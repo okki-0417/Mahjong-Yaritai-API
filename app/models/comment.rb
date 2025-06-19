@@ -30,6 +30,6 @@ class Comment < ApplicationRecord
     return if parent_comment?
     return if Comment.exists?(id: parent_comment_id)
 
-    errors.add(:parent_comment_id, "親コメントが見つかりません")
+    errors.add(:parent_comment_id, :missing_parent_comment)
   end
 end
