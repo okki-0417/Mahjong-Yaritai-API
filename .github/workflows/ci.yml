@@ -71,6 +71,13 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
+      - name: Check PostgreSQL connection
+        run: |
+          echo "Checking if host 'postgres' is reachable..."
+          apt-get update && apt-get install -y postgresql-client
+          PGPASSWORD=password psql -h postgres -U user -d test -c '\l'
+
+
       - name: Setup database
         run: |
           cp config/database.ci.yml config/database.yml
