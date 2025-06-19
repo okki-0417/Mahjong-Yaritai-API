@@ -1,10 +1,3 @@
-puts "RAILS_ENV is #{ENV['RAILS_ENV']}"
-puts "DATABASE_USER is #{ENV['DATABASE_USER']}"
-puts "DATABASE_HOST is #{ENV['DATABASE_HOST']}"
-puts "DATABASE_PASSWORD is #{ENV['DATABASE_PASSWORD']}"
-puts "DATABASE_NAME is #{ENV['DATABASE_NAME']}"
-
-
 Rails.application.configure do
   config.enable_reloading = false
   config.eager_load = ENV["CI"].present?
