@@ -46,6 +46,7 @@ jobs:
         ports:
           - 5432:5432
         env:
+          POSTGRES_HOST: postgres
           POSTGRES_USER: user
           POSTGRES_PASSWORD: password
           POSTGRES_DB: test
@@ -67,10 +68,7 @@ jobs:
       - name: Setup database
         run: |
           cp config/database.ci.yml config/database.yml
-          bundle exec rails db:create RAILS_ENV=test
-          bundle exec rails db:migrate RAILS_ENV=test
-      # - name: Set up database
-      #   run: bin/rails db:prepare
+          bin/rails db:prepare RAILS_ENV=test
 
       - name: Run RSpec
         run: bundle exec rspec
