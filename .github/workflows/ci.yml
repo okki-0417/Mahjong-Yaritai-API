@@ -44,7 +44,7 @@ jobs:
       postgres:
         image: postgres:14.0
         env:
-          POSTGRES_DATABASE: database
+          POSTGRES_DATABASE: database_test
           POSTGRES_USER: user
           POSTGRES_PASSWORD: password
         ports:
@@ -59,7 +59,7 @@ jobs:
       RAILS_ENV: test
       DATABASE_NAME: database
       DATABASE_USER: user
-      DATABASE_PASSWORD: root_password
+      DATABASE_PASSWORD: password
       DATABASE_HOST: postgres
 
     steps:
