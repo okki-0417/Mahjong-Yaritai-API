@@ -46,11 +46,17 @@ jobs:
         ports:
           - 5432:5432
         env:
-          POSTGRES_HOST: postgres
           POSTGRES_USER: user
           POSTGRES_PASSWORD: password
           POSTGRES_DB: test
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    env:
+      RAILS_ENV: test
+      DATABASE_HOST: postgres
+      DATABASE_USER: user
+      DATABASE_PASSWORD: password
+      DATABASE_NAME: test
 
     steps:
       - name: Checkout code
