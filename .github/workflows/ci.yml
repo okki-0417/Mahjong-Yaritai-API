@@ -41,36 +41,24 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      postgres:
-        image: postgres:14.0
+      db:
+        image: postgres:17.0
         ports:
           - 5432:5432
         env:
           POSTGRES_USER: user
           POSTGRES_PASSWORD: password
-          POSTGRES_DB: test
+          POSTGRES_DB: database_test
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     env:
       RAILS_ENV: test
-      DATABASE_HOST: postgres
+      DATABASE_HOST: db
       DATABASE_USER: user
       DATABASE_PASSWORD: password
-      DATABASE_NAME: test
+      DATABASE_NAME: database
 
     steps:
-      - name: Check PostgreSQL connection
-        run: |
-          echo "Testing PostgreSQL connection to host=$DATABASE_HOST..."
-          apt-get update && apt-get install -y postgresql-client
-          for i in {1..10}; do
-            pg_isready -h $DATABASE_HOST -U $DATABASE_USER && echo "Postgres is ready!" && exit 0
-            echo "Waiting for Postgres... ($i)"
-            sleep 2
-          done
-          echo "Postgres failed to start in time" >&2
-          exit 1
-
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -84,9 +72,7 @@ jobs:
           bundler-cache: true
 
       - name: Setup database
-        run: |
-          cp config/database.ci.yml config/database.yml
-          bin/rails db:prepare RAILS_ENV=test
+        run: bin/rails db:prepare
 
       - name: Run RSpec
         run: bundle exec rspec
