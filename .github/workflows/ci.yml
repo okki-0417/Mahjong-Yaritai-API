@@ -71,12 +71,15 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
-      - name: Check PostgreSQL connection
+      - name: Wait for PostgreSQL
         run: |
-          echo "Checking if host 'postgres' is reachable..."
-          sudo apt-get update && sudo apt-get install -y postgresql-client
-          PGPASSWORD=password psql -h postgres -U user -d test -c '\l'
-
+          for i in {1..15}; do
+            pg_isready -h postgres -U user && echo "Postgres is ready!" && exit 0
+            echo "Waiting for Postgres... ($i)"
+            sleep 2
+          done
+          echo "Postgres failed to start in time" >&2
+          exit 1
 
       - name: Setup database
         run: |
