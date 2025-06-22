@@ -1,6 +1,5 @@
 databases:
   - name: MahjongYaritaiDB
-    postgresMajorVersion: 17
     databaseName: database_d74c
     user: root
     region: singapore
