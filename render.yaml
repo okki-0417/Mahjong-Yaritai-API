@@ -45,7 +45,7 @@ services:
       - key: MAIL_PASSWORD
         sync: false
       - key: RAILS_ENV
-        sync: production
+        value: production
       - key: RAILS_MASTER_KEY
         sync: false
       - key: SECRET_KEY_BASE
