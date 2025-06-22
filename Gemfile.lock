@@ -183,7 +183,7 @@ GEM
       letter_opener (~> 1.9)
       railties (>= 6.1)
       rexml
-    logger (1.6.5)
+    logger (1.7.0)
     loofah (2.24.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -374,7 +374,7 @@ GEM
       rubocop-minitest
       rubocop-performance
       rubocop-rails
-    ruby-lsp (0.23.13)
+    ruby-lsp (0.23.14)
       language_server-protocol (~> 3.17.0)
       prism (>= 1.2, < 2.0)
       rbs (>= 3, < 4)
@@ -390,7 +390,7 @@ GEM
       logger
       rack (>= 2.2.4)
       redis-client (>= 0.22.2)
-    sorbet-runtime (0.5.11971)
+    sorbet-runtime (0.5.12003)
     sshkit (1.23.2)
       base64
       net-scp (>= 1.1.2)
