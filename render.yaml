@@ -1,22 +1,55 @@
 databases:
   - name: MahjongYaritaiDB
-    databaseName: <%= ENV.fetch("DATABASE_NAME") %>
+    postgresMajorVersion: 17
+    databaseName: MahjongYaritaiApp
     user: MahjongYaritaiApp
     region: singapore
+    ipAllowList: []
 
 services:
   - type: web
     name: MahjongYaritaiApp
-    env: ruby
+    runtime: ruby
     region: singapore
     plan: free
-    buildCommand: "./bin/render-build.sh"
-    startCommand: "bundle exec puma -C config/puma.rb"
+    repo: https://github.com/okki-0417/Mahjong-Yaritai-API
+    branch: main
+    autoDeployTrigger: checksPass
+    healthCheckPath: /
+    dockerfilePath: ./Dockerfile
     envVars:
-      - key: DATABASE_URL
+      - key: DATABASE_HOST
         fromDatabase:
           name: MahjongYaritaiDB
           property: connectionString
+      - key: DATABASE_NAME
+        fromDatabase:
+          name: MahjongYaritaiDB
+          property: connectionString
+      - key: DATABASE_PASSWORD
+        fromDatabase:
+          name: MahjongYaritaiDB
+          property: connectionString
+      - key: DATABASE_USER
+        fromDatabase:
+          name: MahjongYaritaiDB
+          property: connectionString
+      - key: FRONTEND_HOST
+        sync: false
+      - key: FRONTEND_ORIGIN
+        sync: false
+      - key: HOST_NAME
+        sync: false
+      - key: MAIL_ADDRESS
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+      - key: RAILS_ENV
+        sync: production
       - key: RAILS_MASTER_KEY
+        sync: false
+      - key: SECRET_KEY_BASE
+        sync: false
+      - key: USER_AGENT
         sync: false
 
