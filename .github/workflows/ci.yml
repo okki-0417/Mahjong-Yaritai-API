@@ -58,6 +58,7 @@ jobs:
       DATABASE_PASSWORD: password
       DATABASE_NAME: database
       MAIL_ADDRESS: test@test.com
+      FRONTEND_ORIGIN: frontend.com
 
     steps:
       - name: Checkout code
