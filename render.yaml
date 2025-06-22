@@ -1,15 +1,15 @@
 databases:
   - name: MahjongYaritaiDB
     postgresMajorVersion: 17
-    databaseName: MahjongYaritaiApp
-    user: MahjongYaritaiApp
+    databaseName: database_d74c
+    user: root
     region: singapore
     ipAllowList: []
 
 services:
   - type: web
     name: MahjongYaritaiApp
-    runtime: ruby
+    runtime: docker
     region: singapore
     plan: free
     repo: https://github.com/okki-0417/Mahjong-Yaritai-API
