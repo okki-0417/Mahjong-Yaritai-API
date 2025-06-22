@@ -1,13 +1,12 @@
 databases:
   - name: MahjongYaritaiDB
-    databaseName: database_d74c
-    user: root
+    postgresMajorVersion: 16
     region: singapore
     ipAllowList: []
 
 services:
-  - type: web
-    name: MahjongYaritaiApp
+  - name: MahjongYaritaiApp
+    type: web
     runtime: docker
     region: singapore
     plan: free
@@ -33,6 +32,9 @@ services:
         fromDatabase:
           name: MahjongYaritaiDB
           property: connectionString
+      - key: REDIS_URL
+        fromService: MahJongYaritaiRedis
+        property: hostport
       - key: FRONTEND_HOST
         sync: false
       - key: FRONTEND_ORIGIN
@@ -52,3 +54,11 @@ services:
       - key: USER_AGENT
         sync: false
 
+
+services:
+  - name: MahJongYaritaiRedis
+    type: keyvalue
+    plan: free
+    region: singapore
+    maxmemoryPolicy: allkeys-lru
+    ipAllowList: []
