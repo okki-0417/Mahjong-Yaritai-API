@@ -53,9 +53,6 @@ services:
         sync: false
       - key: USER_AGENT
         sync: false
-
-
-services:
   - name: MahJongYaritaiRedis
     type: keyvalue
     plan: free
