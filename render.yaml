@@ -2,6 +2,7 @@ databases:
   - name: MahjongYaritaiDB
     postgresMajorVersion: 16
     region: singapore
+    plan: free
     ipAllowList: []
 
 services:
