@@ -22,19 +22,15 @@ services:
       - key: DATABASE_HOST
         fromDatabase:
           name: MahjongYaritaiDB
-          property: connectionString
+          property: host
       - key: DATABASE_NAME
-        fromDatabase:
-          name: MahjongYaritaiDB
-          property: connectionString
+        value: db_mahjong_yaritai
       - key: DATABASE_PASSWORD
-        fromDatabase:
-          name: MahjongYaritaiDB
-          property: connectionString
+        value: Must be fulfilled after the database creation.
       - key: DATABASE_USER
-        fromDatabase:
-          name: MahjongYaritaiDB
-          property: connectionString
+        value: mahjong_yaritai_root
+      - key: HOST_NAME
+        value: Must be fulfilled after the web server creation.
       - key: REDIS_HOST
         fromService:
           name: MahJongYaritaiRedis
@@ -48,8 +44,6 @@ services:
       - key: FRONTEND_HOST
         sync: false
       - key: FRONTEND_ORIGIN
-        sync: false
-      - key: HOST_NAME
         sync: false
       - key: MAIL_ADDRESS
         sync: false
