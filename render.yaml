@@ -1,6 +1,8 @@
 databases:
   - name: MahjongYaritaiDB
     postgresMajorVersion: 16
+    databaseName: db_mahjong_yaritai
+    user: mahjong_yaritai_root
     region: singapore
     plan: free
     ipAllowList: []
