@@ -9,27 +9,22 @@ Rails.application.configure do
   config.public_file_server.headers = { "cache-control" => "public, max-age=#{1.year.to_i}" }
 
   config.middleware.use ActionDispatch::Cookies
-  config.middleware.use ActionDispatch::Session::RedisStore
+  config.middleware.use ActionDispatch::Session::RedisStore,
+    same_site: :lax,
+    key: "_mj_session_id",
+    expire_after: 1.month
+
+  config.session_store :redis_store,
+    servers: [
+      {
+        host: ENV.fetch("REDIS_HOST"),
+        port: ENV.fetch("REDIS_PORT"),
+      },
+    ]
 
   config.active_storage.service = :local
 
-  config.session_store :redis_store,
-                        servers: [
-                          {
-                            url: ENV.fetch("REDIS_URL"),
-                            logger: Rails.logger,
-                          },
-                        ],
-                        key: "_mahjong_yaritai_session",
-                        secure: true
-
-  config.cache_store = :redis_cache_store, {
-    urls: [
-      ENV.fetch("REDIS_URL"),
-    ],
-  }
-
-  MahjongYaritaiApp::Application.config.middleware.swap Rails::Rack::Logger, CustomLogger
+  config.middleware.swap Rails::Rack::Logger, CustomLogger
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {

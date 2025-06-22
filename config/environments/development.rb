@@ -11,13 +11,18 @@ Rails.application.configure do
   }
 
   config.middleware.use ActionDispatch::Cookies
-  config.middleware.use ActionDispatch::Session::RedisStore
+  config.middleware.use ActionDispatch::Session::RedisStore,
+    same_site: :lax,
+    key: "_dev_session_id",
+    expire_after: 1.month
 
   config.session_store :redis_store,
-                        servers: [ENV.fetch("REDIS_URL")],
-                        expire_after: 20.years,
-                        key: "_api_app_session",
-                        secure: true
+    servers: [
+      {
+        host: ENV.fetch("REDIS_HOST"),
+        port: ENV.fetch("REDIS_PORT"),
+      },
+    ]
 
   config.log_level = :debug
   config.log_tags = [:request_id]

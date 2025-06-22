@@ -14,13 +14,17 @@ module Authenticatable
 
     cookies.permanent.signed[:user_id] = {
       value: user.id,
-      secure: true,
+      # NOTE: sameSite:None かつ secure:false だと GoogleChrome では無効化される
+      # NOTE: sameSiteが空の場合は基本的にLaxと同じ挙動をする
+      same_site: Rails.env.production? ? :none : :lax,
+      secure: Rails.env.production?,
       httponly: true,
     }
 
     cookies.permanent.signed[:remember_token] = {
       value: user.remember_token,
-      secure: true,
+      secure: Rails.env.production?,
+      same_site: Rails.env.production? ? :none : :lax,
       httponly: true,
     }
   end

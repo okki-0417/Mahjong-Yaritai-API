@@ -32,11 +32,16 @@ services:
         fromDatabase:
           name: MahjongYaritaiDB
           property: connectionString
-      - key: REDIS_URL
+      - key: REDIS_HOST
         fromService:
           name: MahJongYaritaiRedis
           type: keyvalue
-          property: hostport
+          property: host
+      - key: REDIS_PORT
+        fromService:
+          name: MahJongYaritaiRedis
+          type: keyvalue
+          property: port
       - key: FRONTEND_HOST
         sync: false
       - key: FRONTEND_ORIGIN
