@@ -1,0 +1,9 @@
+#!/bin/sh
+
+echo "Running pre-commit hook..."
+bin/rubocop
+
+if [ $? -ne 0 ]; then
+  echo "RuboCop failed. Commit aborted."
+  exit 1
+fi
