@@ -14,8 +14,8 @@ module Authenticatable
 
     cookies.permanent.signed[:user_id] = {
       value: user.id,
-      # NOTE: sameSite:None かつ secure:false だと GoogleChrome では無効化される
-      # NOTE: sameSiteが空の場合は基本的にLaxと同じ挙動をする
+      # sameSite:None かつ secure:false だと GoogleChrome では無効化されてしまうので、
+      # 開発時はバックエンドとフロントエンドともに同じホストで起動する想定で Lax を指定
       same_site: Rails.env.production? ? :none : :lax,
       secure: Rails.env.production?,
       httponly: true,
