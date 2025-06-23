@@ -9,10 +9,10 @@ module Resolvers
 
     def resolve(page:, per: 20)
       problems = WhatToDiscardProblem.all
-                                     .page(page)
-                                     .order(created_at: :desc)
-                                     .per(per)
-                                     .preload(
+        .page(page)
+        .order(created_at: :desc)
+        .per(per)
+        .preload(
                                       :dora,
                                       :hand1,
                                       :hand2,

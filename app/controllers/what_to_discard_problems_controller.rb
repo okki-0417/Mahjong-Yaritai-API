@@ -5,9 +5,9 @@ class WhatToDiscardProblemsController < ApplicationController
 
   def index
     problems = WhatToDiscardProblem.preload(:user)
-                                   .order(created_at: :desc)
-                                   .page(params[:page])
-                                   .per(3)
+      .order(created_at: :desc)
+      .page(params[:page])
+      .per(3)
 
     render json: problems, each_serializer: WhatToDiscardProblemSerializer, meta: pagination_data(problems), status: :ok
   end

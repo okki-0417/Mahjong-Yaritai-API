@@ -5,10 +5,10 @@ class WhatToDiscardProblems::CommentsController < ApplicationController
 
   def index
     parent_comments = WhatToDiscardProblem.find(params[:what_to_discard_problem_id])
-                                          .comments
-                                          .parents
-                                          .preload(:user)
-                                          .order(created_at: :asc)
+      .comments
+      .parents
+      .preload(:user)
+      .order(created_at: :asc)
 
     render json: parent_comments, each_serializer: CommentSerializer, status: :ok
   end
@@ -29,7 +29,7 @@ class WhatToDiscardProblems::CommentsController < ApplicationController
 
   def destroy
     comment = current_user.created_comments
-                          .find(params[:id])
+      .find(params[:id])
 
     comment.destroy!
 
