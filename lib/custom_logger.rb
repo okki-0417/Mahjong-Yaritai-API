@@ -3,6 +3,7 @@ class CustomLogger < Rails::Rack::Logger
     user_agent = env["HTTP_USER_AGENT"].to_s
 
     if user_agent.include?(ENV.fetch("USER_AGENT"))
+      # デプロイツールからのヘルスチェックのログを出さないため
       Rails.logger.silence { super }
     else
       super

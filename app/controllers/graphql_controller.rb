@@ -12,7 +12,6 @@ class GraphqlController < ApplicationController
       current_user:,
     }
     result = MahjongYaritaiAppSchema.execute(query, variables:, context:, operation_name:)
-    # Rails.logger.debug("\n********************GraphQL result: #{result.to_json}**********************\n")
 
     render json: result
   rescue StandardError => e

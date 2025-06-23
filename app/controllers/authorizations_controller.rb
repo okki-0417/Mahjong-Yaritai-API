@@ -5,10 +5,7 @@ class AuthorizationsController < ApplicationController
     authorization = Authorization.find_by(token: token_params[:token])
 
     if authorization && !authorization.expired?
-      Rails.logger.info("authorization: #{authorization}")
-
       session[:authorization_id] = authorization.id
-      Rails.logger.info("session[:authorization_id]: #{session[:authorization_id]}")
 
       head :ok
     else
@@ -17,9 +14,6 @@ class AuthorizationsController < ApplicationController
   end
 
   def show
-    Rails.logger.info("session[:authorization_id]: #{session[:authorization_id]}")
-    Rails.logger.info("authorized?: #{Authorization.exists?(id: session[:authorization_id]&.to_i)}")
-
     render json: {
       authorized: Authorization.exists?(
         id: session[:authorization_id]&.to_i
