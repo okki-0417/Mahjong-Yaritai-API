@@ -16,7 +16,7 @@ Rails.application.configure do
         port: ENV.fetch("REDIS_PORT"),
       },
     ],
-    same_site: :lax,
+    same_site: :none,
     key: "_mj_session_id",
     expire_after: 1.month
 
