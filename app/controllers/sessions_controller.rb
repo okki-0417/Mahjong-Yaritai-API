@@ -8,13 +8,13 @@ class SessionsController < ApplicationController
     user = User.find_by!(email: session_params[:email])
 
     if user.authenticate(session_params[:password])
-      login user
-      remember user
+    login user
+    remember user
 
-      render json: { session: {
-          is_logged_in: logged_in?,
-          user_id: current_user.id,
-        } }, status: :created
+    render json: { session: {
+        is_logged_in: logged_in?,
+        user_id: current_user.id,
+      } }, status: :created
     else
       render json: { errors: [ { message: "Not authorized" } ] }, status: :unprocessable_entity
     end

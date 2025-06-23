@@ -6,23 +6,19 @@ Rails.application.configure do
   config.eager_load = false
   config.consider_all_requests_local = true
 
-  config.cache_store = :redis_cache_store, {
-    url: ENV.fetch("REDIS_URL"),
-  }
-
   config.middleware.use ActionDispatch::Cookies
   config.middleware.use ActionDispatch::Session::RedisStore,
-    same_site: :lax,
-    key: "_dev_session_id",
-    expire_after: 1.month
-
-  config.session_store :redis_store,
     servers: [
       {
         host: ENV.fetch("REDIS_HOST"),
         port: ENV.fetch("REDIS_PORT"),
       },
-    ]
+    ],
+    same_site: :lax,
+    key: "_dev_session_id",
+    expire_after: 1.month
+
+  config.session_store :redis_store
 
   config.log_level = :debug
   config.log_tags = [:request_id]

@@ -10,11 +10,17 @@ Rails.application.configure do
 
   config.middleware.use ActionDispatch::Cookies
   config.middleware.use ActionDispatch::Session::RedisStore,
+    servers: [
+      {
+        host: ENV.fetch("REDIS_HOST"),
+        port: ENV.fetch("REDIS_PORT"),
+      },
+    ],
     same_site: :lax,
     key: "_mj_session_id",
     expire_after: 1.month
 
-  config.session_store :redis_store, servers: ["redis://#{ENV.fetch("REDIS_HOST")}:#{ENV.fetch("REDIS_PORT")}"]
+  config.session_store :redis_store
 
   config.active_storage.service = :local
 
