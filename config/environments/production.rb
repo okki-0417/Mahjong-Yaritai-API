@@ -14,13 +14,7 @@ Rails.application.configure do
     key: "_mj_session_id",
     expire_after: 1.month
 
-  config.session_store :redis_store,
-    servers: [
-      {
-        host: ENV.fetch("REDIS_HOST"),
-        port: ENV.fetch("REDIS_PORT"),
-      },
-    ]
+  config.session_store :redis_store, servers: ["redis://#{ENV.fetch("REDIS_HOST")}:#{ENV.fetch("REDIS_PORT")}"]
 
   config.active_storage.service = :local
 
