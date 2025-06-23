@@ -1,7 +1,15 @@
 #!/bin/sh
 
 echo "Running pre-commit hook..."
-bin/rubocop
+
+files=$(git diff --cached --name-only --diff-filter=ACM | grep '\.rb$')
+
+if [ -z "$files" ]; then
+  echo "No Ruby files staged for commit."
+  exit 0
+fi
+
+bin/rubocop $files
 
 if [ $? -ne 0 ]; then
   echo "RuboCop failed. Commit aborted."
