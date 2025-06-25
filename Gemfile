@@ -18,6 +18,9 @@ gem "redis-store"
 gem "rswag-api"
 gem "rswag-ui"
 gem "sidekiq"
+gem "stackprof"
+gem "sentry-ruby"
+gem "sentry-rails"
 
 group :development do
   gem "brakeman", require: false
