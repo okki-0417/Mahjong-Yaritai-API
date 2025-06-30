@@ -36,9 +36,10 @@ paths:
                       maxLength: 64
   "/authorization":
     post:
-      summary: show authorization
+      summary: create authorization
       tags:
       - Authorization
+      operationId: createAuthorization
       parameters: []
       responses:
         '403':
@@ -132,6 +133,7 @@ paths:
       summary: create user
       tags:
       - User
+      operationId: createUser
       parameters: []
       responses:
         '403':
@@ -202,6 +204,15 @@ paths:
           description: unprocessable_entity
         '200':
           description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - user
+                properties:
+                  user:
+                    "$ref": "#/components/schemas/User"
       requestBody:
         content:
           application/json:
@@ -285,9 +296,10 @@ paths:
                 required:
                 - what_to_discard_problem_comments
                 properties:
-                  type: array
-                  items:
-                    "$ref": "#/components/schemas/Comment"
+                  what_to_discard_problem_comments:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/Comment"
     post:
       summary: create comment
       tags:
@@ -379,7 +391,7 @@ paths:
                 - what_to_discard_problem_like
                 properties:
                   what_to_discard_problem_like:
-                    "$req": "#/components/schemas/Like"
+                    "$ref": "#/components/schemas/Like"
   "/what_to_discard_problems/{what_to_discard_problem_id}/likes/{id}":
     parameters:
     - name: what_to_discard_problem_id
@@ -489,6 +501,9 @@ paths:
         type: string
     delete:
       summary: delete vote
+      tags:
+      - WhatToDiscardProblem::Vote
+      operationId: deleteVote
       responses:
         '204':
           description: no_content
@@ -515,6 +530,120 @@ paths:
                       "$ref": "#/components/schemas/WhatToDiscardProblem"
                   meta:
                     "$ref": "#/components/schemas/Pagination"
+    post:
+      summary: create what_to_discard_problem
+      tags:
+      - WhatToDiscardProblem
+      operationId: createWhatToDiscardProblem
+      parameters: []
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - what_to_discard_problem
+                properties:
+                  what_to_discard_problem:
+                    "$ref": "#/components/schemas/WhatToDiscardProblem"
+        '401':
+          description: unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - what_to_discard_problem
+              properties:
+                what_to_discard_problem:
+                  type: object
+                  required:
+                  - round
+                  - turn
+                  - wind
+                  - dora_id
+                  - point_east
+                  - point_south
+                  - point_west
+                  - point_north
+                  - hand1_id
+                  - hand2_id
+                  - hand3_id
+                  - hand4_id
+                  - hand5_id
+                  - hand6_id
+                  - hand7_id
+                  - hand8_id
+                  - hand9_id
+                  - hand10_id
+                  - hand11_id
+                  - hand12_id
+                  - hand13_id
+                  - tsumo_id
+                  properties:
+                    round:
+                      type: string
+                    turn:
+                      type: integer
+                    wind:
+                      type: string
+                    dora_id:
+                      type: integer
+                    point_east:
+                      type: integer
+                    point_south:
+                      type: integer
+                    point_west:
+                      type: integer
+                    point_north:
+                      type: integer
+                    hand1_id:
+                      type: integer
+                    hand2_id:
+                      type: integer
+                    hand3_id:
+                      type: integer
+                    hand4_id:
+                      type: integer
+                    hand5_id:
+                      type: integer
+                    hand6_id:
+                      type: integer
+                    hand7_id:
+                      type: integer
+                    hand8_id:
+                      type: integer
+                    hand9_id:
+                      type: integer
+                    hand10_id:
+                      type: integer
+                    hand11_id:
+                      type: integer
+                    hand12_id:
+                      type: integer
+                    hand13_id:
+                      type: integer
+                    tsumo_id:
+                      type: integer
+  "/what_to_discard_problems/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: id
+      required: true
+      schema:
+        type: string
+    delete:
+      summary: delete what_to_discard_problem
+      tags:
+      - WhatToDiscardProblem
+      operationId: deleteWhatToDiscardProblem
+      responses:
+        '401':
+          description: unauthorized
 servers:
 - url: http://murai.local:3001
 components:
@@ -625,6 +754,7 @@ components:
     WhatToDiscardProblem:
       type: object
       required:
+      - id
       - user
       - round
       - turn
@@ -654,6 +784,8 @@ components:
       - created_at
       - updated_at
       properties:
+        id:
+          type: integer
         user:
           "$ref": "#/components/schemas/User"
         round:
@@ -744,6 +876,8 @@ components:
       - created_at
       - updated_at
       properties:
+        id:
+          type: integer
         user_id:
           type: integer
         round:
@@ -805,12 +939,15 @@ components:
     Tile:
       type: object
       required:
+      - id
       - suit
       - ordinal_number_in_suit
       - name
       - created_at
       - updated_at
       properties:
+        id:
+          type: integer
         suit:
           type: string
         ordinal_number_in_suit:

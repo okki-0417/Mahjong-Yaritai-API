@@ -25,12 +25,18 @@ class UsersController < ApplicationController
   def show
     user = User.find(params[:id])
 
-    render json: user, serializer: UserSerializer, status: :ok
+    render json: user,
+      serializer: UserSerializer,
+      root: :user,
+      status: :ok
   end
 
   def update
     if current_user.update(user_update_params)
-      render json: current_user, serializer: UserSerializer, status: :ok
+      render json: current_user,
+        serializer: UserSerializer,
+        root: :user,
+        status: :ok
     else
       render json: validation_error_json(current_user), status: :unprocessable_entity
     end
@@ -43,9 +49,9 @@ class UsersController < ApplicationController
 
   private
 
-  def user_params
-    params.require(:user).permit(:name, :email, :password, :password_confirmation)
-  end
+    def user_params
+      params.require(:user).permit(:name, :email, :password, :password_confirmation)
+    end
 
   def user_update_params
     params.require(:user).permit(:name, :avatar)

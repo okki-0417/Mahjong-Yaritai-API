@@ -21,7 +21,10 @@ class SessionsController < ApplicationController
   end
 
   def show
-    render json: current_user, serializer: SessionSerializer, status: :ok
+    render json: current_user,
+      serializer: SessionSerializer,
+      root: :session,
+      status: :ok
   end
 
   def destroy
@@ -32,7 +35,7 @@ class SessionsController < ApplicationController
 
   private
 
-  def session_params
-    params.require(:session).permit(:email, :password)
-  end
+    def session_params
+      params.require(:session).permit(:email, :password)
+    end
 end

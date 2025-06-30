@@ -10,6 +10,7 @@ class MahjongYaritaiAppSchema < GraphQL::Schema
     if err.is_a?(GraphQL::InvalidNullError)
       return nil
     end
+
     super
   end
 

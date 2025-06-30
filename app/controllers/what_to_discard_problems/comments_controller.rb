@@ -44,7 +44,7 @@ class WhatToDiscardProblems::CommentsController < ApplicationController
 
   private
 
-  def comment_params
-    params.require(:what_to_discard_problem_comment).permit(:content, :parent_comment_id)
-  end
+    def comment_params
+      params.require(:what_to_discard_problem_comment).permit(:content, :parent_comment_id)
+    end
 end

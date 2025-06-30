@@ -36,7 +36,7 @@ RSpec.describe "what_to_discard_problems/likes", type: :request do
         schema type: :object,
           required: %w[what_to_discard_problem_like],
           properties: {
-            what_to_discard_problem_like: { "$req" => "#/components/schemas/Like" },
+            what_to_discard_problem_like: { "$ref" => "#/components/schemas/Like" },
           }
 
         after do |example|

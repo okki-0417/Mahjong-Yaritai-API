@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApplicationController < ActionController::API
   include Authenticatable
   include ErrorJsonRenderable
@@ -7,7 +9,7 @@ class ApplicationController < ActionController::API
   include ActionController::RequestForgeryProtection
 
   def reject_logged_in_user
-    render json: error_json(["Already Logged In"]), status: :forbidden if logged_in?
+    render json: error_json([ "Already Logged In" ]), status: :forbidden if logged_in?
   end
 
   def restrict_to_logged_in_user

@@ -4,7 +4,8 @@ require "swagger_helper"
 
 RSpec.describe "what_to_discard_problems/votes", type: :request do
   path "/what_to_discard_problems/{what_to_discard_problem_id}/votes" do
-    parameter name: "what_to_discard_problem_id", in: :path, type: :string, description: "what_to_discard_problem_id"
+    parameter name: "what_to_discard_problem_id", in: :path, type: :string,
+description: "what_to_discard_problem_id"
 
     post("create vote") do
       tags "WhatToDiscardProblem::Vote"
@@ -77,7 +78,9 @@ RSpec.describe "what_to_discard_problems/votes", type: :request do
         schema type: :object,
           required: %w[what_to_discard_problem_vote],
           properties: {
-            what_to_discard_problem_vote: { "$ref" => "#/components/schemas/WhatToDiscardProblemVote" },
+            what_to_discard_problem_vote: {
+              "$ref" => "#/components/schemas/WhatToDiscardProblemVote",
+            },
           }
 
         after do |example|
@@ -93,14 +96,19 @@ RSpec.describe "what_to_discard_problems/votes", type: :request do
   end
 
   path "/what_to_discard_problems/{what_to_discard_problem_id}/votes/{id}" do
-    parameter name: "what_to_discard_problem_id", in: :path, type: :string, description: "what_to_discard_problem_id"
+    parameter name: "what_to_discard_problem_id", in: :path, type: :string,
+description: "what_to_discard_problem_id"
     parameter name: "id", in: :path, type: :string, description: "id"
 
     delete("delete vote") do
+      tags "WhatToDiscardProblem::Vote"
+      operationId "deleteVote"
+
       response(204, "no_content") do
         let(:what_to_discard_problem_id) { what_to_discard_problem.id }
         let(:what_to_discard_problem) { create(:what_to_discard_problem) }
-        let(:id) { create(:what_to_discard_problem_vote, what_to_discard_problem:, user: current_user).id }
+        let(:id) {
+ create(:what_to_discard_problem_vote, what_to_discard_problem:, user: current_user).id }
 
         let(:current_user) { create(:user) }
         include_context "logged_in_rswag"

@@ -6,6 +6,7 @@ RSpec.describe "users", type: :request do
   path "/users" do
     post("create user") do
       tags "User"
+      operationId "createUser"
       consumes "application/json"
       produces "application/json"
       parameter name: :request_params, in: :body, schema: {
@@ -30,7 +31,8 @@ RSpec.describe "users", type: :request do
           {
             user: {
               name: "name",
-              avatar:  Rack::Test::UploadedFile.new(File.join(Rails.root, "spec/fixtures/images/test.png")),
+              avatar:  Rack::Test::UploadedFile.new(File.join(Rails.root,
+"spec/fixtures/images/test.png")),
               password: "password",
               password_confirmation: "password",
             },
@@ -48,7 +50,8 @@ RSpec.describe "users", type: :request do
           {
             user: {
               name: "name",
-              avatar:  Rack::Test::UploadedFile.new(File.join(Rails.root, "spec/fixtures/images/test.png")),
+              avatar:  Rack::Test::UploadedFile.new(File.join(Rails.root,
+"spec/fixtures/images/test.png")),
               password: "password",
               password_confirmation: "password",
             },
@@ -65,7 +68,8 @@ RSpec.describe "users", type: :request do
           {
             user: {
               name: "name",
-              avatar:  Rack::Test::UploadedFile.new(File.join(Rails.root, "spec/fixtures/images/test.png")),
+              avatar:  Rack::Test::UploadedFile.new(File.join(Rails.root,
+"spec/fixtures/images/test.png")),
               password: "password",
               password_confirmation: "password",
             },
@@ -142,7 +146,8 @@ RSpec.describe "users", type: :request do
           {
             user: {
               name: "name",
-              avatar:  Rack::Test::UploadedFile.new(File.join(Rails.root, "spec/fixtures/images/test.png")),
+              avatar:  Rack::Test::UploadedFile.new(File.join(Rails.root,
+"spec/fixtures/images/test.png")),
             },
           }
         end
@@ -157,7 +162,8 @@ RSpec.describe "users", type: :request do
           {
             user: {
               name: "name",
-              avatar:  Rack::Test::UploadedFile.new(File.join(Rails.root, "spec/fixtures/images/test.png")),
+              avatar:  Rack::Test::UploadedFile.new(File.join(Rails.root,
+"spec/fixtures/images/test.png")),
             },
           }
         end
@@ -177,13 +183,22 @@ RSpec.describe "users", type: :request do
           {
             user: {
               name: "name",
-              avatar:  Rack::Test::UploadedFile.new(File.join(Rails.root, "spec/fixtures/images/test.png")),
+              avatar:  Rack::Test::UploadedFile.new(File.join(Rails.root,
+"spec/fixtures/images/test.png")),
             },
           }
         end
 
         let(:current_user) { create(:user) }
         include_context "logged_in_rswag"
+
+        schema type: :object,
+          required: %w[user],
+          properties: {
+            user: {
+              "$ref" => "#/components/schemas/User",
+            },
+            }
 
         after do |example|
           example.metadata[:response][:content] = {

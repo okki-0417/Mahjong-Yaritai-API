@@ -35,7 +35,8 @@ RSpec.configure do |config|
           },
           Comment: {
             type: :object,
-            required: %w[id user replies_count commentable_type commentable_id content created_at updated_at],
+            required: %w[id user replies_count commentable_type commentable_id content created_at
+updated_at],
             properties: {
               id: { type: :integer },
               user: { "$ref" => "#/components/schemas/User" },
@@ -66,15 +67,17 @@ RSpec.configure do |config|
               id: { type: :integer },
               user:  { "$ref" => "#/components/schemas/User" },
               what_to_discard_problem: { "$ref" => "#/components/schemas/WhatToDiscardProblem_NoRel" },
-              tile: { "$ref" =>"#/components/schemas/Tile" },
+              tile: { "$ref" => "#/components/schemas/Tile" },
               created_at: { type: :string, format: :date_time },
               updated_at: { type: :string, format: :date_time },
             },
           },
           WhatToDiscardProblem: {
             type: :object,
-            required: %w[user round turn wind point_east point_south point_west point_north dora hand1 hand2 hand3 hand4 hand5 hand6 hand7 hand8 hand9 hand10 hand11 hand12 hand13 tsumo comments_count likes_count votes_count created_at updated_at],
+            required: %w[id user round turn wind point_east point_south point_west point_north dora
+hand1 hand2 hand3 hand4 hand5 hand6 hand7 hand8 hand9 hand10 hand11 hand12 hand13 tsumo comments_count likes_count votes_count created_at updated_at],
             properties: {
+              id: { type: :integer },
               user:  { "$ref" => "#/components/schemas/User" },
               round: { type: :string },
               turn: { type: :integer },
@@ -107,8 +110,10 @@ RSpec.configure do |config|
           },
           WhatToDiscardProblem_NoRel: {
             type: :object,
-            required: %w[user_id round turn wind point_east point_south point_west point_north dora_id hand1_id hand2_id hand3_id hand4_id hand5_id hand6_id hand7_id hand8_id hand9_id hand10_id hand11_id hand12_id hand13_id tsumo_id comments_count likes_count votes_count created_at updated_at],
+            required: %w[user_id round turn wind point_east point_south point_west point_north
+dora_id hand1_id hand2_id hand3_id hand4_id hand5_id hand6_id hand7_id hand8_id hand9_id hand10_id hand11_id hand12_id hand13_id tsumo_id comments_count likes_count votes_count created_at updated_at],
             properties: {
+              id: { type: :integer },
               user_id:  { type: :integer },
               round: { type: :string },
               turn: { type: :integer },
@@ -141,8 +146,9 @@ RSpec.configure do |config|
           },
           Tile: {
             type: :object,
-            required: %w[suit ordinal_number_in_suit name created_at updated_at],
+            required: %w[id suit ordinal_number_in_suit name created_at updated_at],
             properties: {
+              id: { type: :integer },
               suit: { type: :string },
               ordinal_number_in_suit: { type: :integer },
               name: { type: :string },

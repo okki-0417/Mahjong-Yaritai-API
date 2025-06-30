@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
@@ -21,7 +23,7 @@ Rails.application.configure do
   config.session_store :redis_store
 
   config.log_level = :debug
-  config.log_tags = [:request_id]
+  config.log_tags = [ :request_id ]
 
   config.logger = ActiveSupport::Logger.new("log/development.log")
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WhatToDiscardProblem::VoteSerializer < ActiveModel::Serializer
   attributes %i[
     id

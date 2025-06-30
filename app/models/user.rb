@@ -12,7 +12,8 @@ class User < ApplicationRecord
   has_many :created_what_to_discard_problems, class_name: :WhatToDiscardProblem, dependent: :destroy
   has_many :created_comments, class_name: :Comment, dependent: :destroy
   has_many :created_likes, class_name: :Like, dependent: :destroy
-  has_many :created_what_to_discard_problem_votes, class_name: "WhatToDiscardProblem::Vote", dependent: :destroy
+  has_many :created_what_to_discard_problem_votes, class_name: "WhatToDiscardProblem::Vote",
+dependent: :destroy
 
   attr_accessor :remember_token
 
@@ -23,6 +24,7 @@ class User < ApplicationRecord
 
   def authenticated?(remember_token)
     return false if remember_digest.nil?
+
     BCrypt::Password.new(remember_digest).is_password?(remember_token)
   end
 
@@ -32,10 +34,10 @@ class User < ApplicationRecord
 
   private
 
-  def self.digest(string)
-    cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST : BCrypt::Engine.cost
-    BCrypt::Password.create(string, cost:)
-  end
+    def self.digest(string)
+      cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST : BCrypt::Engine.cost
+      BCrypt::Password.create(string, cost:)
+    end
 
   def self.new_token
     SecureRandom.urlsafe_base64(64)

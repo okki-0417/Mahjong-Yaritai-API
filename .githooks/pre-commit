@@ -9,7 +9,7 @@ fi
 
 echo "Running pre-commit hook..."
 
-bin/rubocop $files -a
+bin/rubocop $files -a app/ spec/
 
 if [ $? -ne 0 ]; then
   echo "RuboCop failed. Commit aborted."

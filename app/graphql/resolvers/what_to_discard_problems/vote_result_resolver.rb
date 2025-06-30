@@ -2,7 +2,7 @@
 
 module Resolvers::WhatToDiscardProblems
   class VoteResultResolver < Resolvers::BaseResolver
-    type [Types::WhatToDiscardProblem::VoteResultType], null: false
+    type [ Types::WhatToDiscardProblem::VoteResultType ], null: false
 
     argument :what_to_discard_problem_id, Int, required: true
 

@@ -18,8 +18,10 @@ RSpec.describe "what_to_discard_problems/comments", type: :request do
         schema type: :object,
           required: %w[what_to_discard_problem_comments],
           properties: {
-            type: :array,
-            items: { "$ref" => "#/components/schemas/Comment" },
+            what_to_discard_problem_comments: {
+              type: :array,
+              items: { "$ref" => "#/components/schemas/Comment" },
+            },
           }
 
         after do |example|

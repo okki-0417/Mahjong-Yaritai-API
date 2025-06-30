@@ -20,7 +20,7 @@ class AuthorizationSessionsController < ApplicationController
 
   private
 
-  def authorization_session_params
-    params.require(:authorization_session).permit(:email)
-  end
+    def authorization_session_params
+      params.require(:authorization_session).permit(:email)
+    end
 end

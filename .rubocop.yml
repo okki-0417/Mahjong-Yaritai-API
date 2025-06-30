@@ -1,11 +1,51 @@
 inherit_gem: { rubocop-rails-omakase: rubocop.yml }
 
 AllCops:
-  Exclude:
-    - "db/**/*"
+  Include:
+    - app/**/*.rb
+    - spec/**/*.rb
+
+Layout/SpaceInsideHashLiteralBraces:
+  Enabled: true
+  EnforcedStyle: space
+
+Layout/IndentationWidth:
+  Enabled: true
+  Width: 2
+
+Layout/TrailingWhitespace:
+  Enabled: true
+
+Layout/EmptyLinesAroundBlockBody:
+  Enabled: true
+
+Layout/SpaceAroundOperators:
+  Enabled: true
 
 Layout/SpaceInsideArrayLiteralBrackets:
-  Enabled: false
+  Enabled: true
+  EnforcedStyle: space
+
+Layout/MultilineMethodCallIndentation:
+  Enabled: true
+  EnforcedStyle: indented
+
+Layout/BlockAlignment:
+  Enabled: true
+
+Layout/EndAlignment:
+  Enabled: true
+
+Layout/EmptyLineAfterGuardClause:
+  Enabled: true
+
+Layout/EmptyLineBetweenDefs:
+  Enabled: true
+
+Style/WordArray:
+  Enabled: true
+  EnforcedStyle: percent
+
 
 Lint/UselessAssignment:
   Enabled: true
@@ -26,15 +66,7 @@ Style/TrailingCommaInHashLiteral:
 Style/TrailingCommaInArrayLiteral:
   EnforcedStyleForMultiline: consistent_comma
 
-Layout/MultilineMethodCallIndentation:
-  Enabled: true
-  EnforcedStyle: indented
-
 Style/SymbolArray:
-  Enabled: true
-  EnforcedStyle: percent
-
-Style/WordArray:
   Enabled: true
   EnforcedStyle: percent
 

@@ -17,7 +17,8 @@ RSpec.describe "what_to_discard_problems/comments/replies", type: :request do
         let(:what_to_discard_problem) { create(:what_to_discard_problem) }
         let(:comment) { create(:comment, commentable: what_to_discard_problem) }
 
-        before { create(:comment, commentable: what_to_discard_problem, parent_comment_id: comment.id) }
+        before {
+ create(:comment, commentable: what_to_discard_problem, parent_comment_id: comment.id) }
 
         schema type: :object,
           required: %w[what_to_discard_problem_comment_replies],

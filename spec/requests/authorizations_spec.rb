@@ -4,8 +4,9 @@ require "swagger_helper"
 
 RSpec.describe "authorizations", type: :request do
   path "/authorization" do
-    post("show authorization") do
+    post("create authorization") do
       tags "Authorization"
+      operationId "createAuthorization"
       consumes "application/json"
       produces "applications/json"
       parameter name: :request_params, in: :body, schema: {

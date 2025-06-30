@@ -29,7 +29,7 @@ class WhatToDiscardProblems::VotesController < ApplicationController
 
   private
 
-  def vote_params
-    params.require(:what_to_discard_problem_vote).permit(:tile_id)
-  end
+    def vote_params
+      params.require(:what_to_discard_problem_vote).permit(:tile_id)
+    end
 end

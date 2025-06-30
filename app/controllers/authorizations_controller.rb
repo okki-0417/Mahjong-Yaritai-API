@@ -11,13 +11,13 @@ class AuthorizationsController < ApplicationController
 
       head :ok
     else
-      render json: error_json(["認証に失敗しました"]), status: :unprocessable_entity
+      render json: error_json([ "認証に失敗しました" ]), status: :unprocessable_entity
     end
   end
 
   private
 
-  def token_params
-    params.require(:authorization).permit(:token)
-  end
+    def token_params
+      params.require(:authorization).permit(:token)
+    end
 end

@@ -10,6 +10,6 @@ module Types
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
 
-    field :created_what_to_discard_problems, [Types::WhatToDiscardProblemType], null: false
+    field :created_what_to_discard_problems, [ Types::WhatToDiscardProblemType ], null: false
   end
 end

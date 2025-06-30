@@ -9,14 +9,21 @@ class WhatToDiscardProblemsController < ApplicationController
       .page(params[:page])
       .per(3)
 
-    render json: problems, each_serializer: WhatToDiscardProblemSerializer, meta: pagination_data(problems), status: :ok
+    render json: problems,
+      each_serializer: WhatToDiscardProblemSerializer,
+      root: :what_to_discard_problems,
+      meta: pagination_data(problems),
+      status: :ok
   end
 
   def create
     problem = current_user.created_what_to_discard_problems.new(problem_params)
 
     if problem.save
-      render json: problem, serializer: WhatToDiscardProblemSerializer, status: :created
+      render json: problem,
+        serializer: WhatToDiscardProblemSerializer,
+        root: :what_to_discard_problem,
+        status: :created
     else
       render json: validation_error_json(problem), status: :unprocessable_entity
     end
@@ -34,30 +41,30 @@ class WhatToDiscardProblemsController < ApplicationController
 
   private
 
-  def problem_params
-    params.require(:what_to_discard_problem).permit(
-      :round,
-      :turn,
-      :wind,
-      :dora_id,
-      :point_east,
-      :point_south,
-      :point_west,
-      :point_north,
-      :hand1_id,
-      :hand2_id,
-      :hand3_id,
-      :hand4_id,
-      :hand5_id,
-      :hand6_id,
-      :hand7_id,
-      :hand8_id,
-      :hand9_id,
-      :hand10_id,
-      :hand11_id,
-      :hand12_id,
-      :hand13_id,
-      :tsumo_id
-    )
-  end
+    def problem_params
+      params.require(:what_to_discard_problem).permit(
+        :round,
+        :turn,
+        :wind,
+        :dora_id,
+        :point_east,
+        :point_south,
+        :point_west,
+        :point_north,
+        :hand1_id,
+        :hand2_id,
+        :hand3_id,
+        :hand4_id,
+        :hand5_id,
+        :hand6_id,
+        :hand7_id,
+        :hand8_id,
+        :hand9_id,
+        :hand10_id,
+        :hand11_id,
+        :hand12_id,
+        :hand13_id,
+        :tsumo_id
+      )
+    end
 end
