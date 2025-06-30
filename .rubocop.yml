@@ -2,7 +2,7 @@ inherit_gem: { rubocop-rails-omakase: rubocop.yml }
 
 AllCops:
   Exclude:
-    - "db/migrate/**/*"
+    - "db/**/*"
 
 Layout/SpaceInsideArrayLiteralBrackets:
   Enabled: false
@@ -17,6 +17,7 @@ Rails/Output:
   Enabled: true
 
 Style/StringLiterals:
+  Enabled: true
   EnforcedStyle: double_quotes
 
 Style/TrailingCommaInHashLiteral:
@@ -37,3 +38,5 @@ Style/WordArray:
   Enabled: true
   EnforcedStyle: percent
 
+Style/GuardClause:
+  Enabled: true
