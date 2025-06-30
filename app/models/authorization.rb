@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
 class Authorization < ApplicationRecord
-  validates :email, presence: true
+  TOKEN_LENGTH = 6
+  EXPIRATION_PERIOD = 15.minutes
+  EMAIL_LENGTH = 64
+
+  validates :email, presence: true, length: { maximum: EMAIL_LENGTH }
+  validates :token, presence: true
   validate :check_email_uniqueness
 
-  EXPIRATION_PERIOD = 15.minutes
-  before_create :generate_token
+  before_validation :generate_token, on: :create
 
   def expired?
     created_at < EXPIRATION_PERIOD.ago
@@ -14,7 +18,7 @@ class Authorization < ApplicationRecord
   private
 
   def generate_token
-    self.token = SecureRandom.random_number(10 ** 6).to_s.rjust(6, "0")
+    self.token = SecureRandom.random_number(10 ** TOKEN_LENGTH).to_s.rjust(TOKEN_LENGTH, "0")
   end
 
   def check_email_uniqueness

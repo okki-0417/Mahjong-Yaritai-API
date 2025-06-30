@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class AuthorizationSessionsController < ApplicationController
+  before_action :reject_logged_in_user
+
   def create
     authorization = Authorization.new(authorization_session_params)
 
@@ -12,7 +14,7 @@ class AuthorizationSessionsController < ApplicationController
 
       head :created
     else
-      render json: { error: authorization.errors }, status: :unprocessable_entity
+      render json: validation_error_json(authorization), status: :unprocessable_entity
     end
   end
 

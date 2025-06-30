@@ -2,11 +2,13 @@
 
 class WhatToDiscardProblems::Votes::MyVotesController < ApplicationController
   def show
-    return render json: { my_vote: { id: nil, tile_id: nil } }, status: :ok unless logged_in?
+    return render json: nil, serializer: WhatToDiscardProblem::Vote::MyVoteSerializer, root: :my_vote, status: :ok unless logged_in?
 
-    problem = WhatToDiscardProblem.find(params[:what_to_discard_problem_id])
-    current_user_vote = problem.votes.find_by(user_id: current_user&.id)
+    my_vote = WhatToDiscardProblem::Vote.find_by(
+      what_to_discard_problem_id: params[:what_to_discard_problem_id],
+      user_id: current_user&.id,
+    )
 
-    render json: { my_vote: { id: current_user_vote&.id, tile_id: current_user_vote&.tile_id } }
+    render json: my_vote, serializer: WhatToDiscardProblem::Vote::MyVoteSerializer, root: :my_vote, status: :ok
   end
 end

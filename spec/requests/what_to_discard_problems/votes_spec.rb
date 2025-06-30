@@ -1,60 +1,111 @@
 # frozen_string_literal: true
 
-require "rails_helper"
+require "swagger_helper"
 
-describe "WhatToDiscardProblems::VotesController", type: :request do
-  describe "#create" do
-    subject { post what_to_discard_problem_votes_url(what_to_discard_problem_id:), params: {
-      what_to_discard_problem_vote: {
-        tile_id:,
-      },
-    } }
-    let(:what_to_discard_problem_id) { create(:what_to_discard_problem).id }
-    let(:tile_id) { create(:tile).id }
-    let(:current_user) { create(:user) }
+RSpec.describe "what_to_discard_problems/votes", type: :request do
+  path "/what_to_discard_problems/{what_to_discard_problem_id}/votes" do
+    parameter name: "what_to_discard_problem_id", in: :path, type: :string, description: "what_to_discard_problem_id"
 
-    context "未ログインの場合" do
-      it_behaves_like :response, 401
-    end
+    post("create vote") do
+      tags "WhatToDiscardProblem::Vote"
+      operationId "createVote"
+      consumes "application/json"
+      produces "application/json"
+      parameter name: :request_params, in: :body, schema: {
+        type: :object,
+        required: %w[what_to_discard_problem_vote],
+        properties: {
+          what_to_discard_problem_vote: {
+            type: :object,
+            required: %w[tile_id],
+            properties: {
+              tile_id: { type: :string },
+            },
+          },
+        },
+      }
 
-    context "ログイン済みの場合" do
-      include_context "logged_in"
+      response(401, "unauthorized") do
+        let(:what_to_discard_problem_id) { create(:what_to_discard_problem).id }
 
-      context "バリデーションに通らない場合" do
-        before { allow_any_instance_of(WhatToDiscardProblem::Vote).to receive(:save).and_return(false) }
+        let(:request_params) do
+          {
+            what_to_discard_problem_vote: {
+              tile_id:,
+            },
+          }
+        end
+        let(:tile_id) { create(:tile).id }
 
-        it_behaves_like :response, 422
+        run_test!
       end
 
-      context "バリデーションに通る場合" do
-        it_behaves_like :response, 201
+      response(422, "unprocessable_entity") do
+        let(:what_to_discard_problem_id) { create(:what_to_discard_problem).id }
+        let(:request_params) do
+          {
+            what_to_discard_problem_vote: {
+              tile_id:,
+            },
+          }
+        end
+        let(:tile_id) { create(:tile).id }
+
+        let(:current_user) { create(:user) }
+        include_context "logged_in_rswag"
+
+        before { allow_any_instance_of(WhatToDiscardProblem::Vote).to receive(:save).and_return(false) }
+
+        run_test!
+      end
+
+      response(201, "created") do
+        let(:what_to_discard_problem_id) { create(:what_to_discard_problem).id }
+
+        let(:request_params) do
+          {
+            what_to_discard_problem_vote: {
+              tile_id:,
+            },
+          }
+        end
+        let(:tile_id) { create(:tile).id }
+
+        let(:current_user) { create(:user) }
+        include_context "logged_in_rswag"
+
+        schema type: :object,
+          required: %w[what_to_discard_problem_vote],
+          properties: {
+            what_to_discard_problem_vote: { "$ref" => "#/components/schemas/WhatToDiscardProblemVote" },
+          }
+
+        after do |example|
+          example.metadata[:response][:content] = {
+            "application/json" => {
+              example: JSON.parse(response.body, symbolize_names: true),
+            },
+          }
+        end
+        run_test!
       end
     end
   end
 
-  describe "#destroy" do
-    subject {
- delete what_to_discard_problem_vote_url(what_to_discard_problem_id: what_to_discard_problem.id, id: vote.id) }
+  path "/what_to_discard_problems/{what_to_discard_problem_id}/votes/{id}" do
+    parameter name: "what_to_discard_problem_id", in: :path, type: :string, description: "what_to_discard_problem_id"
+    parameter name: "id", in: :path, type: :string, description: "id"
 
-    let(:what_to_discard_problem) { create(:what_to_discard_problem) }
-    let(:vote) { create(:what_to_discard_problem_vote, what_to_discard_problem:, user: current_user) }
-    let(:current_user) { create(:user) }
+    delete("delete vote") do
+      response(204, "no_content") do
+        let(:what_to_discard_problem_id) { what_to_discard_problem.id }
+        let(:what_to_discard_problem) { create(:what_to_discard_problem) }
+        let(:id) { create(:what_to_discard_problem_vote, what_to_discard_problem:, user: current_user).id }
 
-    context "未ログインの場合" do
-      it_behaves_like :response, 401
-    end
+        let(:current_user) { create(:user) }
+        include_context "logged_in_rswag"
 
-    context "ログイン済みの場合" do
-      include_context "logged_in"
-
-      context "削除に失敗した場合" do
-        before { allow_any_instance_of(WhatToDiscardProblem::Vote).to receive(:destroy).and_return(false) }
-
-        it_behaves_like :response, 422
-      end
-
-      context "削除に成功した場合" do
-        it_behaves_like :response, 204
+        run_test!
       end
     end
   end

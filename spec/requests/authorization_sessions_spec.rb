@@ -1,30 +1,51 @@
 # frozen_string_literal: true
 
-require "rails_helper"
+require "swagger_helper"
 
-RSpec.describe "AuthorizationSessionsController", type: :request do
-  describe "#create" do
-    let(:email) { "test@mahjong-yaritai.com" }
-
-    subject { post authorization_session_path,
-      params: {
-        authorization_session: {
-          email:,
+RSpec.describe "authorization_sessions", type: :request do
+  path "/authorization_session" do
+    post("create authorization_session") do
+      tags "AuthorizationSession"
+      operationId "createAuthorizationSession"
+      consumes "application/json"
+      parameter name: :request_params, in: :body, schema: {
+        type: :object,
+        required: %w[authorization_session],
+        properties: {
+          authorization_session: {
+            type: :object,
+            required: %w[email],
+            properties: {
+              email: { type: :string, maxLength: Authorization::EMAIL_LENGTH },
+            },
+          },
         },
       }
-    }
 
-    context "バリデーションに失敗した場合" do
-      let(:email) { nil }
+      response(403, "forbidden") do
+        let(:request_params) { { authorization_session: { email: } } }
+        let(:email) { "test@mahjong-yaritai.com" }
 
-      it_behaves_like :response, 422
-    end
+        let(:current_user) { create(:user) }
+        include_context "logged_in_rswag"
 
-    context "バリデーションに成功した場合" do
-      it_behaves_like :response, 201
+        run_test!
+      end
 
-      it "メールが送信されること" do
-        expect { subject }.to change { ActionMailer::Base.deliveries.count }.by(1)
+      response(422, "unprocessable_entity") do
+        let(:request_params) { { authorization_session: { email: } } }
+        let(:email) { "test@mahjong-yaritai.com" }
+
+        before { allow_any_instance_of(Authorization).to receive(:save).and_return(false) }
+
+        run_test!
+      end
+
+      response(201, "created") do
+        let(:request_params) { { authorization_session: { email: } } }
+        let(:email) { "test@mahjong-yaritai.com" }
+
+        run_test!
       end
     end
   end

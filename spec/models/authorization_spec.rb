@@ -4,33 +4,26 @@ require "rails_helper"
 
 RSpec.describe Authorization, type: :model do
   describe "#validations" do
-    let(:authorization) { FactoryBot.build(:authorization, email:) }
-    let(:email) { "" }
+    subject { authorization.valid? }
 
-    subject { authorization }
-
-    context "emailが空の場合" do
-      it_behaves_like :invalid
-    end
-
-    context "emailが入っている場合" do
+    describe "#check_email_uniqueness" do
+      let(:authorization) { described_class.new(email:) }
       let(:email) { "test@mahjong-yaritai.com" }
 
       context "emailが既にユーザーに使われていた場合" do
-        before { FactoryBot.create(:user, email:) }
+        before { create(:user, email:) }
 
-        it_behaves_like :invalid
-      end
-
-      context "emailが既にユーザーに使われていなかった場合" do
-        it_behaves_like :valid
+        it "バリデーションに通らず、エラーが追加されていること" do
+          is_expected.to eq false
+          expect(authorization.errors).to be_added(:email, :taken)
+        end
       end
     end
   end
 
   describe "#callbacks" do
     describe "#generate_token" do
-      let(:authorization) { FactoryBot.build(:authorization, email:) }
+      let(:authorization) { described_class.new(email:) }
       let(:email) { "test@mahjong-yaritai.com" }
 
       subject { authorization.save }
@@ -39,7 +32,7 @@ RSpec.describe Authorization, type: :model do
         it "tokensが作成されていること" do
           expect(authorization.token).to eq nil
           subject
-          expect(authorization.token).not_to eq nil
+          expect(authorization.token).to be_present
         end
       end
     end
