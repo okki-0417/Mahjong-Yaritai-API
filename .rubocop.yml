@@ -25,4 +25,11 @@ Layout/MultilineMethodCallIndentation:
   Enabled: true
   EnforcedStyle: indented
 
+Style/SymbolArray:
+  Enabled: true
+  EnforcedStyle: percent
+
+Style/WordArray:
+  Enabled: true
+  EnforcedStyle: percent
 

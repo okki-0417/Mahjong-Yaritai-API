@@ -7,7 +7,7 @@ RSpec.describe "what_to_discard_problems/comments/replies", type: :request do
 
     get("list replies") do
       tags "WhatToDiscardProblem:Comment:Reply"
-      operationId "getReplies"
+      operationId "getWhatToDiscardProblemCommentReplies"
       produces "application/json"
 
       response(200, "successful") do
@@ -20,9 +20,9 @@ RSpec.describe "what_to_discard_problems/comments/replies", type: :request do
         before { create(:comment, commentable: what_to_discard_problem, parent_comment_id: comment.id) }
 
         schema type: :object,
-          required: %w[comments],
+          required: %w[what_to_discard_problem_comment_replies],
           properties: {
-            comments: {
+            what_to_discard_problem_comment_replies: {
               type: :array,
               items: { "$ref" => "#/components/schemas/Comment" },
             },

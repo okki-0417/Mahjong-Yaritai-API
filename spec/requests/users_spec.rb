@@ -1,97 +1,219 @@
 # frozen_string_literal: true
 
-require "rails_helper"
+require "swagger_helper"
 
-RSpec.describe "Users", type: :request do
-  let(:current_user) { create(:user) }
-
-  describe "show" do
-    subject { get user_url(user) }
-    let(:user) { create(:user) }
-
-    it_behaves_like :response, 200
-  end
-
-  describe "create" do
-    let(:name) { "test_name" }
-    let(:password) { "test_password" }
-    let(:password_confirmation) { password }
-
-    subject { post users_url,
-      params: {
-        user: {
-          name:,
-          password:,
-          password_confirmation:,
+RSpec.describe "users", type: :request do
+  path "/users" do
+    post("create user") do
+      tags "User"
+      consumes "application/json"
+      produces "application/json"
+      parameter name: :request_params, in: :body, schema: {
+        type: :object,
+        required: %w[user],
+        properties: {
+          user: {
+            type: :object,
+            required: %w[name avatar],
+            properties: {
+              name: { type: :string, maxLength: User::USER_NAME_LENGTH },
+              avatar: { type: :string, format: :binary },
+              password: { type: :string },
+              password_confirmation: { type: :string },
+            },
+          },
         },
       }
-    }
 
-    context "Authorizationが存在しない場合" do
-      before { allow(Authorization).to receive(:find_by).and_return(nil) }
+      response(403, "forbidden") do
+        let(:request_params) do
+          {
+            user: {
+              name: "name",
+              avatar:  Rack::Test::UploadedFile.new(File.join(Rails.root, "spec/fixtures/images/test.png")),
+              password: "password",
+              password_confirmation: "password",
+            },
+          }
+        end
 
-      it_behaves_like :response, 422
-    end
+        let(:current_user) { create(:user) }
+        include_context "logged_in_rswag"
 
-    context "Authorizationが存在する場合" do
-      let(:authorization) { create(:authorization) }
+        run_test!
+      end
 
-      before { allow(Authorization).to receive(:find_by).and_return(authorization) }
+      response(422, "unprocessable_entity") do
+        let(:request_params) do
+          {
+            user: {
+              name: "name",
+              avatar:  Rack::Test::UploadedFile.new(File.join(Rails.root, "spec/fixtures/images/test.png")),
+              password: "password",
+              password_confirmation: "password",
+            },
+          }
+        end
 
-      context "モデルのバリデーションに通らない場合" do
         before { allow_any_instance_of(User).to receive(:save).and_return(false) }
 
-        it_behaves_like :response, 422
+        run_test!
       end
 
-      context "モデルのバリデーションに通る場合" do
-        it_behaves_like :response, 201
+      response(201, "created") do
+        let(:request_params) do
+          {
+            user: {
+              name: "name",
+              avatar:  Rack::Test::UploadedFile.new(File.join(Rails.root, "spec/fixtures/images/test.png")),
+              password: "password",
+              password_confirmation: "password",
+            },
+          }
+        end
+
+        let(:authorization) { create(:authorization) }
+        before { allow(Authorization).to receive(:find_by).and_return(authorization) }
+
+        after do |example|
+          example.metadata[:response][:content] = {
+            "application/json" => {
+              example: JSON.parse(response.body, symbolize_names: true),
+            },
+          }
+        end
+        run_test!
       end
     end
   end
 
-  describe "update" do
-    let(:updated_name) { "updated_name" }
-    subject { patch user_url(current_user), params: {
-      user: {
-        name: updated_name,
+  path "/users/{id}" do
+    parameter name: "id", in: :path, type: :string, description: "id"
+
+    get("show user") do
+      tags "User"
+      operationId "getUser"
+      produces "application/json"
+
+      response(200, "ok") do
+        let(:id) { create(:user).id }
+
+        schema type: :object,
+          required: %w[user],
+          properties: {
+            user: { "$ref" => "#/components/schemas/User" },
+        }
+
+        after do |example|
+          example.metadata[:response][:content] = {
+            "application/json" => {
+              example: JSON.parse(response.body, symbolize_names: true),
+            },
+          }
+        end
+        run_test!
+      end
+    end
+
+    put("update user") do
+      tags "User"
+      operationId "updateUser"
+      consumes "application/json"
+      produces "application/json"
+      parameter name: :request_params, in: :body, schema: {
+        type: :object,
+        required: %w[user],
+        properties: {
+          user: {
+            type: :object,
+            required: %w[name avatar],
+            properties: {
+              name: { type: :string, maxLength: User::USER_NAME_LENGTH },
+              avatar: { type: :string, format: :binary },
+            },
+          },
         },
-    }}
+      }
 
-    context "未ログインの場合" do
-      it "401を返すこと" do
-        subject
-        expect(response).to have_http_status(401)
+      response(401, "unauthorized") do
+        let(:id) { create(:user).id }
+
+        let(:request_params) do
+          {
+            user: {
+              name: "name",
+              avatar:  Rack::Test::UploadedFile.new(File.join(Rails.root, "spec/fixtures/images/test.png")),
+            },
+          }
+        end
+
+        run_test!
+      end
+
+      response(422, "unprocessable_entity") do
+        let(:id) { current_user.id }
+
+        let(:request_params) do
+          {
+            user: {
+              name: "name",
+              avatar:  Rack::Test::UploadedFile.new(File.join(Rails.root, "spec/fixtures/images/test.png")),
+            },
+          }
+        end
+
+        let(:current_user) { create(:user) }
+        include_context "logged_in_rswag"
+
+        before { allow_any_instance_of(User).to receive(:update).and_return(false) }
+
+        run_test!
+      end
+
+      response(200, "ok") do
+        let(:id) { current_user.id }
+
+        let(:request_params) do
+          {
+            user: {
+              name: "name",
+              avatar:  Rack::Test::UploadedFile.new(File.join(Rails.root, "spec/fixtures/images/test.png")),
+            },
+          }
+        end
+
+        let(:current_user) { create(:user) }
+        include_context "logged_in_rswag"
+
+        after do |example|
+          example.metadata[:response][:content] = {
+            "application/json" => {
+              example: JSON.parse(response.body, symbolize_names: true),
+            },
+          }
+        end
+        run_test!
       end
     end
 
-    context "ログイン済みの場合" do
-      include_context "logged_in"
+    delete("delete user") do
+      tags "User"
+      operationId "deleteUser"
+      produces "application/json"
 
-      it "更新して200を返すこと" do
-        subject
-        expect(current_user.reload.name).to eq updated_name
-        expect(response).to have_http_status(200)
+      response(401, "unauthorized") do
+        let(:id) { create(:user).id }
+
+        run_test!
       end
-    end
-  end
 
-  describe "destroy" do
-    subject { delete user_url(current_user) }
+      response(204, "no_content") do
+        let(:id) { current_user.id }
 
-    context "未ログインの場合" do
-      it "401を返すこと" do
-        subject
-        expect(response).to have_http_status(401)
-      end
-    end
+        let(:current_user) { create(:user) }
+        include_context "logged_in_rswag"
 
-    context "ログイン済みの場合" do
-      include_context "logged_in"
-
-      it "204を返すこと" do
-        expect { subject }.to change { User.count }.by(-1)
-        expect(response).to have_http_status(204)
+        run_test!
       end
     end
   end

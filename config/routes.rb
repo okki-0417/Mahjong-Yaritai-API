@@ -10,12 +10,11 @@ Rails.application.routes.draw do
   get "/up", to: "health_check#show"
 
   resource :authorization_session, only: %i[create]
-  resource :authorization, only: %i[create show]
+  resource :authorization, only: %i[create]
 
   resources :users, only: %i[show create update destroy]
 
   resource :session, only: %i[show create destroy]
-  resource :csrf_token, only: [ :show ]
 
   resources :what_to_discard_problems, only: %i[index create destroy] do
     resources :comments, module: :what_to_discard_problems, only: %i[index create destroy] do

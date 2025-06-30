@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
+  before_action :reject_logged_in_user, only: %i[create]
   before_action :restrict_to_logged_in_user, only: %i[update destroy]
 
   def create
@@ -15,9 +16,9 @@ class UsersController < ApplicationController
       login(user)
       remember(user)
 
-      render json: { user: { id: user.id, name: user.name } }, status: :created
+      render json: user, serializer: UserSerializer, root: :user, status: :created
     else
-      render json: { errors: user.errors.full_messages.map { |message|  { message: } } }, status: :unprocessable_entity
+      render json: validation_error_json(user), status: :unprocessable_entity
     end
   end
 
@@ -31,7 +32,7 @@ class UsersController < ApplicationController
     if current_user.update(user_update_params)
       render json: current_user, serializer: UserSerializer, status: :ok
     else
-      render validation_error_json(current_user), status: :unprocessable_entity
+      render json: validation_error_json(current_user), status: :unprocessable_entity
     end
   end
 

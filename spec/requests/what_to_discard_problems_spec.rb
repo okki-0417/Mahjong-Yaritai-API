@@ -1,81 +1,69 @@
 # frozen_string_literal: true
 
-require "rails_helper"
+require "swagger_helper"
 
-RSpec.describe "WhatToDiscardProblems", type: :request do
-  let(:current_user) { FactoryBot.create(:user) }
+RSpec.describe "what_to_discard_problems", type: :request do
+  path "/what_to_discard_problems" do
+    get("list what_to_discard_problems") do
+      tags "WhatToDiscardProblem"
+      operationId "getWhatToDiscardProblems"
+      produces "application/json"
 
-  describe "#create" do
-    subject do
-      post what_to_discard_problems_url, params: {
-        what_to_discard_problem: {
-          round: "東一",
-          turn: 1,
-          wind: "東",
-          dora_id: create(:tile).id,
-          point_east: 25000,
-          point_south: 25000,
-          point_west: 25000,
-          point_north: 25000,
-          hand1_id: create(:tile).id,
-          hand2_id: create(:tile).id,
-          hand3_id: create(:tile).id,
-          hand4_id: create(:tile).id,
-          hand5_id: create(:tile).id,
-          hand6_id: create(:tile).id,
-          hand7_id: create(:tile).id,
-          hand8_id: create(:tile).id,
-          hand9_id: create(:tile).id,
-          hand10_id: create(:tile).id,
-          hand11_id: create(:tile).id,
-          hand12_id: create(:tile).id,
-          hand13_id: create(:tile).id,
-          tsumo_id: create(:tile).id,
-        },
-      }
-    end
+      response(200, "ok") do
+        before { create_list(:what_to_discard_problem, 3) }
 
-    context "未ログインの場合" do
-      it_behaves_like :response, 401
-    end
+        schema type: :object,
+          required: %w[what_to_discard_problems meta],
+          properties: {
+            what_to_discard_problems: {
+              type: :array,
+              items: { "$ref" => "#/components/schemas/WhatToDiscardProblem" },
+            },
+            meta: { "$ref" => "#/components/schemas/Pagination" },
+          }
 
-    context "ログイン済みの場合" do
-      include_context "logged_in"
-
-      context "バリデーションに通らない場合" do
-        before { allow_any_instance_of(WhatToDiscardProblem).to receive(:save).and_return(false) }
-
-        it_behaves_like :response, 422
-      end
-
-      context "バリデーションに通る場合" do
-        it_behaves_like :response, 201
+        after do |example|
+          example.metadata[:response][:content] = {
+            "application/json" => {
+              example: JSON.parse(response.body, symbolize_names: true),
+            },
+          }
+        end
+        run_test!
       end
     end
+
+    # post("create what_to_discard_problem") do
+    #   response(200, "successful") do
+    #     after do |example|
+    #       example.metadata[:response][:content] = {
+    #         "application/json" => {
+    #           example: JSON.parse(response.body, symbolize_names: true),
+    #         },
+    #       }
+    #     end
+    #     run_test!
+    #   end
+    # end
   end
 
-  describe "#destroy" do
-    subject { delete what_to_discard_problem_url(what_to_discard_problem) }
+  # path "/what_to_discard_problems/{id}" do
+  #   # You"ll want to customize the parameter types...
+  #   parameter name: "id", in: :path, type: :string, description: "id"
 
-    let(:what_to_discard_problem) { create(:what_to_discard_problem, user: current_user) }
-    let(:current_user) { create(:user) }
+  #   delete("delete what_to_discard_problem") do
+  #     response(200, "successful") do
+  #       let(:id) { "123" }
 
-    context "未ログインの場合" do
-      it_behaves_like :response, 401
-    end
-
-    context "ログイン済みの場合" do
-      include_context "logged_in"
-
-      context "削除に失敗した場合" do
-        before { allow_any_instance_of(WhatToDiscardProblem).to receive(:destroy).and_return(false) }
-
-        it_behaves_like :response, 422
-      end
-
-      context "削除に成功した場合" do
-        it_behaves_like :response, 204
-      end
-    end
-  end
+  #       after do |example|
+  #         example.metadata[:response][:content] = {
+  #           "application/json" => {
+  #             example: JSON.parse(response.body, symbolize_names: true),
+  #           },
+  #         }
+  #       end
+  #       run_test!
+  #     end
+  #   end
+  # end
 end

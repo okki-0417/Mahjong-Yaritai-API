@@ -21,7 +21,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_06_14_071607) do
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
-    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+    t.index %w[record_type record_id name blob_id], name: "index_active_storage_attachments_uniqueness", unique: true
   end
 
   create_table "active_storage_blobs", force: :cascade do |t|
@@ -39,7 +39,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_06_14_071607) do
   create_table "active_storage_variant_records", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
-    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+    t.index %w[blob_id variation_digest], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
   create_table "authorizations", force: :cascade do |t|
@@ -96,7 +96,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_06_14_071607) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["tile_id"], name: "index_what_to_discard_problem_votes_on_tile_id"
-    t.index ["user_id", "what_to_discard_problem_id"], name: "idx_on_user_id_what_to_discard_problem_id_ba7da3c2b5", unique: true
+    t.index %w[user_id what_to_discard_problem_id], name: "idx_on_user_id_what_to_discard_problem_id_ba7da3c2b5", unique: true
     t.index ["user_id"], name: "index_what_to_discard_problem_votes_on_user_id"
     t.index ["what_to_discard_problem_id"], name: "idx_on_what_to_discard_problem_id_619294c3a6"
   end

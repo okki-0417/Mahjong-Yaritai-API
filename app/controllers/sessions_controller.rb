@@ -2,40 +2,32 @@
 
 class SessionsController < ApplicationController
   before_action :reject_logged_in_user, only: %i[create]
-  before_action :restrict_to_logged_in_user, only: [ :destroy ]
+  before_action :restrict_to_logged_in_user, only: %i[destroy]
 
   def create
     user = User.find_by!(email: session_params[:email])
 
     if user.authenticate(session_params[:password])
-    login user
-    remember user
+      login user
+      remember user
 
-    render json: { session: {
-        is_logged_in: logged_in?,
-        user_id: current_user.id,
-      } }, status: :created
+      render json: current_user,
+        serializer: SessionSerializer,
+        root: :session,
+        status: :created
     else
       render json: { errors: [ { message: "Not authorized" } ] }, status: :unprocessable_entity
     end
   end
 
   def show
-    render json: {
-      session: {
-        is_logged_in: logged_in?,
-        user_id: current_user&.id,
-      },
-    }, status: :ok
+    render json: current_user, serializer: SessionSerializer, status: :ok
   end
 
   def destroy
-    if logged_in?
-      logout
-      head :no_content
-    else
-      render json: { errors: [ { message: "Failed to logout" } ] }, status: :bad_request
-    end
+    logout
+
+    head :no_content
   end
 
   private
