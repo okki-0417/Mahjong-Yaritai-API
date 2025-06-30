@@ -1,53 +1,53 @@
 # frozen_string_literal: true
 
-require "rails_helper"
+require "swagger_helper"
 
-RSpec.describe AuthorizationsController, type: :request do
-  describe "#create" do
-    subject do
-      post authorization_url,
-        params: {
+RSpec.describe "authorizations", type: :request do
+  path "/authorization" do
+    post("show authorization") do
+      tags "Authorization"
+      consumes "application/json"
+      produces "applications/json"
+      parameter name: :request_params, in: :body, schema: {
+        type: :object,
+        required: %w[authorization],
+        properties: {
           authorization: {
-            token:,
+            type: :object,
+            required: %w[token],
+            properties: {
+              token: { type: :string },
+            },
           },
-        }
-    end
+        },
+      }
 
-    let(:token) { nil }
+      response(403, "forbidden") do
+        let(:request_params) { { authorization: { token: } } }
+        let(:token) { "000000" }
 
-    context "authorizationが存在しない場合" do
-      before { allow(Authorization).to receive(:find_by).and_return(false) }
+        let(:current_user) { create(:user) }
+        include_context "logged_in"
 
-      it_behaves_like :response, 422
-    end
-
-    context "authorizationが存在する場合" do
-      let(:authorization) { FactoryBot.create(:authorization) }
-      let(:token) { authorization.token }
-
-      context "有効期限切れの場合" do
-        before { allow_any_instance_of(Authorization).to receive(:expired?).and_return(true) }
-
-        it_behaves_like :response, 422
+        run_test!
       end
 
-      context "有効期限内の場合" do
-        before { allow_any_instance_of(Authorization).to receive(:expired?).and_return(false) }
+      response(422, "unprocessable_entity") do
+        let(:request_params) { { authorization: { token: } } }
+        let(:token) { "000000" }
 
-        it_behaves_like :response, 200
+        before { allow(Authorization).to receive(:find_by).and_return(nil) }
+
+        run_test!
       end
-    end
-  end
 
-  describe "#show" do
-    subject { get authorization_url }
+      response(200, "ok") do
+        let(:request_params) { { authorization: { token: } } }
+        let(:token) { authorization.token }
+        let!(:authorization) { create(:authorization) }
 
-    context "権限が付与されていない場合" do
-      it_behaves_like :response, 200
-    end
-
-    context "権限が付与されている場合" do
-      it_behaves_like :response, 200
+        run_test!
+      end
     end
   end
 end

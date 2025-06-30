@@ -6,20 +6,23 @@ RSpec.describe "what_to_discard_problems/likes", type: :request do
 
     post "Create Like" do
       tags "WhatToDiscardProblem::Like"
-      operationId "createLike"
+      operationId "createWhatToDiscardProblemLike"
       consumes "application/json"
       produces "application/json"
 
       response(401, "not_logged_in") do
         let(:what_to_discard_problem_id) { create(:what_to_discard_problem).id }
 
-        after do |example|
-          example.metadata[:response][:content] = {
-            "application/json" => {
-              example: JSON.parse(response.body, symbolize_names: true),
-            },
-          }
-        end
+        run_test!
+      end
+
+      response(422, "unprocessable_entity") do
+        let(:what_to_discard_problem_id) { create(:what_to_discard_problem).id }
+
+        let(:current_user) { create(:user) }
+        include_context "logged_in_rswag"
+
+        before { allow_any_instance_of(Like).to receive(:save).and_return(false) }
 
         run_test!
       end
@@ -31,14 +34,9 @@ RSpec.describe "what_to_discard_problems/likes", type: :request do
         let(:what_to_discard_problem_id) { create(:what_to_discard_problem).id }
 
         schema type: :object,
+          required: %w[what_to_discard_problem_like],
           properties: {
-            what_to_discard_problem_like: {
-              type: :object,
-              required: %w[myLike],
-              properties: {
-                myLike: { "$ref" => "#/components/schemas/Like" },
-              },
-            },
+            what_to_discard_problem_like: { "$req" => "#/components/schemas/Like" },
           }
 
         after do |example|
@@ -50,17 +48,6 @@ RSpec.describe "what_to_discard_problems/likes", type: :request do
         end
         run_test!
       end
-
-      response(422, "unprocessable_entity") do
-        let(:current_user) { create(:user) }
-        include_context "logged_in_rswag"
-
-        let(:what_to_discard_problem_id) { create(:what_to_discard_problem).id }
-
-        before { allow_any_instance_of(Like).to receive(:save).and_return(false) }
-
-        run_test!
-      end
     end
   end
 
@@ -70,8 +57,7 @@ RSpec.describe "what_to_discard_problems/likes", type: :request do
 
     delete "Delete Like" do
       tags "WhatToDiscardProblem::Like"
-      operationId "deleteLike"
-      produces "application/json"
+      operationId "deleteWhatToDiscardProblemLike"
 
       response(401, "not_logged_in") do
         let(:what_to_discard_problem_id) { what_to_discard_problem.id }
@@ -86,8 +72,8 @@ RSpec.describe "what_to_discard_problems/likes", type: :request do
         include_context "logged_in_rswag"
 
         let(:what_to_discard_problem_id) { what_to_discard_problem.id }
-        let!(:id) { create(:like, likable: what_to_discard_problem, user: current_user).id }
         let(:what_to_discard_problem) { create(:what_to_discard_problem) }
+        let(:id) { create(:like, likable: what_to_discard_problem, user: current_user).id }
 
         run_test!
       end

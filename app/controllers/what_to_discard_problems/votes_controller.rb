@@ -10,7 +10,10 @@ class WhatToDiscardProblems::VotesController < ApplicationController
     )
 
     if vote.save
-      render json: vote, serializer: WhatToDiscardProblem::VoteSerializer, status: :created
+      render json: vote,
+        serializer: WhatToDiscardProblem::VoteSerializer,
+        root: :what_to_discard_problem_vote,
+        status: :created
     else
       render json: validation_error_json(vote), status: :unprocessable_entity
     end
@@ -19,11 +22,9 @@ class WhatToDiscardProblems::VotesController < ApplicationController
   def destroy
     vote = current_user.created_what_to_discard_problem_votes.find(params[:id])
 
-    if vote.destroy
-      render json: {}, status: :no_content
-    else
-      render json: {}, status: :unprocessable_entity
-    end
+    vote.destroy!
+
+    render json: {}, status: :no_content
   end
 
   private

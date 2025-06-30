@@ -2,6 +2,10 @@
 
 module ErrorJsonRenderable
   def validation_error_json(model)
-    { errors: model.errors.full_messages.map { |message| { message: } } }
+    error_json(model.errors.full_messages)
+  end
+
+  def error_json(*messages)
+    { errors: messages.map { |message| { message: } } }
   end
 end

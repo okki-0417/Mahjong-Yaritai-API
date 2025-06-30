@@ -4,6 +4,234 @@ info:
   title: API V1
   version: v1
 paths:
+  "/authorization_session":
+    post:
+      summary: create authorization_session
+      tags:
+      - AuthorizationSession
+      operationId: createAuthorizationSession
+      parameters: []
+      responses:
+        '403':
+          description: forbidden
+        '422':
+          description: unprocessable_entity
+        '201':
+          description: created
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - authorization_session
+              properties:
+                authorization_session:
+                  type: object
+                  required:
+                  - email
+                  properties:
+                    email:
+                      type: string
+                      maxLength: 64
+  "/authorization":
+    post:
+      summary: show authorization
+      tags:
+      - Authorization
+      parameters: []
+      responses:
+        '403':
+          description: forbidden
+        '422':
+          description: unprocessable_entity
+        '200':
+          description: ok
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - authorization
+              properties:
+                authorization:
+                  type: object
+                  required:
+                  - token
+                  properties:
+                    token:
+                      type: string
+  "/session":
+    get:
+      summary: show session
+      tags:
+      - Session
+      operationId: getSession
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  is_logged_in:
+                    type: boolean
+                    nullable: true
+                  user_id:
+                    type: integer
+                    nullable: true
+    delete:
+      summary: delete session
+      tags:
+      - Session
+      operationId: deleteSession
+      responses:
+        '401':
+          description: unauthorized
+        '204':
+          description: no_content
+    post:
+      summary: create session
+      tags:
+      - Session
+      operationId: createSession
+      parameters: []
+      responses:
+        '403':
+          description: forbidden
+        '422':
+          description: successful
+        '201':
+          description: successful
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Session"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - session
+              properties:
+                session:
+                  type: object
+                  required:
+                  - email
+                  - password
+                  properties:
+                    email:
+                      type: string
+                    password:
+                      type: string
+  "/users":
+    post:
+      summary: create user
+      tags:
+      - User
+      parameters: []
+      responses:
+        '403':
+          description: forbidden
+        '422':
+          description: unprocessable_entity
+        '201':
+          description: created
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - user
+              properties:
+                user:
+                  type: object
+                  required:
+                  - name
+                  - avatar
+                  properties:
+                    name:
+                      type: string
+                      maxLength: 20
+                    avatar:
+                      type: string
+                      format: binary
+                    password:
+                      type: string
+                    password_confirmation:
+                      type: string
+  "/users/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: id
+      required: true
+      schema:
+        type: string
+    get:
+      summary: show user
+      tags:
+      - User
+      operationId: getUser
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - user
+                properties:
+                  user:
+                    "$ref": "#/components/schemas/User"
+    put:
+      summary: update user
+      tags:
+      - User
+      operationId: updateUser
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+        '422':
+          description: unprocessable_entity
+        '200':
+          description: ok
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - user
+              properties:
+                user:
+                  type: object
+                  required:
+                  - name
+                  - avatar
+                  properties:
+                    name:
+                      type: string
+                      maxLength: 20
+                    avatar:
+                      type: string
+                      format: binary
+    delete:
+      summary: delete user
+      tags:
+      - User
+      operationId: deleteUser
+      responses:
+        '401':
+          description: unauthorized
+        '204':
+          description: no_content
   "/what_to_discard_problems/{what_to_discard_problem_id}/comments/{comment_id}/replies":
     parameters:
     - name: what_to_discard_problem_id
@@ -20,7 +248,7 @@ paths:
       summary: list replies
       tags:
       - WhatToDiscardProblem:Comment:Reply
-      operationId: getReplies
+      operationId: getWhatToDiscardProblemCommentReplies
       responses:
         '200':
           description: successful
@@ -29,9 +257,9 @@ paths:
               schema:
                 type: object
                 required:
-                - comments
+                - what_to_discard_problem_comment_replies
                 properties:
-                  comments:
+                  what_to_discard_problem_comment_replies:
                     type: array
                     items:
                       "$ref": "#/components/schemas/Comment"
@@ -55,12 +283,11 @@ paths:
               schema:
                 type: object
                 required:
-                - comments
+                - what_to_discard_problem_comments
                 properties:
-                  comments:
-                    type: array
-                    items:
-                      "$ref": "#/components/schemas/Comment"
+                  type: array
+                  items:
+                    "$ref": "#/components/schemas/Comment"
     post:
       summary: create comment
       tags:
@@ -79,9 +306,9 @@ paths:
               schema:
                 type: object
                 required:
-                - comment
+                - what_to_discard_problem_comment
                 properties:
-                  comment:
+                  what_to_discard_problem_comment:
                     "$ref": "#/components/schemas/Comment"
       requestBody:
         content:
@@ -102,6 +329,7 @@ paths:
                       nullable: true
                     content:
                       type: string
+                      maxLength: 255
   "/what_to_discard_problems/{what_to_discard_problem_id}/comments/{id}":
     parameters:
     - name: what_to_discard_problem_id
@@ -135,26 +363,23 @@ paths:
       summary: Create Like
       tags:
       - WhatToDiscardProblem::Like
-      operationId: createLike
+      operationId: createWhatToDiscardProblemLike
       responses:
         '401':
           description: not_logged_in
+        '422':
+          description: unprocessable_entity
         '201':
           description: created
           content:
             application/json:
               schema:
                 type: object
+                required:
+                - what_to_discard_problem_like
                 properties:
                   what_to_discard_problem_like:
-                    type: object
-                    required:
-                    - myLike
-                    properties:
-                      myLike:
-                        "$ref": "#/components/schemas/Like"
-        '422':
-          description: unprocessable_entity
+                    "$req": "#/components/schemas/Like"
   "/what_to_discard_problems/{what_to_discard_problem_id}/likes/{id}":
     parameters:
     - name: what_to_discard_problem_id
@@ -171,12 +396,125 @@ paths:
       summary: Delete Like
       tags:
       - WhatToDiscardProblem::Like
-      operationId: deleteLike
+      operationId: deleteWhatToDiscardProblemLike
       responses:
         '401':
           description: not_logged_in
         '204':
           description: no_content
+  "/what_to_discard_problems/{what_to_discard_problem_id}/votes/my_vote":
+    parameters:
+    - name: what_to_discard_problem_id
+      in: path
+      description: what_to_discard_problem_id
+      required: true
+      schema:
+        type: string
+    get:
+      summary: show my_vote
+      tags:
+      - WhatToDiscardProblem::Comment::MyVote
+      operationId: getMyVote
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                nullable: true
+                properties:
+                  id:
+                    type: integer
+                  tile:
+                    "$ref": "#/components/schemas/Tile"
+  "/what_to_discard_problems/{what_to_discard_problem_id}/votes":
+    parameters:
+    - name: what_to_discard_problem_id
+      in: path
+      description: what_to_discard_problem_id
+      required: true
+      schema:
+        type: string
+    post:
+      summary: create vote
+      tags:
+      - WhatToDiscardProblem::Vote
+      operationId: createVote
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+        '422':
+          description: unprocessable_entity
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - what_to_discard_problem_vote
+                properties:
+                  what_to_discard_problem_vote:
+                    "$ref": "#/components/schemas/WhatToDiscardProblemVote"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - what_to_discard_problem_vote
+              properties:
+                what_to_discard_problem_vote:
+                  type: object
+                  required:
+                  - tile_id
+                  properties:
+                    tile_id:
+                      type: string
+  "/what_to_discard_problems/{what_to_discard_problem_id}/votes/{id}":
+    parameters:
+    - name: what_to_discard_problem_id
+      in: path
+      description: what_to_discard_problem_id
+      required: true
+      schema:
+        type: string
+    - name: id
+      in: path
+      description: id
+      required: true
+      schema:
+        type: string
+    delete:
+      summary: delete vote
+      responses:
+        '204':
+          description: no_content
+  "/what_to_discard_problems":
+    get:
+      summary: list what_to_discard_problems
+      tags:
+      - WhatToDiscardProblem
+      operationId: getWhatToDiscardProblems
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - what_to_discard_problems
+                - meta
+                properties:
+                  what_to_discard_problems:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/WhatToDiscardProblem"
+                  meta:
+                    "$ref": "#/components/schemas/Pagination"
 servers:
 - url: http://murai.local:3001
 components:
@@ -260,3 +598,287 @@ components:
         updated_at:
           type: string
           format: date_time
+    WhatToDiscardProblemVote:
+      type: object
+      required:
+      - id
+      - user
+      - what_to_discard_problem
+      - tile
+      - created_at
+      - updated_at
+      properties:
+        id:
+          type: integer
+        user:
+          "$ref": "#/components/schemas/User"
+        what_to_discard_problem:
+          "$ref": "#/components/schemas/WhatToDiscardProblem_NoRel"
+        tile:
+          "$ref": "#/components/schemas/Tile"
+        created_at:
+          type: string
+          format: date_time
+        updated_at:
+          type: string
+          format: date_time
+    WhatToDiscardProblem:
+      type: object
+      required:
+      - user
+      - round
+      - turn
+      - wind
+      - point_east
+      - point_south
+      - point_west
+      - point_north
+      - dora
+      - hand1
+      - hand2
+      - hand3
+      - hand4
+      - hand5
+      - hand6
+      - hand7
+      - hand8
+      - hand9
+      - hand10
+      - hand11
+      - hand12
+      - hand13
+      - tsumo
+      - comments_count
+      - likes_count
+      - votes_count
+      - created_at
+      - updated_at
+      properties:
+        user:
+          "$ref": "#/components/schemas/User"
+        round:
+          type: string
+        turn:
+          type: integer
+        wind:
+          type: string
+        point_east:
+          type: integer
+        point_south:
+          type: integer
+        point_west:
+          type: integer
+        point_north:
+          type: integer
+        dora:
+          "$ref": "#/components/schemas/Tile"
+        hand1:
+          "$ref": "#/components/schemas/Tile"
+        hand2:
+          "$ref": "#/components/schemas/Tile"
+        hand3:
+          "$ref": "#/components/schemas/Tile"
+        hand4:
+          "$ref": "#/components/schemas/Tile"
+        hand5:
+          "$ref": "#/components/schemas/Tile"
+        hand6:
+          "$ref": "#/components/schemas/Tile"
+        hand7:
+          "$ref": "#/components/schemas/Tile"
+        hand8:
+          "$ref": "#/components/schemas/Tile"
+        hand9:
+          "$ref": "#/components/schemas/Tile"
+        hand10:
+          "$ref": "#/components/schemas/Tile"
+        hand11:
+          "$ref": "#/components/schemas/Tile"
+        hand12:
+          "$ref": "#/components/schemas/Tile"
+        hand13:
+          "$ref": "#/components/schemas/Tile"
+        tsumo:
+          "$ref": "#/components/schemas/Tile"
+        comments_count:
+          type: integer
+        likes_count:
+          type: integer
+        votes_count:
+          type: integer
+        created_at:
+          type: string
+          format: date_time
+        updated_at:
+          type: string
+          format: date_time
+    WhatToDiscardProblem_NoRel:
+      type: object
+      required:
+      - user_id
+      - round
+      - turn
+      - wind
+      - point_east
+      - point_south
+      - point_west
+      - point_north
+      - dora_id
+      - hand1_id
+      - hand2_id
+      - hand3_id
+      - hand4_id
+      - hand5_id
+      - hand6_id
+      - hand7_id
+      - hand8_id
+      - hand9_id
+      - hand10_id
+      - hand11_id
+      - hand12_id
+      - hand13_id
+      - tsumo_id
+      - comments_count
+      - likes_count
+      - votes_count
+      - created_at
+      - updated_at
+      properties:
+        user_id:
+          type: integer
+        round:
+          type: string
+        turn:
+          type: integer
+        wind:
+          type: string
+        point_east:
+          type: integer
+        point_south:
+          type: integer
+        point_west:
+          type: integer
+        point_north:
+          type: integer
+        dora_id:
+          type: integer
+        hand1_id:
+          type: integer
+        hand2_id:
+          type: integer
+        hand3_id:
+          type: integer
+        hand4_id:
+          type: integer
+        hand5_id:
+          type: integer
+        hand6_id:
+          type: integer
+        hand7_id:
+          type: integer
+        hand8_id:
+          type: integer
+        hand9_id:
+          type: integer
+        hand10_id:
+          type: integer
+        hand11_id:
+          type: integer
+        hand12_id:
+          type: integer
+        hand13_id:
+          type: integer
+        tsumo_id:
+          type: integer
+        comments_count:
+          type: integer
+        likes_count:
+          type: integer
+        votes_count:
+          type: integer
+        created_at:
+          type: string
+          format: date_time
+        updated_at:
+          type: string
+          format: date_time
+    Tile:
+      type: object
+      required:
+      - suit
+      - ordinal_number_in_suit
+      - name
+      - created_at
+      - updated_at
+      properties:
+        suit:
+          type: string
+        ordinal_number_in_suit:
+          type: integer
+        name:
+          type: string
+        created_at:
+          type: string
+          format: date_time
+        updated_at:
+          type: string
+          format: date_time
+    Error:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            type: object
+            required:
+            - message
+            properties:
+              message:
+                type: string
+    Pagination:
+      type: object
+      required:
+      - pagination
+      properties:
+        pagination:
+          type: object
+          required:
+          - total_pages
+          - current_page
+          - prev_page
+          - next_page
+          - first_page
+          - last_page
+          properties:
+            total_pages:
+              type: integer
+            current_page:
+              type: integer
+            prev_page:
+              type: integer
+              nullable: true
+            next_page:
+              type: integer
+              nullable: true
+            first_page:
+              type: integer
+            last_page:
+              type: integer
+    Session:
+      type: object
+      required:
+      - session
+      properties:
+        session:
+          type: object
+          required:
+          - is_logged_in
+          - user_id
+          properties:
+            is_logged_in:
+              type: boolean
+            user_id:
+              type: integer
+              nullable: true

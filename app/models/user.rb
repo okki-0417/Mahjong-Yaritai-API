@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
-  validates :name, presence: true, length: { maximum: 64 }
+  USER_NAME_LENGTH = 20
+  validates :name, presence: true, length: { maximum: USER_NAME_LENGTH }
   EMAIL_REGEXP = /\A[a-zA-Z0-9.!\#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\z/
   validates :email, presence: true, uniqueness: true, format: { with: EMAIL_REGEXP }
 

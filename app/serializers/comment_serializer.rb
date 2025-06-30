@@ -1,6 +1,7 @@
 class CommentSerializer < ActiveModel::Serializer
   attributes %i[
     id
+    user_id
     parent_comment_id
     replies_count
     commentable_type
