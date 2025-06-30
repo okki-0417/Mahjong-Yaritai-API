@@ -108,14 +108,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  is_logged_in:
-                    type: boolean
-                    nullable: true
-                  user_id:
-                    type: integer
-                    nullable: true
+                "$ref": "#/components/schemas/Session"
       requestBody:
         content:
           application/json:
@@ -873,3 +866,19 @@ components:
               type: integer
             last_page:
               type: integer
+    Session:
+      type: object
+      required:
+      - session
+      properties:
+        session:
+          type: object
+          required:
+          - is_logged_in
+          - user_id
+          properties:
+            is_logged_in:
+              type: boolean
+            user_id:
+              type: integer
+              nullable: true
