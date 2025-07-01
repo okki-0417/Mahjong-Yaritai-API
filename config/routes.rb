@@ -26,6 +26,7 @@ Rails.application.routes.draw do
     scope module: :what_to_discard_problems do
       namespace :votes do
         resource :my_vote, only: %i[show]
+        resource :result, only: %i[show]
       end
     end
   end

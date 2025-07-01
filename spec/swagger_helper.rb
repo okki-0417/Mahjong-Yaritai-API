@@ -144,6 +144,14 @@ dora_id hand1_id hand2_id hand3_id hand4_id hand5_id hand6_id hand7_id hand8_id 
               updated_at: { type: :string, format: :date_time },
             },
           },
+          WhatToDiscardProblemVoteResult: {
+            type: :object,
+            required: %w[tile_id count],
+            properties: {
+              tile_id: { type: :integer },
+              count: { type: :integer },
+            },
+          },
           Tile: {
             type: :object,
             required: %w[id suit ordinal_number_in_suit name created_at updated_at],

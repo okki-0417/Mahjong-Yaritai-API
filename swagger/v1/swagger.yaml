@@ -440,6 +440,33 @@ paths:
                     type: integer
                   tile:
                     "$ref": "#/components/schemas/Tile"
+  "/what_to_discard_problems/{what_to_discard_problem_id}/votes/result":
+    parameters:
+    - name: what_to_discard_problem_id
+      in: path
+      description: what_to_discard_problem_id
+      required: true
+      schema:
+        type: string
+    get:
+      summary: get result
+      tags:
+      - WhatToDiscardProblem::Vote::Result
+      operationId: getWhatToDiscardProblemVoteResult
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - what_to_discard_problem_vote_result
+                properties:
+                  what_to_discard_problem_vote_result:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/WhatToDiscardProblemVoteResult"
   "/what_to_discard_problems/{what_to_discard_problem_id}/votes":
     parameters:
     - name: what_to_discard_problem_id
@@ -936,6 +963,16 @@ components:
         updated_at:
           type: string
           format: date_time
+    WhatToDiscardProblemVoteResult:
+      type: object
+      required:
+      - tile_id
+      - count
+      properties:
+        tile_id:
+          type: integer
+        count:
+          type: integer
     Tile:
       type: object
       required:
