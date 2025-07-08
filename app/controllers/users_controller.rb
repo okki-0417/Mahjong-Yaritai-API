@@ -33,6 +33,11 @@ class UsersController < ApplicationController
 
   def update
     if current_user.update(user_update_params)
+      # アバターが更新された場合は非同期ジョブをエンキュー
+      if user_update_params[:avatar].present?
+        AvatarProcessingJob.perform_async(current_user.id)
+      end
+
       render json: current_user,
         serializer: UserSerializer,
         root: :user,
