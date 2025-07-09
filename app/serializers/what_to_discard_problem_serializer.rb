@@ -31,22 +31,36 @@ class WhatToDiscardProblemSerializer < ActiveModel::Serializer
     votes_count
     created_at
     updated_at
+    is_liked_by_me
+    my_vote_tile_id
   ]
 
+  def is_liked_by_me
+    return false unless scope[:problem_ids_liked_by_me]
+
+    scope[:problem_ids_liked_by_me].include?(object.id)
+  end
+
+  def my_vote_tile_id
+    return nil unless scope[:votes_by_me]
+
+    scope[:votes_by_me][object.id]
+  end
+
   belongs_to :user, serializer: UserSerializer
-  belongs_to :dora, serializer: TileSerializer
-  belongs_to :hand1, serializer: TileSerializer
-  belongs_to :hand2, serializer: TileSerializer
-  belongs_to :hand3, serializer: TileSerializer
-  belongs_to :hand4, serializer: TileSerializer
-  belongs_to :hand5, serializer: TileSerializer
-  belongs_to :hand6, serializer: TileSerializer
-  belongs_to :hand7, serializer: TileSerializer
-  belongs_to :hand8, serializer: TileSerializer
-  belongs_to :hand9, serializer: TileSerializer
-  belongs_to :hand10, serializer: TileSerializer
-  belongs_to :hand11, serializer: TileSerializer
-  belongs_to :hand12, serializer: TileSerializer
-  belongs_to :hand13, serializer: TileSerializer
-  belongs_to :tsumo, serializer: TileSerializer
+  # belongs_to :dora, serializer: TileSerializer
+  # belongs_to :hand1, serializer: TileSerializer
+  # belongs_to :hand2, serializer: TileSerializer
+  # belongs_to :hand3, serializer: TileSerializer
+  # belongs_to :hand4, serializer: TileSerializer
+  # belongs_to :hand5, serializer: TileSerializer
+  # belongs_to :hand6, serializer: TileSerializer
+  # belongs_to :hand7, serializer: TileSerializer
+  # belongs_to :hand8, serializer: TileSerializer
+  # belongs_to :hand9, serializer: TileSerializer
+  # belongs_to :hand10, serializer: TileSerializer
+  # belongs_to :hand11, serializer: TileSerializer
+  # belongs_to :hand12, serializer: TileSerializer
+  # belongs_to :hand13, serializer: TileSerializer
+  # belongs_to :tsumo, serializer: TileSerializer
 end

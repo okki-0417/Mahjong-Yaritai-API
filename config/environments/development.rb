@@ -17,6 +17,8 @@ Rails.application.configure do
       },
     ],
     same_site: :lax,
+    httponly: true,
+    secure: false,
     key: "_dev_session_id",
     expire_after: 1.month
 
@@ -27,7 +29,7 @@ Rails.application.configure do
 
   config.logger = ActiveSupport::Logger.new("log/development.log")
 
-  config.active_job.queue_adapter = :sidekiq
+  config.active_job.queue_adapter = :async
 
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :letter_opener_web

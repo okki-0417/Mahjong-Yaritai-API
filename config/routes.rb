@@ -20,13 +20,15 @@ Rails.application.routes.draw do
     resources :comments, module: :what_to_discard_problems, only: %i[index create destroy] do
       resources :replies, module: :comments, only: %i[index]
     end
-    resources :likes, module: :what_to_discard_problems, only: %i[create destroy]
-    resources :votes, module: :what_to_discard_problems, only: %i[create destroy]
 
     scope module: :what_to_discard_problems do
       namespace :votes do
-        resource :my_vote, only: %i[show]
+        resource :my_vote, only: %i[show create destroy]
         resource :result, only: %i[show]
+      end
+
+      namespace :likes do
+        resource :my_like, only: %i[show create destroy]
       end
     end
   end

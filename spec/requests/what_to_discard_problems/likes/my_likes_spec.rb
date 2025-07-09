@@ -1,32 +1,37 @@
-# frozen_string_literal: true
-
 require "swagger_helper"
 
-RSpec.describe "what_to_discard_problems/votes/my_votes", type: :request do
-  path "/what_to_discard_problems/{what_to_discard_problem_id}/votes/my_vote" do
+RSpec.describe "what_to_discard_problems/likes/my_likes", type: :request do
+  path "/what_to_discard_problems/{what_to_discard_problem_id}/likes/my_like" do
     parameter name: "what_to_discard_problem_id", in: :path, type: :string, description: "what_to_discard_problem_id"
 
-    get("show my_vote") do
-      tags "WhatToDiscardProblem::Comment::MyVote"
-      operationId "getWhatToDiscardProblemMyVote"
+    get("show my_like") do
+      tags "WhatToDiscardProblem::Like::MyLike"
+      operationId "getWhatToDiscardProblemMyLike"
       produces "application/json"
+
+      response(204, "no_content") do
+        let(:what_to_discard_problem_id) { what_to_discard_problem.id }
+        let(:what_to_discard_problem) { create(:what_to_discard_problem) }
+
+        let(:current_user) { create(:user) }
+        include_context "logged_in_rswag"
+
+        run_test!
+      end
 
       response(200, "successful") do
         let(:what_to_discard_problem_id) { what_to_discard_problem.id }
         let(:what_to_discard_problem) { create(:what_to_discard_problem) }
 
-        before { create(:what_to_discard_problem_vote, what_to_discard_problem:, user: current_user) }
+        before { create(:like, likable: what_to_discard_problem, user: current_user) }
 
         let(:current_user) { create(:user) }
         include_context "logged_in_rswag"
 
         schema type: :object,
-          required: %w[what_to_discard_problem_my_vote],
+          required: %w[my_like],
           properties: {
-            what_to_discard_problem_my_vote: {
-              "$ref" => "#/components/schemas/WhatToDiscardProblemVote",
-              nullable: true,
-            },
+            my_like: { "$ref" => "#/components/schemas/Like"  },
           }
 
         after do |example|
@@ -42,28 +47,13 @@ RSpec.describe "what_to_discard_problems/votes/my_votes", type: :request do
     end
 
     post("create my_like") do
-      tags "WhatToDiscardProblem::Vote::MyVote"
-      operationId "createWhatToDiscardProblemMyVote"
-      consumes "application/json"
+      tags "WhatToDiscardProblem::Like::MyLike"
+      operationId "createWhatToDiscardProblemMyLike"
       produces "application/json"
-      parameter name: :request_params, in: :body, schema: {
-        type: :object,
-        required: %w[what_to_discard_problem_my_vote],
-        properties: {
-          what_to_discard_problem_my_vote: {
-            type: :object,
-            required: %w[tile_id],
-            properties: {
-              tile_id: { type: :integer },
-            },
-          },
-        },
-      }
 
       response(401, "unauthorized") do
         let(:what_to_discard_problem_id) { what_to_discard_problem.id }
         let(:what_to_discard_problem) { create(:what_to_discard_problem) }
-        let(:request_params) { { what_to_discard_problem_my_vote: { tile_id: create(:tile).id } } }
 
         run_test!
       end
@@ -71,12 +61,11 @@ RSpec.describe "what_to_discard_problems/votes/my_votes", type: :request do
       response(422, "unprocessable_entity") do
         let(:what_to_discard_problem_id) { what_to_discard_problem.id }
         let(:what_to_discard_problem) { create(:what_to_discard_problem) }
-        let(:request_params) { { what_to_discard_problem_my_vote: { tile_id: create(:tile).id } } }
 
         let(:current_user) { create(:user) }
         include_context "logged_in_rswag"
 
-        before { allow_any_instance_of(WhatToDiscardProblem::Vote).to receive(:save).and_return(false) }
+        before { allow_any_instance_of(Like).to receive(:save).and_return(false) }
 
         run_test!
       end
@@ -84,15 +73,14 @@ RSpec.describe "what_to_discard_problems/votes/my_votes", type: :request do
       response(201, "created") do
         let(:what_to_discard_problem_id) { what_to_discard_problem.id }
         let(:what_to_discard_problem) { create(:what_to_discard_problem) }
-        let(:request_params) { { what_to_discard_problem_my_vote: { tile_id: create(:tile).id } } }
 
         let(:current_user) { create(:user) }
         include_context "logged_in_rswag"
 
         schema type: :object,
-          required: %w[what_to_discard_problem_my_vote],
+          required: %w[what_to_discard_problem_my_like],
           properties: {
-            what_to_discard_problem_my_vote: { "$ref" => "#/components/schemas/WhatToDiscardProblemVote"  },
+            what_to_discard_problem_my_like: { "$ref" => "#/components/schemas/Like"  },
           }
 
         after do |example|
@@ -107,8 +95,8 @@ RSpec.describe "what_to_discard_problems/votes/my_votes", type: :request do
     end
 
     delete("delete my_like") do
-      tags "WhatToDiscardProblem::Like::MyVote"
-      operationId "deleteWhatToDiscardProblemMyVote"
+      tags "WhatToDiscardProblem::Like::MyLike"
+      operationId "deleteWhatToDiscardProblemMyLike"
       produces "application/json"
 
       response(401, "unauthorized") do
@@ -125,7 +113,7 @@ RSpec.describe "what_to_discard_problems/votes/my_votes", type: :request do
         let(:current_user) { create(:user) }
         include_context "logged_in_rswag"
 
-        before { create(:what_to_discard_problem_vote, what_to_discard_problem:, user: current_user) }
+        before { create(:like, likable: what_to_discard_problem, user: current_user) }
 
         run_test!
       end

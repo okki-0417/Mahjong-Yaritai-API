@@ -5,3 +5,4 @@ spec/log.txt
 storage/
 node_modules
 config/master.key
+.aider*

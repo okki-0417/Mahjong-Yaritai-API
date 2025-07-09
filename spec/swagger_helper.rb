@@ -23,7 +23,7 @@ RSpec.configure do |config|
         schemas: {
           Like: {
             type: :object,
-            required: %w[id user_id likable_type likable_id created_at updated_at],
+            required: %w[id likable_type likable_id created_at updated_at],
             properties: {
               id: { type: :integer },
               user_id: { type: :integer },
@@ -74,8 +74,38 @@ updated_at],
           },
           WhatToDiscardProblem: {
             type: :object,
-            required: %w[id user round turn wind point_east point_south point_west point_north dora
-hand1 hand2 hand3 hand4 hand5 hand6 hand7 hand8 hand9 hand10 hand11 hand12 hand13 tsumo comments_count likes_count votes_count created_at updated_at],
+            required: %w[
+              id
+              user
+              round
+              turn
+              wind
+              point_east
+              point_south
+              point_west
+              point_north
+              dora_id
+              hand1_id
+              hand2_id
+              hand3_id
+              hand4_id
+              hand5_id
+              hand6_id
+              hand7_id
+              hand8_id
+              hand9_id
+              hand10_id
+              hand11_id
+              hand12_id
+              hand13_id
+              tsumo_id
+              comments_count
+              likes_count
+              votes_count
+              created_at
+              updated_at
+              is_liked_by_me
+              my_vote_tile_id],
             properties: {
               id: { type: :integer },
               user:  { "$ref" => "#/components/schemas/User" },
@@ -86,24 +116,26 @@ hand1 hand2 hand3 hand4 hand5 hand6 hand7 hand8 hand9 hand10 hand11 hand12 hand1
               point_south: { type: :integer },
               point_west: { type: :integer },
               point_north: { type: :integer },
-              dora: { "$ref" => "#/components/schemas/Tile" },
-              hand1: { "$ref" => "#/components/schemas/Tile" },
-              hand2: { "$ref" => "#/components/schemas/Tile" },
-              hand3: { "$ref" => "#/components/schemas/Tile" },
-              hand4: { "$ref" => "#/components/schemas/Tile" },
-              hand5: { "$ref" => "#/components/schemas/Tile" },
-              hand6: { "$ref" => "#/components/schemas/Tile" },
-              hand7: { "$ref" => "#/components/schemas/Tile" },
-              hand8: { "$ref" => "#/components/schemas/Tile" },
-              hand9: { "$ref" => "#/components/schemas/Tile" },
-              hand10: { "$ref" => "#/components/schemas/Tile" },
-              hand11: { "$ref" => "#/components/schemas/Tile" },
-              hand12: { "$ref" => "#/components/schemas/Tile" },
-              hand13: { "$ref" => "#/components/schemas/Tile" },
-              tsumo: { "$ref" => "#/components/schemas/Tile" },
+              dora_id: { type: :integer },
+              hand1_id: { type: :integer },
+              hand2_id: { type: :integer },
+              hand3_id: { type: :integer },
+              hand4_id: { type: :integer },
+              hand5_id: { type: :integer },
+              hand6_id: { type: :integer },
+              hand7_id: { type: :integer },
+              hand8_id: { type: :integer },
+              hand9_id: { type: :integer },
+              hand10_id: { type: :integer },
+              hand11_id: { type: :integer },
+              hand12_id: { type: :integer },
+              hand13_id: { type: :integer },
+              tsumo_id: { type: :integer },
               comments_count: { type: :integer },
               likes_count: { type: :integer },
               votes_count: { type: :integer },
+              is_liked_by_me: { type: :boolean },
+              my_vote_tile_id: { type: :integer, nullable: true },
               created_at: { type: :string, format: :date_time },
               updated_at: { type: :string, format: :date_time },
             },
@@ -140,6 +172,8 @@ dora_id hand1_id hand2_id hand3_id hand4_id hand5_id hand6_id hand7_id hand8_id 
               comments_count: { type: :integer },
               likes_count: { type: :integer },
               votes_count: { type: :integer },
+              is_liked_by_me: { type: :boolean },
+              my_vote_tile_id: { type: :integer, nullable: true },
               created_at: { type: :string, format: :date_time },
               updated_at: { type: :string, format: :date_time },
             },
@@ -150,6 +184,7 @@ dora_id hand1_id hand2_id hand3_id hand4_id hand5_id hand6_id hand7_id hand8_id 
             properties: {
               tile_id: { type: :integer },
               count: { type: :integer },
+              is_voted_bys_me: { type: :boolean },
             },
           },
           Tile: {
@@ -182,34 +217,22 @@ dora_id hand1_id hand2_id hand3_id hand4_id hand5_id hand6_id hand7_id hand8_id 
           },
           Pagination: {
             type: :object,
-            required: %w[pagination],
+            required: %w[total_pages current_page prev_page next_page first_page last_page],
             properties: {
-              pagination: {
-                type: :object,
-                required: %w[total_pages current_page prev_page next_page first_page last_page],
-                properties: {
-                  total_pages: { type: :integer },
-                  current_page: { type: :integer },
-                  prev_page: { type: :integer, nullable: true },
-                  next_page: { type: :integer, nullable: true },
-                  first_page: { type: :integer },
-                  last_page: { type: :integer },
-                },
-              },
+              total_pages: { type: :integer },
+              current_page: { type: :integer },
+              prev_page: { type: :integer, nullable: true },
+              next_page: { type: :integer, nullable: true },
+              first_page: { type: :integer },
+              last_page: { type: :integer },
             },
           },
           Session: {
             type: :object,
-            required: %w[session],
+            required: %w[is_logged_in user_id],
             properties: {
-              session: {
-                type: :object,
-                required: %w[is_logged_in user_id],
-                properties: {
-                  is_logged_in: { type: :boolean },
-                  user_id: { type: :integer, nullable: true },
-                },
-              },
+              is_logged_in: { type: :boolean },
+              user_id: { type: :integer, nullable: true },
             },
           },
         },

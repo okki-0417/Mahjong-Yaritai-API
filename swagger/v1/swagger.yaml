@@ -76,13 +76,11 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                - session
                 properties:
-                  is_logged_in:
-                    type: boolean
-                    nullable: true
-                  user_id:
-                    type: integer
-                    nullable: true
+                  session:
+                    "$ref": "#/components/schemas/Session"
     delete:
       summary: delete session
       tags:
@@ -109,7 +107,12 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/Session"
+                type: object
+                required:
+                - session
+                properties:
+                  session:
+                    "$ref": "#/components/schemas/Session"
       requestBody:
         content:
           application/json:
@@ -215,24 +218,20 @@ paths:
                     "$ref": "#/components/schemas/User"
       requestBody:
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               required:
-              - user
+              - name
+              - avatar
               properties:
-                user:
-                  type: object
-                  required:
-                  - name
-                  - avatar
-                  properties:
-                    name:
-                      type: string
-                      maxLength: 20
-                    avatar:
-                      type: string
-                      format: binary
+                name:
+                  type: string
+                  maxLength: 20
+                avatar:
+                  type: string
+                  format: binary
+                  nullable: true
     delete:
       summary: delete user
       tags:
@@ -364,21 +363,41 @@ paths:
           description: unauthorized
         '204':
           description: no_content
-  "/what_to_discard_problems/{what_to_discard_problem_id}/likes":
+  "/what_to_discard_problems/{what_to_discard_problem_id}/likes/my_like":
     parameters:
     - name: what_to_discard_problem_id
       in: path
+      description: what_to_discard_problem_id
       required: true
       schema:
         type: string
-    post:
-      summary: Create Like
+    get:
+      summary: show my_like
       tags:
-      - WhatToDiscardProblem::Like
-      operationId: createWhatToDiscardProblemLike
+      - WhatToDiscardProblem::Like::MyLike
+      operationId: getWhatToDiscardProblemMyLike
+      responses:
+        '204':
+          description: no_content
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - my_like
+                properties:
+                  my_like:
+                    "$ref": "#/components/schemas/Like"
+    post:
+      summary: create my_like
+      tags:
+      - WhatToDiscardProblem::Like::MyLike
+      operationId: createWhatToDiscardProblemMyLike
       responses:
         '401':
-          description: not_logged_in
+          description: unauthorized
         '422':
           description: unprocessable_entity
         '201':
@@ -388,30 +407,18 @@ paths:
               schema:
                 type: object
                 required:
-                - what_to_discard_problem_like
+                - what_to_discard_problem_my_like
                 properties:
-                  what_to_discard_problem_like:
+                  what_to_discard_problem_my_like:
                     "$ref": "#/components/schemas/Like"
-  "/what_to_discard_problems/{what_to_discard_problem_id}/likes/{id}":
-    parameters:
-    - name: what_to_discard_problem_id
-      in: path
-      required: true
-      schema:
-        type: string
-    - name: id
-      in: path
-      required: true
-      schema:
-        type: string
     delete:
-      summary: Delete Like
+      summary: delete my_like
       tags:
-      - WhatToDiscardProblem::Like
-      operationId: deleteWhatToDiscardProblemLike
+      - WhatToDiscardProblem::Like::MyLike
+      operationId: deleteWhatToDiscardProblemMyLike
       responses:
         '401':
-          description: not_logged_in
+          description: unauthorized
         '204':
           description: no_content
   "/what_to_discard_problems/{what_to_discard_problem_id}/votes/my_vote":
@@ -426,7 +433,7 @@ paths:
       summary: show my_vote
       tags:
       - WhatToDiscardProblem::Comment::MyVote
-      operationId: getMyVote
+      operationId: getWhatToDiscardProblemMyVote
       responses:
         '200':
           description: successful
@@ -434,12 +441,59 @@ paths:
             application/json:
               schema:
                 type: object
-                nullable: true
+                required:
+                - what_to_discard_problem_my_vote
                 properties:
-                  id:
-                    type: integer
-                  tile:
-                    "$ref": "#/components/schemas/Tile"
+                  what_to_discard_problem_my_vote:
+                    "$ref": "#/components/schemas/WhatToDiscardProblemVote"
+                    nullable: true
+    post:
+      summary: create my_like
+      tags:
+      - WhatToDiscardProblem::Vote::MyVote
+      operationId: createWhatToDiscardProblemMyVote
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+        '422':
+          description: unprocessable_entity
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - what_to_discard_problem_my_vote
+                properties:
+                  what_to_discard_problem_my_vote:
+                    "$ref": "#/components/schemas/WhatToDiscardProblemVote"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - what_to_discard_problem_my_vote
+              properties:
+                what_to_discard_problem_my_vote:
+                  type: object
+                  required:
+                  - tile_id
+                  properties:
+                    tile_id:
+                      type: integer
+    delete:
+      summary: delete my_like
+      tags:
+      - WhatToDiscardProblem::Like::MyVote
+      operationId: deleteWhatToDiscardProblemMyVote
+      responses:
+        '401':
+          description: unauthorized
+        '204':
+          description: no_content
   "/what_to_discard_problems/{what_to_discard_problem_id}/votes/result":
     parameters:
     - name: what_to_discard_problem_id
@@ -467,73 +521,6 @@ paths:
                     type: array
                     items:
                       "$ref": "#/components/schemas/WhatToDiscardProblemVoteResult"
-  "/what_to_discard_problems/{what_to_discard_problem_id}/votes":
-    parameters:
-    - name: what_to_discard_problem_id
-      in: path
-      description: what_to_discard_problem_id
-      required: true
-      schema:
-        type: string
-    post:
-      summary: create vote
-      tags:
-      - WhatToDiscardProblem::Vote
-      operationId: createVote
-      parameters: []
-      responses:
-        '401':
-          description: unauthorized
-        '422':
-          description: unprocessable_entity
-        '201':
-          description: created
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                - what_to_discard_problem_vote
-                properties:
-                  what_to_discard_problem_vote:
-                    "$ref": "#/components/schemas/WhatToDiscardProblemVote"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-              - what_to_discard_problem_vote
-              properties:
-                what_to_discard_problem_vote:
-                  type: object
-                  required:
-                  - tile_id
-                  properties:
-                    tile_id:
-                      type: string
-  "/what_to_discard_problems/{what_to_discard_problem_id}/votes/{id}":
-    parameters:
-    - name: what_to_discard_problem_id
-      in: path
-      description: what_to_discard_problem_id
-      required: true
-      schema:
-        type: string
-    - name: id
-      in: path
-      description: id
-      required: true
-      schema:
-        type: string
-    delete:
-      summary: delete vote
-      tags:
-      - WhatToDiscardProblem::Vote
-      operationId: deleteVote
-      responses:
-        '204':
-          description: no_content
   "/what_to_discard_problems":
     get:
       summary: list what_to_discard_problems
@@ -556,7 +543,8 @@ paths:
                     items:
                       "$ref": "#/components/schemas/WhatToDiscardProblem"
                   meta:
-                    "$ref": "#/components/schemas/Pagination"
+                    pagination:
+                      "$ref": "#/components/schemas/Pagination"
     post:
       summary: create what_to_discard_problem
       tags:
@@ -679,7 +667,6 @@ components:
       type: object
       required:
       - id
-      - user_id
       - likable_type
       - likable_id
       - created_at
@@ -790,26 +777,28 @@ components:
       - point_south
       - point_west
       - point_north
-      - dora
-      - hand1
-      - hand2
-      - hand3
-      - hand4
-      - hand5
-      - hand6
-      - hand7
-      - hand8
-      - hand9
-      - hand10
-      - hand11
-      - hand12
-      - hand13
-      - tsumo
+      - dora_id
+      - hand1_id
+      - hand2_id
+      - hand3_id
+      - hand4_id
+      - hand5_id
+      - hand6_id
+      - hand7_id
+      - hand8_id
+      - hand9_id
+      - hand10_id
+      - hand11_id
+      - hand12_id
+      - hand13_id
+      - tsumo_id
       - comments_count
       - likes_count
       - votes_count
       - created_at
       - updated_at
+      - is_liked_by_me
+      - my_vote_tile_id
       properties:
         id:
           type: integer
@@ -829,42 +818,47 @@ components:
           type: integer
         point_north:
           type: integer
-        dora:
-          "$ref": "#/components/schemas/Tile"
-        hand1:
-          "$ref": "#/components/schemas/Tile"
-        hand2:
-          "$ref": "#/components/schemas/Tile"
-        hand3:
-          "$ref": "#/components/schemas/Tile"
-        hand4:
-          "$ref": "#/components/schemas/Tile"
-        hand5:
-          "$ref": "#/components/schemas/Tile"
-        hand6:
-          "$ref": "#/components/schemas/Tile"
-        hand7:
-          "$ref": "#/components/schemas/Tile"
-        hand8:
-          "$ref": "#/components/schemas/Tile"
-        hand9:
-          "$ref": "#/components/schemas/Tile"
-        hand10:
-          "$ref": "#/components/schemas/Tile"
-        hand11:
-          "$ref": "#/components/schemas/Tile"
-        hand12:
-          "$ref": "#/components/schemas/Tile"
-        hand13:
-          "$ref": "#/components/schemas/Tile"
-        tsumo:
-          "$ref": "#/components/schemas/Tile"
+        dora_id:
+          type: integer
+        hand1_id:
+          type: integer
+        hand2_id:
+          type: integer
+        hand3_id:
+          type: integer
+        hand4_id:
+          type: integer
+        hand5_id:
+          type: integer
+        hand6_id:
+          type: integer
+        hand7_id:
+          type: integer
+        hand8_id:
+          type: integer
+        hand9_id:
+          type: integer
+        hand10_id:
+          type: integer
+        hand11_id:
+          type: integer
+        hand12_id:
+          type: integer
+        hand13_id:
+          type: integer
+        tsumo_id:
+          type: integer
         comments_count:
           type: integer
         likes_count:
           type: integer
         votes_count:
           type: integer
+        is_liked_by_me:
+          type: boolean
+        my_vote_tile_id:
+          type: integer
+          nullable: true
         created_at:
           type: string
           format: date_time
@@ -957,6 +951,11 @@ components:
           type: integer
         votes_count:
           type: integer
+        is_liked_by_me:
+          type: boolean
+        my_vote_tile_id:
+          type: integer
+          nullable: true
         created_at:
           type: string
           format: date_time
@@ -973,6 +972,8 @@ components:
           type: integer
         count:
           type: integer
+        is_voted_bys_me:
+          type: boolean
     Tile:
       type: object
       required:
@@ -1014,45 +1015,35 @@ components:
     Pagination:
       type: object
       required:
-      - pagination
+      - total_pages
+      - current_page
+      - prev_page
+      - next_page
+      - first_page
+      - last_page
       properties:
-        pagination:
-          type: object
-          required:
-          - total_pages
-          - current_page
-          - prev_page
-          - next_page
-          - first_page
-          - last_page
-          properties:
-            total_pages:
-              type: integer
-            current_page:
-              type: integer
-            prev_page:
-              type: integer
-              nullable: true
-            next_page:
-              type: integer
-              nullable: true
-            first_page:
-              type: integer
-            last_page:
-              type: integer
+        total_pages:
+          type: integer
+        current_page:
+          type: integer
+        prev_page:
+          type: integer
+          nullable: true
+        next_page:
+          type: integer
+          nullable: true
+        first_page:
+          type: integer
+        last_page:
+          type: integer
     Session:
       type: object
       required:
-      - session
+      - is_logged_in
+      - user_id
       properties:
-        session:
-          type: object
-          required:
-          - is_logged_in
-          - user_id
-          properties:
-            is_logged_in:
-              type: boolean
-            user_id:
-              type: integer
-              nullable: true
+        is_logged_in:
+          type: boolean
+        user_id:
+          type: integer
+          nullable: true

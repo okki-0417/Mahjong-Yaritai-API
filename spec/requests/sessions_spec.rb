@@ -13,9 +13,10 @@ RSpec.describe "sessions", type: :request do
         let(:current_user) { create(:user) }
         include_context "logged_in"
 
-        schema type: :object, properties: {
-          is_logged_in: { type: :boolean, nullable: true },
-          user_id: { type: :integer, nullable: true },
+        schema type: :object,
+          required: %w[session],
+          properties: {
+            session: { "$ref" => "#/components/schemas/Session" },
         }
 
         after do |example|
@@ -99,7 +100,11 @@ RSpec.describe "sessions", type: :request do
 
         before { allow(User).to receive(:find_by!).and_return(user) }
 
-        schema "$ref" => "#/components/schemas/Session"
+        schema type: :object,
+          required: %w[session],
+          properties: {
+            session: { "$ref" => "#/components/schemas/Session" },
+        }
 
         after do |example|
           example.metadata[:response][:content] = {

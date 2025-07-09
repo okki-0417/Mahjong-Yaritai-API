@@ -19,7 +19,9 @@ RSpec.describe "what_to_discard_problems", type: :request do
               type: :array,
               items: { "$ref" => "#/components/schemas/WhatToDiscardProblem" },
             },
-            meta: { "$ref" => "#/components/schemas/Pagination" },
+            meta: {
+              pagination: { "$ref" => "#/components/schemas/Pagination"  },
+            },
           }
 
         after do |example|
@@ -44,8 +46,7 @@ RSpec.describe "what_to_discard_problems", type: :request do
         properties: {
           what_to_discard_problem: {
             type: :object,
-            required: %w[round turn wind dora_id point_east point_south point_west point_north
-hand1_id hand2_id hand3_id hand4_id hand5_id hand6_id hand7_id hand8_id hand9_id hand10_id hand11_id hand12_id hand13_id tsumo_id],
+            required: %w[round turn wind dora_id point_east point_south point_west point_north hand1_id hand2_id hand3_id hand4_id hand5_id hand6_id hand7_id hand8_id hand9_id hand10_id hand11_id hand12_id hand13_id tsumo_id],
             properties: {
               round: { type: :string },
               turn: { type: :integer },

@@ -32,12 +32,11 @@ class UsersController < ApplicationController
   end
 
   def update
-    if current_user.update(user_update_params)
-      # アバターが更新された場合は非同期ジョブをエンキュー
-      if user_update_params[:avatar].present?
-        AvatarProcessingJob.perform_async(current_user.id)
-      end
+    # formDataで受け取るため、StrongParameter(JSON)を使えない
+    update_params = { name: params[:name] }
+    update_params[:avatar] = params[:avatar] if params[:avatar].present? && params[:avatar] != "undefined"
 
+    if current_user.update(update_params)
       render json: current_user,
         serializer: UserSerializer,
         root: :user,
@@ -57,8 +56,4 @@ class UsersController < ApplicationController
     def user_params
       params.require(:user).permit(:name, :email, :password, :password_confirmation)
     end
-
-  def user_update_params
-    params.require(:user).permit(:name, :avatar)
-  end
 end

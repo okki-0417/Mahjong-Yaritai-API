@@ -122,51 +122,29 @@ RSpec.describe "users", type: :request do
     put("update user") do
       tags "User"
       operationId "updateUser"
-      consumes "application/json"
+      consumes "multipart/form-data"
       produces "application/json"
-      parameter name: :request_params, in: :body, schema: {
+      parameter name: :name, in: :formData, schema: {
         type: :object,
-        required: %w[user],
+        required: %w[name avatar],
         properties: {
-          user: {
-            type: :object,
-            required: %w[name avatar],
-            properties: {
-              name: { type: :string, maxLength: User::USER_NAME_LENGTH },
-              avatar: { type: :string, format: :binary },
-            },
-          },
+          name: { type: :string, maxLength: User::USER_NAME_LENGTH },
+          avatar: { type: :string, format: :binary, nullable: true },
         },
       }
 
       response(401, "unauthorized") do
         let(:id) { create(:user).id }
-
-        let(:request_params) do
-          {
-            user: {
-              name: "name",
-              avatar:  Rack::Test::UploadedFile.new(File.join(Rails.root,
-"spec/fixtures/images/test.png")),
-            },
-          }
-        end
+        let(:name) { "name" }
+        let(:avatar) { fixture_file_upload(File.join(Rails.root, "spec/fixtures/images/test.png")) }
 
         run_test!
       end
 
       response(422, "unprocessable_entity") do
         let(:id) { current_user.id }
-
-        let(:request_params) do
-          {
-            user: {
-              name: "name",
-              avatar:  Rack::Test::UploadedFile.new(File.join(Rails.root,
-"spec/fixtures/images/test.png")),
-            },
-          }
-        end
+        let(:name) { "name" }
+        let(:avatar) { fixture_file_upload(File.join(Rails.root, "spec/fixtures/images/test.png")) }
 
         let(:current_user) { create(:user) }
         include_context "logged_in_rswag"
@@ -178,16 +156,8 @@ RSpec.describe "users", type: :request do
 
       response(200, "ok") do
         let(:id) { current_user.id }
-
-        let(:request_params) do
-          {
-            user: {
-              name: "name",
-              avatar:  Rack::Test::UploadedFile.new(File.join(Rails.root,
-"spec/fixtures/images/test.png")),
-            },
-          }
-        end
+        let(:name) { "name" }
+        let(:avatar) { fixture_file_upload(File.join(Rails.root, "spec/fixtures/images/test.png")) }
 
         let(:current_user) { create(:user) }
         include_context "logged_in_rswag"
@@ -198,7 +168,7 @@ RSpec.describe "users", type: :request do
             user: {
               "$ref" => "#/components/schemas/User",
             },
-            }
+          }
 
         after do |example|
           example.metadata[:response][:content] = {
