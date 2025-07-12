@@ -33,8 +33,22 @@ RSpec.describe "sessions", type: :request do
     delete("delete session") do
       tags "Session"
       operationId "deleteSession"
+      produces "application/json"
 
       response(401, "unauthorized") do
+        schema type: :object,
+        required: %w[errors],
+          properties: {
+            errors: { "$ref" => "#/components/schemas/Errors" },
+          }
+
+        after do |example|
+          example.metadata[:response][:content] = {
+            "application/json" => {
+              example: JSON.parse(response.body, symbolize_names: true),
+            },
+          }
+        end
         run_test!
       end
 
@@ -76,10 +90,23 @@ RSpec.describe "sessions", type: :request do
         let(:current_user) { create(:user) }
         include_context "logged_in_rswag"
 
+        schema type: :object,
+        required: %w[errors],
+          properties: {
+            errors: { "$ref" => "#/components/schemas/Errors" },
+          }
+
+        after do |example|
+          example.metadata[:response][:content] = {
+            "application/json" => {
+              example: JSON.parse(response.body, symbolize_names: true),
+            },
+          }
+        end
         run_test!
       end
 
-      response(422, "successful") do
+      response(422, "unprocessable_entity") do
         let(:request_params) { { session: { email:, password: } } }
 
         before { create(:user, email:, password:) }
@@ -88,6 +115,19 @@ RSpec.describe "sessions", type: :request do
 
         before { allow_any_instance_of(User).to receive(:authenticate).and_return(false) }
 
+        schema type: :object,
+        required: %w[errors],
+          properties: {
+            errors: { "$ref" => "#/components/schemas/Errors" },
+          }
+
+        after do |example|
+          example.metadata[:response][:content] = {
+            "application/json" => {
+              example: JSON.parse(response.body, symbolize_names: true),
+            },
+          }
+        end
         run_test!
       end
 

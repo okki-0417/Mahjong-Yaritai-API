@@ -199,19 +199,13 @@ dora_id hand1_id hand2_id hand3_id hand4_id hand5_id hand6_id hand7_id hand8_id 
               updated_at: { type: :string, format: :date_time },
             },
           },
-          Error: {
-            type: :object,
-            required: %w[errors],
-            properties: {
-              errors: {
-                type: :array,
-                items: {
-                  type: :object,
-                  required: %w[message],
-                  properties: {
-                    message: { type: :string },
-                  },
-                },
+          Errors: {
+            type: :array,
+            items: {
+              type: :object,
+              required: %w[message],
+              properties: {
+                message: { type: :string },
               },
             },
           },

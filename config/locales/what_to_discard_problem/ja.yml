@@ -26,7 +26,10 @@ ja:
         hand12: "手牌12"
         hand13: "手牌13"
         tsumo: "ツモ"
-  errors:
-    messages:
-      too_many_duplicates: "手牌に5枚以上同じ牌が含まれています"
-      tiles_not_sorted: "手牌が理牌されていません（昇順になっていません）"
+    errors:
+      models:
+        what_to_discard_problem:
+          attributes:
+            base:
+              too_many_duplicated_tiles: "手牌に5枚以上同じ牌が含まれています"
+              tiles_not_sorted: "手牌が理牌されていません（昇順になっていません）"
