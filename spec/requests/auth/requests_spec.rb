@@ -2,28 +2,28 @@
 
 require "swagger_helper"
 
-RSpec.describe "authorization_sessions", type: :request do
-  path "/authorization_session" do
-    post("create authorization_session") do
-      tags "AuthorizationSession"
-      operationId "createAuthorizationSession"
+RSpec.describe "auth_requests", type: :request do
+  path "/auth/request" do
+    post("create auth_request") do
+      tags "Auth::Request"
+      operationId "createAuthRequest"
       consumes "application/json"
       parameter name: :request_params, in: :body, schema: {
         type: :object,
-        required: %w[authorization_session],
+        required: %w[auth_request],
         properties: {
-          authorization_session: {
+          auth_request: {
             type: :object,
             required: %w[email],
             properties: {
-              email: { type: :string, maxLength: Authorization::EMAIL_LENGTH },
+              email: { type: :string, maxLength: Auth::Request::EMAIL_LENGTH },
             },
           },
         },
       }
 
       response(403, "forbidden") do
-        let(:request_params) { { authorization_session: { email: } } }
+        let(:request_params) { { auth_request: { email: } } }
         let(:email) { "test@mahjong-yaritai.com" }
 
         let(:current_user) { create(:user) }
@@ -33,16 +33,16 @@ RSpec.describe "authorization_sessions", type: :request do
       end
 
       response(422, "unprocessable_entity") do
-        let(:request_params) { { authorization_session: { email: } } }
+        let(:request_params) { { auth_request: { email: } } }
         let(:email) { "test@mahjong-yaritai.com" }
 
-        before { allow_any_instance_of(Authorization).to receive(:save).and_return(false) }
+        before { allow_any_instance_of(Auth::Request).to receive(:save).and_return(false) }
 
         run_test!
       end
 
       response(201, "created") do
-        let(:request_params) { { authorization_session: { email: } } }
+        let(:request_params) { { auth_request: { email: } } }
         let(:email) { "test@mahjong-yaritai.com" }
 
         run_test!

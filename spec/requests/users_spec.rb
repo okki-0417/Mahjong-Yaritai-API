@@ -76,8 +76,8 @@ RSpec.describe "users", type: :request do
           }
         end
 
-        let(:authorization) { create(:authorization) }
-        before { allow(Authorization).to receive(:find_by).and_return(authorization) }
+        let(:authorization) { create(:auth_request) }
+        before { allow(Auth::Request).to receive(:find_by).and_return(authorization) }
 
         after do |example|
           example.metadata[:response][:content] = {

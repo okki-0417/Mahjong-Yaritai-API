@@ -5,10 +5,10 @@ class UsersController < ApplicationController
   before_action :restrict_to_logged_in_user, only: %i[update destroy]
 
   def create
-    authorization = Authorization.find_by(id: session[:authorization_id]&.to_i)
+    auth_request = Auth::Request.find_by(id: session[:auth_request_id]&.to_i)
 
     user = User.new(
-      email: authorization&.email,
+      email: auth_request&.email,
       **user_params,
     )
 

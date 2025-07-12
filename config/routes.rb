@@ -9,8 +9,10 @@ Rails.application.routes.draw do
   get "/", to: "health_check#show"
   get "/up", to: "health_check#show"
 
-  resource :authorization_session, only: %i[create]
-  resource :authorization, only: %i[create]
+  namespace :auth do
+    resource :request, only: %i[create]
+    resource :verification, only: %i[create]
+  end
 
   resources :users, only: %i[show create update destroy]
 
