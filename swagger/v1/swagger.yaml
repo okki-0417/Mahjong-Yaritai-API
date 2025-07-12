@@ -533,13 +533,13 @@ paths:
         required: false
         description: Cursor for pagination
         schema:
-          type: integer
+          type: string
       - name: limit
         in: query
         required: false
         description: Number of items per page (max 100)
         schema:
-          type: integer
+          type: string
       responses:
         '200':
           description: ok
@@ -619,49 +619,49 @@ paths:
                       minLength: 2
                       maxLength: 2
                     turn:
-                      type: integer
+                      type: string
                     wind:
                       type: string
                       minLength: 1
                       maxLength: 1
                     dora_id:
-                      type: integer
+                      type: string
                     point_east:
-                      type: integer
+                      type: string
                     point_south:
-                      type: integer
+                      type: string
                     point_west:
-                      type: integer
+                      type: string
                     point_north:
-                      type: integer
+                      type: string
                     hand1_id:
-                      type: integer
+                      type: string
                     hand2_id:
-                      type: integer
+                      type: string
                     hand3_id:
-                      type: integer
+                      type: string
                     hand4_id:
-                      type: integer
+                      type: string
                     hand5_id:
-                      type: integer
+                      type: string
                     hand6_id:
-                      type: integer
+                      type: string
                     hand7_id:
-                      type: integer
+                      type: string
                     hand8_id:
-                      type: integer
+                      type: string
                     hand9_id:
-                      type: integer
+                      type: string
                     hand10_id:
-                      type: integer
+                      type: string
                     hand11_id:
-                      type: integer
+                      type: string
                     hand12_id:
-                      type: integer
+                      type: string
                     hand13_id:
-                      type: integer
+                      type: string
                     tsumo_id:
-                      type: integer
+                      type: string
   "/what_to_discard_problems/{id}":
     parameters:
     - name: id

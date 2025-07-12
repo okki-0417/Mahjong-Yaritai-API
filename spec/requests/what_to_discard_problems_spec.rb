@@ -9,8 +9,8 @@ RSpec.describe "what_to_discard_problems", type: :request do
       operationId "getWhatToDiscardProblems"
       produces "application/json"
 
-      parameter name: :cursor, in: :query, type: :integer, required: false, description: "Cursor for pagination"
-      parameter name: :limit, in: :query, type: :integer, required: false, description: "Number of items per page (max 100)"
+      parameter name: :cursor, in: :query, type: :string, required: false, description: "Cursor for pagination"
+      parameter name: :limit, in: :query, type: :string, required: false, description: "Number of items per page (max 100)"
 
       response(200, "ok") do
         before { create_list(:what_to_discard_problem, 3) }
@@ -55,27 +55,27 @@ RSpec.describe "what_to_discard_problems", type: :request do
             required: %w[round turn wind dora_id point_east point_south point_west point_north hand1_id hand2_id hand3_id hand4_id hand5_id hand6_id hand7_id hand8_id hand9_id hand10_id hand11_id hand12_id hand13_id tsumo_id],
             properties: {
               round: { type: :string, minLength: 2, maxLength: 2 },
-              turn: { type: :integer },
+              turn: { type: :string },
               wind: { type: :string, minLength: 1, maxLength: 1 },
-              dora_id: { type: :integer },
-              point_east: { type: :integer },
-              point_south: { type: :integer },
-              point_west: { type: :integer },
-              point_north: { type: :integer },
-              hand1_id: { type: :integer },
-              hand2_id: { type: :integer },
-              hand3_id: { type: :integer },
-              hand4_id: { type: :integer },
-              hand5_id: { type: :integer },
-              hand6_id: { type: :integer },
-              hand7_id: { type: :integer },
-              hand8_id: { type: :integer },
-              hand9_id: { type: :integer },
-              hand10_id: { type: :integer },
-              hand11_id: { type: :integer },
-              hand12_id: { type: :integer },
-              hand13_id: { type: :integer },
-              tsumo_id: { type: :integer },
+              dora_id: { type: :string },
+              point_east: { type: :string },
+              point_south: { type: :string },
+              point_west: { type: :string },
+              point_north: { type: :string },
+              hand1_id: { type: :string },
+              hand2_id: { type: :string },
+              hand3_id: { type: :string },
+              hand4_id: { type: :string },
+              hand5_id: { type: :string },
+              hand6_id: { type: :string },
+              hand7_id: { type: :string },
+              hand8_id: { type: :string },
+              hand9_id: { type: :string },
+              hand10_id: { type: :string },
+              hand11_id: { type: :string },
+              hand12_id: { type: :string },
+              hand13_id: { type: :string },
+              tsumo_id: { type: :string },
             },
           },
         },
