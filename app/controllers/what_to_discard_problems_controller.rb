@@ -59,7 +59,7 @@ class WhatToDiscardProblemsController < ApplicationController
   end
 
   def create
-    problem = current_user.created_what_to_discard_problems.new
+    problem = current_user.created_what_to_discard_problems.new(problem_params)
     Rails.logger.info "problem:#{problem.inspect}"
     Rails.logger.info "params:#{params}"
     Rails.logger.info "problem_params:#{problem_params}"
