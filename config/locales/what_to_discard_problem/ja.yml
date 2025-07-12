@@ -29,3 +29,4 @@ ja:
   errors:
     messages:
       too_many_duplicates: "手牌に5枚以上同じ牌が含まれています"
+      tiles_not_sorted: "手牌が理牌されていません（昇順になっていません）"

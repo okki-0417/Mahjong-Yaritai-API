@@ -23,7 +23,7 @@ class WhatToDiscardProblemsController < ApplicationController
         :tsumo)
       .order(created_at: :desc)
       .page(params[:page])
-      .per(3)
+      .per(20)
 
     problem_ids = problems.map(&:id)
 
