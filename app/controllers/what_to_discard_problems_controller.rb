@@ -60,6 +60,9 @@ class WhatToDiscardProblemsController < ApplicationController
 
   def create
     problem = current_user.created_what_to_discard_problems.new(problem_params)
+    Rails.logger.info "problem:#{problem}"
+    Rails.logger.info "params:#{params}"
+    Rails.logger.info "problem_params:#{problem_params}"
 
     if problem.save
       render json: problem,
