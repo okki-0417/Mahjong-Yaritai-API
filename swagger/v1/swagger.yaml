@@ -527,6 +527,19 @@ paths:
       tags:
       - WhatToDiscardProblem
       operationId: getWhatToDiscardProblems
+      parameters:
+      - name: cursor
+        in: query
+        required: false
+        description: Cursor for pagination
+        schema:
+          type: integer
+      - name: limit
+        in: query
+        required: false
+        description: Number of items per page (max 100)
+        schema:
+          type: integer
       responses:
         '200':
           description: ok
@@ -543,8 +556,10 @@ paths:
                     items:
                       "$ref": "#/components/schemas/WhatToDiscardProblem"
                   meta:
-                    pagination:
-                      "$ref": "#/components/schemas/Pagination"
+                    type: object
+                    properties:
+                      cursor:
+                        "$ref": "#/components/schemas/CursorPagination"
     post:
       summary: create what_to_discard_problem
       tags:
@@ -1039,6 +1054,19 @@ components:
         first_page:
           type: integer
         last_page:
+          type: integer
+    CursorPagination:
+      type: object
+      required:
+      - has_next
+      - limit
+      properties:
+        next:
+          type: integer
+          nullable: true
+        has_next:
+          type: boolean
+        limit:
           type: integer
     Session:
       type: object

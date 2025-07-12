@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 class WhatToDiscardProblemsController < ApplicationController
+  include CursorPaginationable
+
   before_action :restrict_to_logged_in_user, only: %i[create destroy]
 
   def index
-    problems = WhatToDiscardProblem.preload(user: :avatar_attachment)
+    base_relation = WhatToDiscardProblem.preload(user: :avatar_attachment)
       .eager_load(
         :dora,
         :hand1,
@@ -21,10 +23,14 @@ class WhatToDiscardProblemsController < ApplicationController
         :hand12,
         :hand13,
         :tsumo)
-      .order(created_at: :desc)
-      .page(params[:page])
-      .per(20)
 
+    result = cursor_paginate(
+      base_relation,
+      cursor: params[:cursor],
+      limit: params[:limit]
+    )
+
+    problems = result[:records]
     problem_ids = problems.map(&:id)
 
     problem_ids_liked_by_me = if logged_in?
@@ -48,7 +54,7 @@ class WhatToDiscardProblemsController < ApplicationController
       each_serializer: WhatToDiscardProblemSerializer,
       root: :what_to_discard_problems,
       scope: { problem_ids_liked_by_me:, votes_by_me: },
-      meta: { pagination: pagination_data(problems)  },
+      meta: result[:meta],
       status: :ok
   end
 

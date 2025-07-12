@@ -227,6 +227,15 @@ dora_id hand1_id hand2_id hand3_id hand4_id hand5_id hand6_id hand7_id hand8_id 
               last_page: { type: :integer },
             },
           },
+          CursorPagination: {
+            type: :object,
+            required: %w[has_next limit],
+            properties: {
+              next: { type: :integer, nullable: true },
+              has_next: { type: :boolean },
+              limit: { type: :integer },
+            },
+          },
           Session: {
             type: :object,
             required: %w[is_logged_in user_id],

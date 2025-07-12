@@ -9,6 +9,9 @@ RSpec.describe "what_to_discard_problems", type: :request do
       operationId "getWhatToDiscardProblems"
       produces "application/json"
 
+      parameter name: :cursor, in: :query, type: :integer, required: false, description: "Cursor for pagination"
+      parameter name: :limit, in: :query, type: :integer, required: false, description: "Number of items per page (max 100)"
+
       response(200, "ok") do
         before { create_list(:what_to_discard_problem, 3) }
 
@@ -20,7 +23,10 @@ RSpec.describe "what_to_discard_problems", type: :request do
               items: { "$ref" => "#/components/schemas/WhatToDiscardProblem" },
             },
             meta: {
-              pagination: { "$ref" => "#/components/schemas/Pagination"  },
+              type: :object,
+              properties: {
+                cursor: { "$ref" => "#/components/schemas/CursorPagination" },
+              },
             },
           }
 
