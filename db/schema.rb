@@ -20,7 +20,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_06_14_071607) do
     t.bigint "record_id", null: false
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
-    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index [ "blob_id" ], name: "index_active_storage_attachments_on_blob_id"
     t.index %w[record_type record_id name blob_id], name: "index_active_storage_attachments_uniqueness", unique: true
   end
 
@@ -33,7 +33,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_06_14_071607) do
     t.bigint "byte_size", null: false
     t.string "checksum"
     t.datetime "created_at", null: false
-    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+    t.index [ "key" ], name: "index_active_storage_blobs_on_key", unique: true
   end
 
   create_table "active_storage_variant_records", force: :cascade do |t|
@@ -58,8 +58,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_06_14_071607) do
     t.string "content", limit: 500, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["parent_comment_id"], name: "index_comments_on_parent_comment_id"
-    t.index ["user_id"], name: "index_comments_on_user_id"
+    t.index [ "parent_comment_id" ], name: "index_comments_on_parent_comment_id"
+    t.index [ "user_id" ], name: "index_comments_on_user_id"
   end
 
   create_table "likes", force: :cascade do |t|
@@ -68,7 +68,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_06_14_071607) do
     t.bigint "likable_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_likes_on_user_id"
+    t.index [ "user_id" ], name: "index_likes_on_user_id"
   end
 
   create_table "tiles", force: :cascade do |t|
@@ -86,7 +86,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_06_14_071607) do
     t.string "remember_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index [ "email" ], name: "index_users_on_email", unique: true
   end
 
   create_table "what_to_discard_problem_votes", force: :cascade do |t|
@@ -95,10 +95,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_06_14_071607) do
     t.bigint "what_to_discard_problem_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["tile_id"], name: "index_what_to_discard_problem_votes_on_tile_id"
+    t.index [ "tile_id" ], name: "index_what_to_discard_problem_votes_on_tile_id"
     t.index %w[user_id what_to_discard_problem_id], name: "idx_on_user_id_what_to_discard_problem_id_ba7da3c2b5", unique: true
-    t.index ["user_id"], name: "index_what_to_discard_problem_votes_on_user_id"
-    t.index ["what_to_discard_problem_id"], name: "idx_on_what_to_discard_problem_id_619294c3a6"
+    t.index [ "user_id" ], name: "index_what_to_discard_problem_votes_on_user_id"
+    t.index [ "what_to_discard_problem_id" ], name: "idx_on_what_to_discard_problem_id_619294c3a6"
   end
 
   create_table "what_to_discard_problems", force: :cascade do |t|
@@ -130,22 +130,22 @@ ActiveRecord::Schema[7.2].define(version: 2025_06_14_071607) do
     t.integer "votes_count", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["dora_id"], name: "index_what_to_discard_problems_on_dora_id"
-    t.index ["hand10_id"], name: "index_what_to_discard_problems_on_hand10_id"
-    t.index ["hand11_id"], name: "index_what_to_discard_problems_on_hand11_id"
-    t.index ["hand12_id"], name: "index_what_to_discard_problems_on_hand12_id"
-    t.index ["hand13_id"], name: "index_what_to_discard_problems_on_hand13_id"
-    t.index ["hand1_id"], name: "index_what_to_discard_problems_on_hand1_id"
-    t.index ["hand2_id"], name: "index_what_to_discard_problems_on_hand2_id"
-    t.index ["hand3_id"], name: "index_what_to_discard_problems_on_hand3_id"
-    t.index ["hand4_id"], name: "index_what_to_discard_problems_on_hand4_id"
-    t.index ["hand5_id"], name: "index_what_to_discard_problems_on_hand5_id"
-    t.index ["hand6_id"], name: "index_what_to_discard_problems_on_hand6_id"
-    t.index ["hand7_id"], name: "index_what_to_discard_problems_on_hand7_id"
-    t.index ["hand8_id"], name: "index_what_to_discard_problems_on_hand8_id"
-    t.index ["hand9_id"], name: "index_what_to_discard_problems_on_hand9_id"
-    t.index ["tsumo_id"], name: "index_what_to_discard_problems_on_tsumo_id"
-    t.index ["user_id"], name: "index_what_to_discard_problems_on_user_id"
+    t.index [ "dora_id" ], name: "index_what_to_discard_problems_on_dora_id"
+    t.index [ "hand10_id" ], name: "index_what_to_discard_problems_on_hand10_id"
+    t.index [ "hand11_id" ], name: "index_what_to_discard_problems_on_hand11_id"
+    t.index [ "hand12_id" ], name: "index_what_to_discard_problems_on_hand12_id"
+    t.index [ "hand13_id" ], name: "index_what_to_discard_problems_on_hand13_id"
+    t.index [ "hand1_id" ], name: "index_what_to_discard_problems_on_hand1_id"
+    t.index [ "hand2_id" ], name: "index_what_to_discard_problems_on_hand2_id"
+    t.index [ "hand3_id" ], name: "index_what_to_discard_problems_on_hand3_id"
+    t.index [ "hand4_id" ], name: "index_what_to_discard_problems_on_hand4_id"
+    t.index [ "hand5_id" ], name: "index_what_to_discard_problems_on_hand5_id"
+    t.index [ "hand6_id" ], name: "index_what_to_discard_problems_on_hand6_id"
+    t.index [ "hand7_id" ], name: "index_what_to_discard_problems_on_hand7_id"
+    t.index [ "hand8_id" ], name: "index_what_to_discard_problems_on_hand8_id"
+    t.index [ "hand9_id" ], name: "index_what_to_discard_problems_on_hand9_id"
+    t.index [ "tsumo_id" ], name: "index_what_to_discard_problems_on_tsumo_id"
+    t.index [ "user_id" ], name: "index_what_to_discard_problems_on_user_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
