@@ -44,26 +44,8 @@ paths:
       responses:
         '403':
           description: forbidden
-          content:
-            applications/json:
-              schema:
-                type: object
-                required:
-                - errors
-                properties:
-                  errors:
-                    "$ref": "#/components/schemas/Errors"
         '422':
           description: unprocessable_entity
-          content:
-            applications/json:
-              schema:
-                type: object
-                required:
-                - errors
-                properties:
-                  errors:
-                    "$ref": "#/components/schemas/Errors"
         '200':
           description: ok
       requestBody:
@@ -186,26 +168,8 @@ paths:
       responses:
         '403':
           description: forbidden
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                - errors
-                properties:
-                  errors:
-                    "$ref": "#/components/schemas/Errors"
         '422':
           description: unprocessable_entity
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                - errors
-                properties:
-                  errors:
-                    "$ref": "#/components/schemas/Errors"
         '201':
           description: created
       requestBody:
