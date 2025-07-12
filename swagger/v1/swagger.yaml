@@ -83,6 +83,19 @@ paths:
                   properties:
                     token:
                       type: string
+  "/me/withdrawal":
+    post:
+      summary: create user
+      tags:
+      - Me::Withdrawal
+      operationId: withdrawUser
+      responses:
+        '401':
+          description: unauthorized
+        '422':
+          description: unprocessable_entity
+        '204':
+          description: no_content
   "/session":
     get:
       summary: show session

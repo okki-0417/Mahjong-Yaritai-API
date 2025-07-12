@@ -18,6 +18,10 @@ Rails.application.routes.draw do
 
   resource :session, only: %i[show destroy]
 
+  namespace :me do
+    resource :withdrawal, only: %i[create]
+  end
+
   resources :what_to_discard_problems, only: %i[index create destroy] do
     resources :comments, module: :what_to_discard_problems, only: %i[index create destroy] do
       resources :replies, module: :comments, only: %i[index]
