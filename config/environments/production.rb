@@ -31,7 +31,7 @@ Rails.application.configure do
   config.action_mailer.smtp_settings = {
     address:         "smtp.gmail.com",             # Gmail の SMTP サーバー
     port:            587,                          # STARTTLS を使うポート
-    domain:          "mahjong-yaritai.com",        # 自分のドメイン名（正確に指定することが推奨）
+    domain:          ENV.fetch("FRONTEND_DOMAIN"), # 自分のドメイン名（正確に指定することが推奨）
     user_name:       ENV.fetch("MAIL_ADDRESS"),
     password:        ENV.fetch("MAIL_PASSWORD"),
     authentication:  "plain",                      # 認証方式（通常は "plain" で問題なし）
@@ -41,7 +41,9 @@ Rails.application.configure do
   }
 
   config.action_mailer.default_url_options = { host: ENV.fetch("FRONTEND_HOST") }
-  config.action_mailer.default_url_options = { host: ENV.fetch("HOST_NAME") }
+  config.routes.default_url_options = { host: ENV.fetch("HOST_NAME") }
+
+  config.active_job.queue_adapter = :async
 
   config.hosts << ENV.fetch("HOST_NAME")
   config.hosts << "10.0.1.136:3001"
