@@ -19,7 +19,9 @@ Rails.application.routes.draw do
   resource :session, only: %i[show destroy]
 
   namespace :me do
-    resource :withdrawal, only: %i[create]
+    resource :withdrawal, only: %i[create] do
+      resource :summary, module: :withdrawals, only: %i[show]
+    end
   end
 
   resources :what_to_discard_problems, only: %i[index create destroy] do

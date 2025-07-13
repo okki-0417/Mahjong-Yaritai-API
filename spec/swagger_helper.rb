@@ -238,6 +238,13 @@ dora_id hand1_id hand2_id hand3_id hand4_id hand5_id hand6_id hand7_id hand8_id 
               user_id: { type: :integer, nullable: true },
             },
           },
+          WithdrawalSummary: {
+            type: :object,
+            required: %w[what_to_discard_problems_count],
+            properties: {
+              what_to_discard_problems_count: { type: :integer },
+            },
+          },
         },
       },
     },

@@ -83,6 +83,35 @@ paths:
                   properties:
                     token:
                       type: string
+  "/me/withdrawal/summary":
+    get:
+      summary: show withdrawal summary
+      tags:
+      - Me::Withdrawals::summary
+      operationId: getWithdrawalSummary
+      responses:
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    "$ref": "#/components/schemas/Errors"
+                required:
+                - errors
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - withdrawal_summary
+                properties:
+                  withdrawal_summary:
+                    "$ref": "#/components/schemas/WithdrawalSummary"
   "/me/withdrawal":
     post:
       summary: create user
@@ -1076,3 +1105,10 @@ components:
         user_id:
           type: integer
           nullable: true
+    WithdrawalSummary:
+      type: object
+      required:
+      - what_to_discard_problems_count
+      properties:
+        what_to_discard_problems_count:
+          type: integer
