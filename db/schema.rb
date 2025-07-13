@@ -47,7 +47,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_13_022859) do
     t.string "token", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "expired_at"
+    t.datetime "expired_at", default: -> { "(now() + 'PT15M'::interval)" }, null: false
   end
 
   create_table "comments", force: :cascade do |t|
