@@ -4,12 +4,12 @@ info:
   title: API V1
   version: v1
 paths:
-  "/authorization_session":
+  "/auth/request":
     post:
-      summary: create authorization_session
+      summary: create auth_request
       tags:
-      - AuthorizationSession
-      operationId: createAuthorizationSession
+      - Auth::Request
+      operationId: createAuthRequest
       parameters: []
       responses:
         '403':
@@ -24,9 +24,9 @@ paths:
             schema:
               type: object
               required:
-              - authorization_session
+              - auth_request
               properties:
-                authorization_session:
+                auth_request:
                   type: object
                   required:
                   - email
@@ -34,29 +34,49 @@ paths:
                     email:
                       type: string
                       maxLength: 64
-  "/authorization":
+  "/auth/verification":
     post:
-      summary: create authorization
+      summary: create auth_verification
       tags:
-      - Authorization
-      operationId: createAuthorization
+      - Auth::Verification
+      operationId: createAuthVerification
       parameters: []
       responses:
         '403':
           description: forbidden
         '422':
           description: unprocessable_entity
-        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    "$ref": "#/components/schemas/Errors"
+                required:
+                - errors
+        '204':
           description: ok
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  auth_verification:
+                    "$ref": "#/components/schemas/User"
+                required:
+                - auth_verification
       requestBody:
         content:
           application/json:
             schema:
               type: object
               required:
-              - authorization
+              - auth_verification
               properties:
-                authorization:
+                auth_verification:
                   type: object
                   required:
                   - token
@@ -100,64 +120,6 @@ paths:
                     "$ref": "#/components/schemas/Errors"
         '204':
           description: no_content
-    post:
-      summary: create session
-      tags:
-      - Session
-      operationId: createSession
-      parameters: []
-      responses:
-        '403':
-          description: forbidden
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                - errors
-                properties:
-                  errors:
-                    "$ref": "#/components/schemas/Errors"
-        '422':
-          description: unprocessable_entity
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                - errors
-                properties:
-                  errors:
-                    "$ref": "#/components/schemas/Errors"
-        '201':
-          description: successful
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                - session
-                properties:
-                  session:
-                    "$ref": "#/components/schemas/Session"
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-              - session
-              properties:
-                session:
-                  type: object
-                  required:
-                  - email
-                  - password
-                  properties:
-                    email:
-                      type: string
-                    password:
-                      type: string
   "/users":
     post:
       summary: create user
@@ -172,30 +134,30 @@ paths:
           description: unprocessable_entity
         '201':
           description: created
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - user
+                properties:
+                  user:
+                    "$ref": "#/components/schemas/User"
       requestBody:
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               required:
-              - user
+              - name
+              - avatar
               properties:
-                user:
-                  type: object
-                  required:
-                  - name
-                  - avatar
-                  properties:
-                    name:
-                      type: string
-                      maxLength: 20
-                    avatar:
-                      type: string
-                      format: binary
-                    password:
-                      type: string
-                    password_confirmation:
-                      type: string
+                name:
+                  type: string
+                  maxLength: 20
+                avatar:
+                  type: string
+                  format: binary
   "/users/{id}":
     parameters:
     - name: id

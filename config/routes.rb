@@ -9,12 +9,14 @@ Rails.application.routes.draw do
   get "/", to: "health_check#show"
   get "/up", to: "health_check#show"
 
-  resource :authorization_session, only: %i[create]
-  resource :authorization, only: %i[create]
+  namespace :auth do
+    resource :request, only: %i[create]
+    resource :verification, only: %i[create]
+  end
 
   resources :users, only: %i[show create update destroy]
 
-  resource :session, only: %i[show create destroy]
+  resource :session, only: %i[show destroy]
 
   resources :what_to_discard_problems, only: %i[index create destroy] do
     resources :comments, module: :what_to_discard_problems, only: %i[index create destroy] do

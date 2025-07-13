@@ -5,16 +5,22 @@ class UsersController < ApplicationController
   before_action :restrict_to_logged_in_user, only: %i[update destroy]
 
   def create
-    authorization = Authorization.find_by(id: session[:authorization_id]&.to_i)
+    auth_request = AuthRequest.find_by(id: session[:auth_request_id]&.to_i)
+
+    # formDataで受け取るため、StrongParameter(JSON)を使えない
+    create_params = { name: params[:name] }
+    create_params[:avatar] = params[:avatar] if params[:avatar].present? && params[:avatar] != "undefined"
 
     user = User.new(
-      email: authorization&.email,
-      **user_params,
+      email: auth_request&.email,
+      **create_params,
     )
 
     if user.save
-      login(user)
-      remember(user)
+      login user
+      remember user
+
+      auth_request.destroy!
 
       render json: user, serializer: UserSerializer, root: :user, status: :created
     else
@@ -50,10 +56,4 @@ class UsersController < ApplicationController
     User.destroy(current_user.id)
     head :no_content
   end
-
-  private
-
-    def user_params
-      params.require(:user).permit(:name, :email, :password, :password_confirmation)
-    end
 end

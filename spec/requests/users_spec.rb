@@ -7,37 +7,20 @@ RSpec.describe "users", type: :request do
     post("create user") do
       tags "User"
       operationId "createUser"
-      consumes "application/json"
+      consumes "multipart/form-data"
       produces "application/json"
-      parameter name: :request_params, in: :body, schema: {
+      parameter name: :name, in: :formData, schema: {
         type: :object,
-        required: %w[user],
+        required: %w[name avatar],
         properties: {
-          user: {
-            type: :object,
-            required: %w[name avatar],
-            properties: {
-              name: { type: :string, maxLength: User::USER_NAME_LENGTH },
-              avatar: { type: :string, format: :binary },
-              password: { type: :string },
-              password_confirmation: { type: :string },
-            },
-          },
+          name: { type: :string, maxLength: User::USER_NAME_LENGTH },
+          avatar: { type: :string, format: :binary },
         },
       }
 
       response(403, "forbidden") do
-        let(:request_params) do
-          {
-            user: {
-              name: "name",
-              avatar:  Rack::Test::UploadedFile.new(File.join(Rails.root,
-"spec/fixtures/images/test.png")),
-              password: "password",
-              password_confirmation: "password",
-            },
-          }
-        end
+        let(:name) { "name" }
+        let(:avatar) { fixture_file_upload(File.join(Rails.root, "spec/fixtures/images/test.png")) }
 
         let(:current_user) { create(:user) }
         include_context "logged_in_rswag"
@@ -46,17 +29,8 @@ RSpec.describe "users", type: :request do
       end
 
       response(422, "unprocessable_entity") do
-        let(:request_params) do
-          {
-            user: {
-              name: "name",
-              avatar:  Rack::Test::UploadedFile.new(File.join(Rails.root,
-"spec/fixtures/images/test.png")),
-              password: "password",
-              password_confirmation: "password",
-            },
-          }
-        end
+        let(:name) { "name" }
+        let(:avatar) { fixture_file_upload(File.join(Rails.root, "spec/fixtures/images/test.png")) }
 
         before { allow_any_instance_of(User).to receive(:save).and_return(false) }
 
@@ -64,20 +38,19 @@ RSpec.describe "users", type: :request do
       end
 
       response(201, "created") do
-        let(:request_params) do
-          {
+        let(:name) { "name" }
+        let(:avatar) { fixture_file_upload(File.join(Rails.root, "spec/fixtures/images/test.png")) }
+
+        let(:auth_request) { create(:auth_request) }
+        before { allow(AuthRequest).to receive(:find_by).and_return(auth_request) }
+
+        schema type: :object,
+          required: %w[user],
+          properties: {
             user: {
-              name: "name",
-              avatar:  Rack::Test::UploadedFile.new(File.join(Rails.root,
-"spec/fixtures/images/test.png")),
-              password: "password",
-              password_confirmation: "password",
+              "$ref" => "#/components/schemas/User",
             },
           }
-        end
-
-        let(:authorization) { create(:authorization) }
-        before { allow(Authorization).to receive(:find_by).and_return(authorization) }
 
         after do |example|
           example.metadata[:response][:content] = {
