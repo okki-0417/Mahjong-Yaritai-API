@@ -39,7 +39,9 @@ Rails.application.configure do
     open_timeout:    5,
     read_timeout:    5,
   }
+
   config.action_mailer.default_url_options = { host: ENV.fetch("FRONTEND_HOST") }
+  config.action_mailer.default_url_options = { host: ENV.fetch("HOST_NAME") }
 
   config.hosts << ENV.fetch("HOST_NAME")
   config.hosts << "10.0.1.136:3001"
