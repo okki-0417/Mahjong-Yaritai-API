@@ -31,7 +31,7 @@ Rails.application.configure do
   config.action_mailer.smtp_settings = {
     address:         "smtp.gmail.com",             # Gmail の SMTP サーバー
     port:            587,                          # STARTTLS を使うポート
-    domain:          ENV.fetch("FRONTEND_DOMAIN"), # 自分のドメイン名（正確に指定することが推奨）
+    domain:          ENV.fetch("FRONTEND_HOST"), # 自分のドメイン名（正確に指定することが推奨）
     user_name:       ENV.fetch("MAIL_ADDRESS"),
     password:        ENV.fetch("MAIL_PASSWORD"),
     authentication:  "plain",                      # 認証方式（通常は "plain" で問題なし）
