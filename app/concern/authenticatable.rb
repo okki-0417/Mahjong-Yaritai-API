@@ -18,6 +18,7 @@ module Authenticatable
       # 開発時はバックエンドとフロントエンドともに同じホストで起動する想定で Lax を指定
       same_site: Rails.env.production? ? :none : :lax,
       secure: Rails.env.production?,
+      domain: :all,
       httponly: true,
     }
 
@@ -25,6 +26,7 @@ module Authenticatable
       value: user.remember_token,
       secure: Rails.env.production?,
       same_site: Rails.env.production? ? :none : :lax,
+      domain: :all,
       httponly: true,
     }
   end
