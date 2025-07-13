@@ -1,4 +1,4 @@
-# require "sidekiq/web"
+require "sidekiq/web"
 
 Rails.application.routes.draw do
   mount Rswag::Ui::Engine => "/api-docs"
@@ -48,5 +48,6 @@ Rails.application.routes.draw do
 
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
+    mount Sidekiq::Web => "/sidekiq"
   end
 end

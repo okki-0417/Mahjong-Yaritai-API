@@ -24,6 +24,9 @@ module MahjongYaritaiApp
     config.api_only = true
     config.action_dispatch.cookies_same_site_protection = :none
 
+    # ActiveJob configuration
+    config.active_job.queue_adapter = :sidekiq
+
     config.autoload_lib(ignore: %w[assets tasks])
 
     Dir[Rails.root.join("app/*")].each do |path|

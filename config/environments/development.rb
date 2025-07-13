@@ -29,8 +29,6 @@ Rails.application.configure do
 
   config.logger = ActiveSupport::Logger.new("log/development.log")
 
-  config.active_job.queue_adapter = :async
-
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :letter_opener_web
   config.action_mailer.perform_deliveries = true
@@ -46,6 +44,8 @@ Rails.application.configure do
   config.active_record.query_log_tags_enabled = true
 
   config.action_controller.raise_on_missing_callback_actions = true
+
+  config.active_job.queue_adapter = :sidekiq
 
   config.active_storage.service = :local
 end

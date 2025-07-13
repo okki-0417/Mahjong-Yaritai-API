@@ -23,7 +23,7 @@ Rails.application.configure do
 
   config.session_store :redis_store
 
-  config.active_storage.service = :local
+  config.active_storage.service = :amazon
 
   config.middleware.swap Rails::Rack::Logger, CustomLogger
 
@@ -42,9 +42,7 @@ Rails.application.configure do
 
   config.action_mailer.default_url_options = { host: ENV.fetch("FRONTEND_HOST") }
   Rails.application.routes.default_url_options = { host: ENV.fetch("HOST_NAME") }
-  config.active_storage.service = :local
-
-  config.active_job.queue_adapter = :async
+  config.active_storage.service = :amazon
 
   config.hosts << ENV.fetch("HOST_NAME")
   config.hosts << "10.0.1.136:3001"
@@ -58,6 +56,8 @@ Rails.application.configure do
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
 
   config.active_support.report_deprecations = false
+
+  config.active_job.queue_adapter = :sidekiq
 
   config.active_storage.draw_routes = false
 

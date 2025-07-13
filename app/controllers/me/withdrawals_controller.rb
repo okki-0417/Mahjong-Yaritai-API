@@ -19,8 +19,8 @@ class Me::WithdrawalsController < Me::BaseController
       reset_session
     end
 
-    # 退会完了メールを送信
-    WithdrawalMailer.withdrawal_completed(user_email, user_name).deliver_now
+    # 退会完了メールを送信（非同期）
+    WithdrawalMailer.withdrawal_completed(user_email, user_name).deliver_later
 
     render body: nil, status: :no_content
   rescue ActiveRecord::RecordNotDestroyed
