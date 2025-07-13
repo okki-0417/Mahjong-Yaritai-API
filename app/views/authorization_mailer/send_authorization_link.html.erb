@@ -13,7 +13,7 @@
     <%= @token %>
   </div>
 
-  <% expire_after_minutes = Auth::Request::EXPIRATION_PERIOD.to_i / 60 %>
+  <% expire_after_minutes = AuthRequest::EXPIRATION_PERIOD.to_i / 60 %>
 
   <p>
     認証コードは<%= expire_after_minutes %>分間有効です。<br />

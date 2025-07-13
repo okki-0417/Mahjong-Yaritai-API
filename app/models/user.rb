@@ -6,8 +6,6 @@ class User < ApplicationRecord
   EMAIL_REGEXP = /\A[a-zA-Z0-9.!\#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\z/
   validates :email, presence: true, uniqueness: true, format: { with: EMAIL_REGEXP }
 
-  has_secure_password
-
   has_one_attached :avatar
   has_many :created_what_to_discard_problems, class_name: :WhatToDiscardProblem, dependent: :destroy
   has_many :created_comments, class_name: :Comment, dependent: :destroy

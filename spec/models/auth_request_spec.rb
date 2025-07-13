@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-RSpec.describe Auth::Request, type: :model do
+RSpec.describe AuthRequest, type: :model do
   describe "#callbacks" do
     describe "#generate_token" do
       let(:authorization) { described_class.new(email:) }

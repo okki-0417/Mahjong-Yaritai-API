@@ -16,7 +16,7 @@ RSpec.describe "auth_requests", type: :request do
             type: :object,
             required: %w[email],
             properties: {
-              email: { type: :string, maxLength: Auth::Request::EMAIL_LENGTH },
+              email: { type: :string, maxLength: AuthRequest::EMAIL_LENGTH },
             },
           },
         },
@@ -36,7 +36,7 @@ RSpec.describe "auth_requests", type: :request do
         let(:request_params) { { auth_request: { email: } } }
         let(:email) { "test@mahjong-yaritai.com" }
 
-        before { allow_any_instance_of(Auth::Request).to receive(:save).and_return(false) }
+        before { allow_any_instance_of(AuthRequest).to receive(:save).and_return(false) }
 
         run_test!
       end

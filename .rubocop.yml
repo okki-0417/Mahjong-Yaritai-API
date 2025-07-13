@@ -4,6 +4,12 @@ AllCops:
   Include:
     - app/**/*.rb
     - spec/**/*.rb
+  Exclude:
+    - db/schema.rb
+    - db/migrate/*.rb
+    - config/**/*.rb
+    - lib/tasks/**/*.rake
+    - vendor/**/*
 
 Layout/SpaceInsideHashLiteralBraces:
   Enabled: true

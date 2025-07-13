@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
-class Auth::VerificationsController < Auth::BaseController
+class Auth::VerificationsController < ApplicationController
+  before_action :reject_logged_in_user
+
   def create
-    auth_request = Auth::Request.find_by(token: auth_verification_params[:token])
+    auth_request = AuthRequest.find_by(auth_verification_params)
 
     if auth_request && !auth_request.expired?
       user = User.find_by(email: auth_request.email)
@@ -16,10 +18,10 @@ class Auth::VerificationsController < Auth::BaseController
         render json: user, serializer: UserSerializer, root: :auth_verification, status: :created
       else
         session[:auth_request_id] = auth_request.id
-        render json: {}, status: :ok
+        render body: nil, status: :no_content
       end
     else
-      render json: error_json([ "認証に失敗しました" ]), status: :unprocessable_entity
+      render json: error_json([ "認証コードが正しくないか、有効期限が切れています。" ]), status: :unprocessable_entity
     end
   end
 

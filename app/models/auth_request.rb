@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-class Auth::Request < ApplicationRecord
-  self.table_name = "auth_requests"
+class AuthRequest < ApplicationRecord
   TOKEN_LENGTH = 6
   EXPIRATION_PERIOD = 15.minutes
   EMAIL_LENGTH = 64

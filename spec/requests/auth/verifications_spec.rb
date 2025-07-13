@@ -28,7 +28,7 @@ RSpec.describe "auth/verifications", type: :request do
         let(:token) { "000000" }
 
         let(:current_user) { create(:user) }
-        include_context "logged_in"
+        include_context "logged_in_rswag"
 
         run_test!
       end
@@ -37,7 +37,7 @@ RSpec.describe "auth/verifications", type: :request do
         let(:request_params) { { auth_verification: { token: } } }
         let(:token) { "000000" }
 
-        before { allow(Auth::Request).to receive(:find_by).and_return(nil) }
+        before { allow(AuthRequest).to receive(:find_by).and_return(nil) }
 
         schema type: :object,
                properties: {
@@ -50,7 +50,7 @@ RSpec.describe "auth/verifications", type: :request do
         run_test!
       end
 
-      response(200, "ok") do
+      response(204, "ok") do
         let(:request_params) { { auth_verification: { token: } } }
         let(:token) { authorization.token }
         let!(:authorization) { create(:auth_request) }

@@ -16,7 +16,7 @@ Rails.application.routes.draw do
 
   resources :users, only: %i[show create update destroy]
 
-  resource :session, only: %i[show create destroy]
+  resource :session, only: %i[show destroy]
 
   resources :what_to_discard_problems, only: %i[index create destroy] do
     resources :comments, module: :what_to_discard_problems, only: %i[index create destroy] do
