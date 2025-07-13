@@ -41,7 +41,7 @@ Rails.application.configure do
   }
 
   config.action_mailer.default_url_options = { host: ENV.fetch("FRONTEND_HOST") }
-  config.routes.default_url_options = { host: ENV.fetch("HOST_NAME") }
+  Rails.application.routes.default_url_options = { host: ENV.fetch("HOST_NAME") }
 
   config.active_job.queue_adapter = :async
 
