@@ -3,7 +3,7 @@ set -e
 
 rm -f tmp/pids/server.pid
 
-if [ "$RAILS_ENV" = "production" ]; then
+# if [ "$RAILS_ENV" = "production" ]; then
   # bundle exec rails db:create
   # bundle exec rails db:migrate
   # bundle exec rails db:seed
@@ -11,6 +11,6 @@ if [ "$RAILS_ENV" = "production" ]; then
   # mkdir -p log
   # touch log/production.log
   # chmod 664 log/production.log
-fi
+# fi
 
 exec "$@"
