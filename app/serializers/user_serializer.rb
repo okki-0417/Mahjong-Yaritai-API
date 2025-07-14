@@ -12,6 +12,10 @@ class UserSerializer < ActiveModel::Serializer
   def avatar_url
     return nil unless object.avatar.attached?
 
-    object.avatar.url
+    begin
+      object.avatar.url
+    rescue
+      Rails.application.routes.url_helpers.url_for(object.avatar)
+    end
   end
 end
