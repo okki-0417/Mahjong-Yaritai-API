@@ -16,7 +16,7 @@ Rails.application.configure do
         port: ENV.fetch("REDIS_PORT"),
       },
     ],
-    same_site: :none,
+    same_site: :strict,
     httponly: true,
     secure: true,
     key: "_mj_session_id",
