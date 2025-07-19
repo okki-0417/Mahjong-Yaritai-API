@@ -254,15 +254,14 @@ paths:
               type: object
               required:
               - name
-              - avatar
               properties:
                 name:
                   type: string
+                  minLength: 1
                   maxLength: 20
                 avatar:
                   type: string
                   format: binary
-                  nullable: true
     delete:
       summary: delete user
       tags:

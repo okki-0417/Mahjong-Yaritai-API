@@ -99,10 +99,10 @@ RSpec.describe "users", type: :request do
       produces "application/json"
       parameter name: :name, in: :formData, schema: {
         type: :object,
-        required: %w[name avatar],
+        required: %w[name],
         properties: {
-          name: { type: :string, maxLength: User::USER_NAME_LENGTH },
-          avatar: { type: :string, format: :binary, nullable: true },
+          name: { type: :string, minLength: 1, maxLength: User::USER_NAME_LENGTH },
+          avatar: { type: :string, format: :binary },
         },
       }
 
