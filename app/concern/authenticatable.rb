@@ -12,9 +12,21 @@ module Authenticatable
   def remember(user)
     user.remember
 
-    cookies.permanent.signed[:user_id] = user.id
+    cookies.permanent.signed[:user_id] = {
+      value: user.id,
+      domain: Rails.env.production? ? ENV.fetch("ETLD_HOST") : "localhost",
+      same_site: :lax,
+      secure: Rails.env.production?,
+      httponly: true,
+    }
 
-    cookies.permanent.signed[:remember_token] = user.remember_token
+    cookies.permanent.signed[:remember_token] = {
+      value: user.remember_token,
+      domain: Rails.env.production? ? ENV.fetch("ETLD_HOST") : "localhost",
+      same_site: :lax,
+      secure: Rails.env.production?,
+      httponly: true,
+    }
   end
 
   def current_user

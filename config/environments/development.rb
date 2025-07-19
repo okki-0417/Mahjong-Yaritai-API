@@ -8,12 +8,7 @@ Rails.application.configure do
   config.eager_load = false
   config.consider_all_requests_local = true
 
-  config.middleware.use ActionDispatch::Cookies,
-    domain: ENV.fetch("ETLD_HOST", "localhost"),
-    same_site: :lax,
-    secure: false,
-    httponly: true
-
+  config.middleware.use ActionDispatch::Cookies
   config.middleware.use ActionDispatch::Session::RedisStore,
     servers: [
       {
