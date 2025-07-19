@@ -13,15 +13,17 @@ module Authenticatable
     user.remember
 
     cookies.permanent.signed[:user_id] = {
+      domain: ENV.fetch("ETLD_HOST"),
       value: user.id,
-      same_site: :strict,
+      same_site: :lax,
       secure: Rails.env.production?,
       httponly: true,
     }
 
     cookies.permanent.signed[:remember_token] = {
+      domain: ENV.fetch("ETLD_HOST"),
       value: user.remember_token,
-      same_site: :strict,
+      same_site: :lax,
       secure: Rails.env.production?,
       httponly: true,
     }
