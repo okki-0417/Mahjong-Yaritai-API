@@ -8,7 +8,12 @@ Rails.application.configure do
   config.action_controller.perform_caching = true
   config.public_file_server.headers = { "cache-control" => "public, max-age=#{1.year.to_i}" }
 
-  config.middleware.use ActionDispatch::Cookies
+  config.middleware.use ActionDispatch::Cookies,
+    domain: ENV.fetch("ETLD_HOST"),
+    same_site: :lax,
+    secure: true,
+    httponly: true
+
   config.middleware.use ActionDispatch::Session::RedisStore,
     servers: [
       {
