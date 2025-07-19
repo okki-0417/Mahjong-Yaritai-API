@@ -2,7 +2,10 @@
 
 class User < ApplicationRecord
   USER_NAME_LENGTH = 20
+  PROFILE_TEXT_LENGTH = 500
+
   validates :name, presence: true, length: { maximum: USER_NAME_LENGTH }
+  validates :profile_text, length: { maximum: PROFILE_TEXT_LENGTH }
   EMAIL_REGEXP = /\A[a-zA-Z0-9.!\#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\z/
   validates :email, presence: true, uniqueness: true, format: { with: EMAIL_REGEXP }
 

@@ -13,7 +13,8 @@ RSpec.describe "users", type: :request do
         type: :object,
         required: %w[name avatar],
         properties: {
-          name: { type: :string, maxLength: User::USER_NAME_LENGTH },
+          name: { type: :string, minLength: 1, maxLength: User::USER_NAME_LENGTH },
+          profile_text: { type: :string, maxLength: User::PROFILE_TEXT_LENGTH },
           avatar: { type: :string, format: :binary },
         },
       }
@@ -102,6 +103,7 @@ RSpec.describe "users", type: :request do
         required: %w[name],
         properties: {
           name: { type: :string, minLength: 1, maxLength: User::USER_NAME_LENGTH },
+          profile_text: { type: :string, maxLength: User::PROFILE_TEXT_LENGTH },
           avatar: { type: :string, format: :binary },
         },
       }

@@ -196,7 +196,11 @@ paths:
               properties:
                 name:
                   type: string
+                  minLength: 1
                   maxLength: 20
+                profile_text:
+                  type: string
+                  maxLength: 500
                 avatar:
                   type: string
                   format: binary
@@ -259,6 +263,9 @@ paths:
                   type: string
                   minLength: 1
                   maxLength: 20
+                profile_text:
+                  type: string
+                  maxLength: 500
                 avatar:
                   type: string
                   format: binary
@@ -781,6 +788,9 @@ components:
           type: integer
         name:
           type: string
+        profile_text:
+          type: string
+          nullable: true
         avatar_url:
           type: string
           nullable: true

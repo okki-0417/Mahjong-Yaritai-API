@@ -9,6 +9,7 @@ class UsersController < ApplicationController
 
     # formDataで受け取るため、StrongParameter(JSON)を使えない
     create_params = { name: params[:name] }
+    create_params[:profile_text] = params[:profile_text] if params[:profile_text].present?
     create_params[:avatar] = params[:avatar] if params[:avatar].present? && params[:avatar] != "undefined"
 
     user = User.new(
@@ -40,6 +41,7 @@ class UsersController < ApplicationController
   def update
     # formDataで受け取るため、StrongParameter(JSON)を使えない
     update_params = { name: params[:name] }
+    update_params[:profile_text] = params[:profile_text] if params[:profile_text].present?
     update_params[:avatar] = params[:avatar] if params[:avatar].present? && params[:avatar] != "undefined"
 
     if current_user.update(update_params)

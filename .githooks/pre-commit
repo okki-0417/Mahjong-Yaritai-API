@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# Get staged Ruby files
 files=$(git diff --cached --name-only --diff-filter=ACM | grep '\.rb$')
 
 if [ -z "$files" ]; then
@@ -9,7 +10,8 @@ fi
 
 echo "Running pre-commit hook..."
 
-bin/rubocop $files -a
+# Use --force-exclusion flag to ensure .rubocop.yml Exclude patterns are respected
+bin/rubocop --force-exclusion $files -a
 
 if [ $? -ne 0 ]; then
   echo "RuboCop failed. Commit aborted."

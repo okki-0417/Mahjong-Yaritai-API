@@ -55,6 +55,7 @@ updated_at],
             properties: {
               id: { type: :integer },
               name: { type: :string },
+              profile_text: { type: :string, nullable: true },
               avatar_url: { type: :string, nullable: true },
               created_at: { type: :string, format: :date_time },
               updated_at: { type: :string, format: :date_time },
