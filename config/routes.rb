@@ -9,8 +9,7 @@ Rails.application.routes.draw do
   # 他のルーティング定義の下に追加
   mount ActiveStorage::Engine => "/rails/active_storage"
 
-  get "/", to: "health_check#show"
-  get "/up", to: "health_check#show"
+  get "/healthz", to: "health#show"
 
   namespace :auth do
     resource :request, only: %i[create]
