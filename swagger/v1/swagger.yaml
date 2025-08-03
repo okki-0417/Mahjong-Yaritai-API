@@ -83,6 +83,109 @@ paths:
                   properties:
                     token:
                       type: string
+  "/learnings/categories":
+    get:
+      summary: list learning categories
+      tags:
+      - Learning::Category
+      operationId: getLearningCategories
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - learning_categories
+                properties:
+                  learning_categories:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/LearningCategory"
+  "/learnings/categories/{id}":
+    parameters:
+    - name: id
+      in: path
+      description: id
+      required: true
+      schema:
+        type: string
+    get:
+      summary: show learning category
+      tags:
+      - Learning::Category
+      operationId: getLearningCategory
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - learning_category
+                properties:
+                  learning_category:
+                    "$ref": "#/components/schemas/LearningCategory"
+  "/learnings/categories/{category_id}/questions":
+    parameters:
+    - name: category_id
+      in: path
+      description: category_id
+      required: true
+      schema:
+        type: string
+    get:
+      summary: list learning questions
+      tags:
+      - Learning::Question
+      operationId: getLearningQuestions
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - learning_questions
+                properties:
+                  learning_questions:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/LearningQuestion"
+  "/learnings/categories/{category_id}/questions/{id}":
+    parameters:
+    - name: category_id
+      in: path
+      description: category_id
+      required: true
+      schema:
+        type: string
+    - name: id
+      in: path
+      description: id
+      required: true
+      schema:
+        type: string
+    get:
+      summary: show learning question
+      tags:
+      - Learning::Question
+      operationId: getLearningQuestion
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - learning_question
+                properties:
+                  learning_question:
+                    "$ref": "#/components/schemas/LearningQuestion"
   "/me/withdrawal/summary":
     get:
       summary: show withdrawal summary
@@ -1121,3 +1224,55 @@ components:
       properties:
         what_to_discard_problems_count:
           type: integer
+    LearningCategory:
+      type: object
+      required:
+      - id
+      - name
+      - description
+      - created_at
+      - updated_at
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        created_at:
+          type: string
+          format: date_time
+        updated_at:
+          type: string
+          format: date_time
+    LearningQuestion:
+      type: object
+      required:
+      - id
+      - statement
+      - answer
+      - category
+      - created_at
+      - updated_at
+      properties:
+        id:
+          type: integer
+        statement:
+          type: string
+        answer:
+          type: string
+        category:
+          "$ref": "#/components/schemas/LearningCategory"
+        created_at:
+          type: string
+          format: date_time
+        updated_at:
+          type: string
+          format: date_time
+    Error:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string

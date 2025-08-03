@@ -246,6 +246,36 @@ dora_id hand1_id hand2_id hand3_id hand4_id hand5_id hand6_id hand7_id hand8_id 
               what_to_discard_problems_count: { type: :integer },
             },
           },
+          LearningCategory: {
+            type: :object,
+            required: %w[id name description created_at updated_at],
+            properties: {
+              id: { type: :integer },
+              name: { type: :string },
+              description: { type: :string },
+              created_at: { type: :string, format: :date_time },
+              updated_at: { type: :string, format: :date_time },
+            },
+          },
+          LearningQuestion: {
+            type: :object,
+            required: %w[id statement answer category created_at updated_at],
+            properties: {
+              id: { type: :integer },
+              statement: { type: :string },
+              answer: { type: :string },
+              category: { "$ref" => "#/components/schemas/LearningCategory" },
+              created_at: { type: :string, format: :date_time },
+              updated_at: { type: :string, format: :date_time },
+            },
+          },
+          Error: {
+            type: :object,
+            required: %w[error],
+            properties: {
+              error: { type: :string },
+            },
+          },
         },
       },
     },

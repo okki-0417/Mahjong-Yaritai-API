@@ -27,6 +27,12 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :learnings do
+    resources :categories, only: %i[index show] do
+      resources :questions, only: %i[index show]
+    end
+  end
+
   resources :what_to_discard_problems, only: %i[index create destroy] do
     resources :comments, module: :what_to_discard_problems, only: %i[index create destroy] do
       resources :replies, module: :comments, only: %i[index]
