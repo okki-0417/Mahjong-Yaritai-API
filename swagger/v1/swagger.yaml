@@ -4,6 +4,60 @@ info:
   title: API V1
   version: v1
 paths:
+  "/auth/google/callback":
+    post:
+      summary: create callback
+      tags:
+      - Auth::Google::Callback
+      operationId: createGoogleCallback
+      parameters: []
+      responses:
+        '400':
+          description: bad request
+        '422':
+          description: unprocessable entity - token exchange failed
+        '200':
+          description: successful - existing user
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - session
+                properties:
+                  session:
+                    "$ref": "#/components/schemas/Session"
+        '204':
+          description: successful - new user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - code
+              properties:
+                code:
+                  type: string
+                  description: Authorization code from Google
+  "/auth/google/login":
+    get:
+      summary: show login
+      tags:
+      - Auth::Google::Login
+      operationId: getGoogleLogin
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - redirect_url
+                properties:
+                  redirect_url:
+                    type: string
   "/auth/request":
     post:
       summary: create auth_request

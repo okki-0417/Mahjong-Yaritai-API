@@ -15,6 +15,11 @@ Rails.application.routes.draw do
   namespace :auth do
     resource :request, only: %i[create]
     resource :verification, only: %i[create]
+
+    namespace :google do
+      resource :login, only: %i[show]
+      resource :callback, only: %i[create]
+    end
   end
 
   resources :users, only: %i[show create update destroy]
