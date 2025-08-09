@@ -28,6 +28,7 @@ module Auth
         if user
           # User exists, log them in
           login user
+          remember user
 
           render json: user,
             serializer: SessionSerializer,
@@ -62,10 +63,8 @@ module Auth
 
           if response.code == "200"
             data = JSON.parse(response.body)
-            Rails.logger.info("Token exchange successful: #{data}")
             { access_token: data["access_token"], id_token: data["id_token"] }
           else
-            Rails.logger.error("Token exchange failed: #{response.body}")
             { error: "Failed to exchange code for token" }
           end
         rescue => e
@@ -83,15 +82,12 @@ module Auth
         response = http.request(request)
 
         if response.code == "200"
-          Rails.logger.info("User info fetched successfully")
           data = JSON.parse(response.body)
           { email: data["email"] }
         else
-          Rails.logger.error("Failed to fetch user info: #{response.body}")
           { error: "Failed to fetch user info" }
         end
       rescue => e
-        Rails.logger.error("Error fetching user info: #{e.message}")
         { error: e.message }
       end
     end
