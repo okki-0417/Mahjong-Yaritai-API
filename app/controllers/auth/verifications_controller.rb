@@ -15,8 +15,6 @@ class Auth::VerificationsController < ApplicationController
 
         auth_request.destroy!
 
-        Rails.logger.info("User #{user.inspect} logged in via auth request with token #{auth_request.token}.")
-
         render json: user, serializer: UserSerializer, root: :auth_verification, status: :created
       else
         session[:auth_request_id] = auth_request.id
