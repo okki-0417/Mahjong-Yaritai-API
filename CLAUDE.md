@@ -26,7 +26,7 @@ This is a Rails 7.2.1 API-only application for a Mahjong game platform called "M
 ### Mahjong Domain
 - **Tile**: 34 different Mahjong tiles (suits: man, pin, sou, honor)
 - **WhatToDiscardProblem**: 13-tile hand + 1 drawn tile, users vote on discard
-- **WhatToDiscardProblemVote**: User votes on which tile to discard
+- **WhatToDiscardProblem::Vote**: User votes on which tile to discard
 - **Comments & Likes**: Standard social features on problems
 
 ### Key Relationships
