@@ -40,24 +40,6 @@ paths:
                 code:
                   type: string
                   description: Authorization code from Google
-  "/auth/google/login":
-    get:
-      summary: show login
-      tags:
-      - Auth::Google::Login
-      operationId: getGoogleLogin
-      responses:
-        '200':
-          description: successful
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                - redirect_url
-                properties:
-                  redirect_url:
-                    type: string
   "/auth/request":
     post:
       summary: create auth_request
