@@ -99,7 +99,7 @@ RSpec.describe "auth/google/callbacks", type: :request do
         run_test!
       end
 
-      response(204, "successful - new user") do
+      response(204, "successful - new user creates auth request") do
         let(:request_params) { { code: "valid_code" } }
 
         before do
@@ -117,6 +117,39 @@ RSpec.describe "auth/google/callbacks", type: :request do
           user_info_response = double(
             code: "200",
             body: '{"email": "newuser@example.com", "name": "New User", "picture": "https://example.com/picture.jpg"}'
+          )
+
+          allow_any_instance_of(Net::HTTP).to receive(:request).with(instance_of(Net::HTTP::Post)).and_return(token_response)
+          allow_any_instance_of(Net::HTTP).to receive(:request).with(instance_of(Net::HTTP::Get)).and_return(user_info_response)
+        end
+
+        after do
+          ENV.delete("GOOGLE_CLIENT_ID")
+          ENV.delete("GOOGLE_CLIENT_SECRET")
+          ENV.delete("GOOGLE_REDIRECT_URI")
+        end
+
+        run_test!
+      end
+
+      response(422, "unprocessable entity - auth request validation fails") do
+        let(:request_params) { { code: "valid_code" } }
+
+        before do
+          ENV["GOOGLE_CLIENT_ID"] = "test_client_id"
+          ENV["GOOGLE_CLIENT_SECRET"] = "test_client_secret"
+          ENV["GOOGLE_REDIRECT_URI"] = "http://localhost:3000/auth/google/callback"
+
+          # Mock successful token exchange
+          token_response = double(
+            code: "200",
+            body: '{"access_token": "test_access_token", "id_token": "test_id_token"}'
+          )
+
+          # Mock successful user info fetch with invalid email
+          user_info_response = double(
+            code: "200",
+            body: '{"email": "", "name": "Invalid User", "picture": "https://example.com/picture.jpg"}'
           )
 
           allow_any_instance_of(Net::HTTP).to receive(:request).with(instance_of(Net::HTTP::Post)).and_return(token_response)

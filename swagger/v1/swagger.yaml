@@ -15,7 +15,7 @@ paths:
         '400':
           description: bad request
         '422':
-          description: unprocessable entity - token exchange failed
+          description: unprocessable entity - auth request validation fails
         '200':
           description: successful - existing user
           content:
@@ -28,7 +28,7 @@ paths:
                   session:
                     "$ref": "#/components/schemas/Session"
         '204':
-          description: successful - new user
+          description: successful - new user creates auth request
       requestBody:
         content:
           application/json:

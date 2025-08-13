@@ -35,10 +35,16 @@ module Auth
             root: :session,
             status: :ok
         else
-          # User doesn't exist, save email in session for registration
-          session[:google_email] = user_info[:email]
+          # User doesn't exist, create auth request
+          # This will be used to complete the registration process
+          auth_request = AuthRequest.new(email: user_info[:email])
 
-          render body: nil, status: :no_content
+          if auth_request.save
+            session[:auth_request_id] = auth_request.id
+            render body: nil, status: :no_content
+          else
+            render json: validation_error_json(auth_request), status: :unprocessable_entity
+          end
         end
       end
 
