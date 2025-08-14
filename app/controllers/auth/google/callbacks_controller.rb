@@ -58,10 +58,10 @@ module Auth
           request = Net::HTTP::Post.new(uri)
           request["Content-Type"] = "application/x-www-form-urlencoded"
           request.body = URI.encode_www_form({
-            client_id: ENV["GOOGLE_CLIENT_ID"],
-            client_secret: ENV["GOOGLE_CLIENT_SECRET"],
+            client_id: ENV.fetch("GOOGLE_CLIENT_ID"),
+            client_secret: ENV.fetch("GOOGLE_CLIENT_SECRET"),
             code:,
-            redirect_uri: ENV["GOOGLE_REDIRECT_URI"],
+            redirect_uri: ENV.fetch("GOOGLE_REDIRECT_URI"),
             grant_type: "authorization_code",
           })
 
@@ -71,7 +71,6 @@ module Auth
             data = JSON.parse(response.body)
             { access_token: data["access_token"], id_token: data["id_token"] }
           else
-            Rails.logger.info(JSON.parse(response.body))
             { error: "Failed to exchange code for token" }
           end
         rescue => e
