@@ -60,10 +60,12 @@ module Auth
           request.body = URI.encode_www_form({
             client_id: ENV["GOOGLE_CLIENT_ID"],
             client_secret: ENV["GOOGLE_CLIENT_SECRET"],
-            code: code,
+            code:,
             redirect_uri: ENV["GOOGLE_REDIRECT_URI"],
             grant_type: "authorization_code",
           })
+
+          Rails.logger.info("[DEBUG] Request body: #{request.body}")
 
           response = http.request(request)
 
