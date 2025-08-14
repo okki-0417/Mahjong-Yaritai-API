@@ -65,14 +65,13 @@ module Auth
             grant_type: "authorization_code",
           })
 
-          Rails.logger.info("[DEBUG] Request body: #{request.body}")
-
           response = http.request(request)
 
           if response.code == "200"
             data = JSON.parse(response.body)
             { access_token: data["access_token"], id_token: data["id_token"] }
           else
+            Rails.logger.info(JSON.parse(response.body))
             { error: "Failed to exchange code for token" }
           end
         rescue => e
