@@ -40,6 +40,66 @@ paths:
                 code:
                   type: string
                   description: Authorization code from Google
+  "/auth/line/callback":
+    post:
+      summary: create callback
+      tags:
+      - Auth::Line::Callback
+      operationId: createLineCallback
+      parameters: []
+      responses:
+        '400':
+          description: bad request - missing code
+        '422':
+          description: unprocessable entity - auth request validation fails
+        '200':
+          description: successful - existing user
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - session
+                properties:
+                  session:
+                    "$ref": "#/components/schemas/Session"
+        '204':
+          description: successful - new user creates auth request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - code
+              - state
+              properties:
+                code:
+                  type: string
+                  description: Authorization code from LINE
+                state:
+                  type: string
+                  description: State parameter for CSRF protection
+  "/auth/line/login_url":
+    get:
+      summary: show login url
+      tags:
+      - Auth::Line::LoginUrl
+      operationId: getLineLoginUrl
+      responses:
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - login_url
+                properties:
+                  login_url:
+                    type: string
+                    description: LINE OAuth authorization URL
+                    example: https://access.line.me/oauth2/v2.1/authorize?client_id=xxx&redirect_uri=xxx&response_type=code&scope=profile+openid+email&state=xxx
   "/auth/request":
     post:
       summary: create auth_request

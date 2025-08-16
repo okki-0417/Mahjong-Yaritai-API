@@ -20,6 +20,11 @@ Rails.application.routes.draw do
       resource :login, only: %i[show]
       resource :callback, only: %i[create]
     end
+
+    namespace :line do
+      resource :login_url, only: %i[show]
+      resource :callback, only: %i[create]
+    end
   end
 
   resources :users, only: %i[show create update destroy]
