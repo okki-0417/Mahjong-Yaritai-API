@@ -7,22 +7,6 @@ class WhatToDiscardProblemsController < ApplicationController
 
   def index
     base_relation = WhatToDiscardProblem.preload(user: :avatar_attachment)
-      .eager_load(
-        :dora,
-        :hand1,
-        :hand2,
-        :hand3,
-        :hand4,
-        :hand5,
-        :hand6,
-        :hand7,
-        :hand8,
-        :hand9,
-        :hand10,
-        :hand11,
-        :hand12,
-        :hand13,
-        :tsumo)
 
     result = cursor_paginate(
       base_relation,
