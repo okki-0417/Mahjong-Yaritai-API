@@ -22,14 +22,6 @@ class WhatToDiscardProblem < ApplicationRecord
   belongs_to :hand13, class_name: :Tile
   belongs_to :tsumo, class_name: :Tile
 
-  validates :round, presence: true
-  validates :turn, presence: true
-  validates :wind, presence: true
-  validates :point_east, presence: true
-  validates :point_south, presence: true
-  validates :point_west, presence: true
-  validates :point_north, presence: true
-
   validate :confirm_no_more_than_four_duplicated_tiles
   validate :confirm_tiles_are_sorted
 

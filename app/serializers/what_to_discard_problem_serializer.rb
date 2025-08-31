@@ -6,10 +6,7 @@ class WhatToDiscardProblemSerializer < ActiveModel::Serializer
     round
     turn
     wind
-    point_east
-    point_south
-    point_west
-    point_north
+    points
     user_id
     dora_id
     hand1_id

@@ -6,11 +6,8 @@ FactoryBot.define do
     round { "東一" }
     turn  { 2 }
     wind  { "東" }
+    points { 25000 }
     association(:dora, factory: :tile)
-    point_east { 25000 }
-    point_south { 25000 }
-    point_west { 25000 }
-    point_north { 25000 }
     association(:hand1, factory: :tile)
     association(:hand2, factory: :tile)
     association(:hand3, factory: :tile)

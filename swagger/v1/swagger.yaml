@@ -830,11 +830,8 @@ paths:
                   - round
                   - turn
                   - wind
+                  - points
                   - dora_id
-                  - point_east
-                  - point_south
-                  - point_west
-                  - point_north
                   - hand1_id
                   - hand2_id
                   - hand3_id
@@ -852,52 +849,57 @@ paths:
                   properties:
                     round:
                       type: string
-                      minLength: 2
-                      maxLength: 2
                     turn:
                       type: string
                     wind:
                       type: string
-                      minLength: 1
-                      maxLength: 1
+                    points:
+                      type: string
                     dora_id:
                       type: string
-                    point_east:
-                      type: string
-                    point_south:
-                      type: string
-                    point_west:
-                      type: string
-                    point_north:
-                      type: string
+                      minLength: 1
                     hand1_id:
                       type: string
+                      minLength: 1
                     hand2_id:
                       type: string
+                      minLength: 1
                     hand3_id:
                       type: string
+                      minLength: 1
                     hand4_id:
                       type: string
+                      minLength: 1
                     hand5_id:
                       type: string
+                      minLength: 1
                     hand6_id:
                       type: string
+                      minLength: 1
                     hand7_id:
                       type: string
+                      minLength: 1
                     hand8_id:
                       type: string
+                      minLength: 1
                     hand9_id:
                       type: string
+                      minLength: 1
                     hand10_id:
                       type: string
+                      minLength: 1
                     hand11_id:
                       type: string
+                      minLength: 1
                     hand12_id:
                       type: string
+                      minLength: 1
                     hand13_id:
                       type: string
+                      minLength: 1
                     tsumo_id:
                       type: string
+                      minLength: 1
   "/what_to_discard_problems/{id}":
     parameters:
     - name: id
@@ -1031,10 +1033,7 @@ components:
       - round
       - turn
       - wind
-      - point_east
-      - point_south
-      - point_west
-      - point_north
+      - points
       - dora_id
       - hand1_id
       - hand2_id
@@ -1064,18 +1063,16 @@ components:
           "$ref": "#/components/schemas/User"
         round:
           type: string
+          nullable: true
         turn:
           type: integer
+          nullable: true
         wind:
           type: string
-        point_east:
+          nullable: true
+        points:
           type: integer
-        point_south:
-          type: integer
-        point_west:
-          type: integer
-        point_north:
-          type: integer
+          nullable: true
         dora_id:
           type: integer
         hand1_id:

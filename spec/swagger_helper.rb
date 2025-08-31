@@ -81,10 +81,7 @@ updated_at],
               round
               turn
               wind
-              point_east
-              point_south
-              point_west
-              point_north
+              points
               dora_id
               hand1_id
               hand2_id
@@ -110,13 +107,10 @@ updated_at],
             properties: {
               id: { type: :integer },
               user:  { "$ref" => "#/components/schemas/User" },
-              round: { type: :string },
-              turn: { type: :integer },
-              wind: { type: :string },
-              point_east: { type: :integer },
-              point_south: { type: :integer },
-              point_west: { type: :integer },
-              point_north: { type: :integer },
+              round: { type: :string, nullable: true },
+              turn: { type: :integer, nullable: true },
+              wind: { type: :string, nullable: true },
+              points: { type: :integer, nullable: true },
               dora_id: { type: :integer },
               hand1_id: { type: :integer },
               hand2_id: { type: :integer },

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_07_31_160602) do
+ActiveRecord::Schema[7.2].define(version: 2025_08_30_164131) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -120,13 +120,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_31_160602) do
 
   create_table "what_to_discard_problems", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.string "round", null: false
-    t.integer "turn", null: false
-    t.string "wind", null: false
-    t.integer "point_east", null: false
-    t.integer "point_south", null: false
-    t.integer "point_west", null: false
-    t.integer "point_north", null: false
+    t.string "round"
+    t.integer "turn"
+    t.string "wind"
     t.bigint "dora_id", null: false
     t.bigint "hand1_id", null: false
     t.bigint "hand2_id", null: false
@@ -147,6 +143,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_31_160602) do
     t.integer "votes_count", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "points"
     t.index ["dora_id"], name: "index_what_to_discard_problems_on_dora_id"
     t.index ["hand10_id"], name: "index_what_to_discard_problems_on_hand10_id"
     t.index ["hand11_id"], name: "index_what_to_discard_problems_on_hand11_id"
