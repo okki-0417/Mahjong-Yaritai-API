@@ -302,6 +302,46 @@ paths:
                 properties:
                   profile:
                     "$ref": "#/components/schemas/User"
+    put:
+      summary: update user
+      tags:
+      - User
+      operationId: updateUser
+      parameters: []
+      responses:
+        '401':
+          description: unauthorized
+        '422':
+          description: unprocessable_entity
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - user
+                properties:
+                  user:
+                    "$ref": "#/components/schemas/User"
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+              - name
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 20
+                profile_text:
+                  type: string
+                  maxLength: 500
+                avatar:
+                  type: string
+                  format: binary
   "/me/withdrawal/summary":
     get:
       summary: show withdrawal summary
@@ -448,46 +488,6 @@ paths:
                 properties:
                   user:
                     "$ref": "#/components/schemas/User"
-    put:
-      summary: update user
-      tags:
-      - User
-      operationId: updateUser
-      parameters: []
-      responses:
-        '401':
-          description: unauthorized
-        '422':
-          description: unprocessable_entity
-        '200':
-          description: ok
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                - user
-                properties:
-                  user:
-                    "$ref": "#/components/schemas/User"
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              type: object
-              required:
-              - name
-              properties:
-                name:
-                  type: string
-                  minLength: 1
-                  maxLength: 20
-                profile_text:
-                  type: string
-                  maxLength: 500
-                avatar:
-                  type: string
-                  format: binary
     delete:
       summary: delete user
       tags:

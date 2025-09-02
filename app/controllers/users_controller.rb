@@ -2,7 +2,7 @@
 
 class UsersController < ApplicationController
   before_action :reject_logged_in_user, only: %i[create]
-  before_action :restrict_to_logged_in_user, only: %i[update destroy]
+  before_action :restrict_to_logged_in_user, only: %i[destroy]
 
   def create
     auth_request = AuthRequest.find_by(id: session[:auth_request_id]&.to_i)
@@ -36,22 +36,6 @@ class UsersController < ApplicationController
       serializer: UserSerializer,
       root: :user,
       status: :ok
-  end
-
-  def update
-    # formDataで受け取るため、StrongParameter(JSON)を使えない
-    update_params = { name: params[:name] }
-    update_params[:profile_text] = params[:profile_text] if params[:profile_text].present?
-    update_params[:avatar] = params[:avatar] if params[:avatar].present? && params[:avatar] != "undefined"
-
-    if current_user.update(update_params)
-      render json: current_user,
-        serializer: UserSerializer,
-        root: :user,
-        status: :ok
-    else
-      render json: validation_error_json(current_user), status: :unprocessable_entity
-    end
   end
 
   def destroy

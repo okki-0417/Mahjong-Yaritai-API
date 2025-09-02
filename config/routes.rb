@@ -27,7 +27,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :users, only: %i[show create update destroy]
+  resources :users, only: %i[show create destroy]
 
   resource :session, only: %i[show destroy]
 
