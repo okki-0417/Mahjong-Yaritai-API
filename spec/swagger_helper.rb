@@ -229,17 +229,13 @@ dora_id hand1_id hand2_id hand3_id hand4_id hand5_id hand6_id hand7_id hand8_id 
           },
           Session: {
             type: :object,
-            required: %w[is_logged_in user_id user],
+            required: %w[
+              is_logged_in
+              user_id
+            ],
             properties: {
               is_logged_in: { type: :boolean },
               user_id: { type: :integer, nullable: true },
-              user: {
-                type: :object,
-                nullable: true,
-                properties: {
-                  avatar_url: { type: :string, nullable: true },
-                },
-              },
             },
           },
           WithdrawalSummary: {

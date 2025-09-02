@@ -1416,20 +1416,12 @@ components:
       required:
       - is_logged_in
       - user_id
-      - user
       properties:
         is_logged_in:
           type: boolean
         user_id:
           type: integer
           nullable: true
-        user:
-          type: object
-          nullable: true
-          properties:
-            avatar_url:
-              type: string
-              nullable: true
     WithdrawalSummary:
       type: object
       required:
