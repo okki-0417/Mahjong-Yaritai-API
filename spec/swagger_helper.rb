@@ -51,7 +51,7 @@ updated_at],
           },
           User: {
             type: :object,
-            required: %w[id name avatar_url created_at updated_at],
+            required: %w[id name created_at updated_at],
             properties: {
               id: { type: :integer },
               name: { type: :string },
@@ -229,10 +229,17 @@ dora_id hand1_id hand2_id hand3_id hand4_id hand5_id hand6_id hand7_id hand8_id 
           },
           Session: {
             type: :object,
-            required: %w[is_logged_in user_id],
+            required: %w[is_logged_in user_id user],
             properties: {
               is_logged_in: { type: :boolean },
               user_id: { type: :integer, nullable: true },
+              user: {
+                type: :object,
+                nullable: true,
+                properties: {
+                  avatar_url: { type: :string, nullable: true },
+                },
+              },
             },
           },
           WithdrawalSummary: {
