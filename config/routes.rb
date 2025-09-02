@@ -32,6 +32,7 @@ Rails.application.routes.draw do
   resource :session, only: %i[show destroy]
 
   namespace :me do
+    resource :profile, only: %i[show update]
     resource :withdrawal, only: %i[create] do
       resource :summary, module: :withdrawals, only: %i[show]
     end

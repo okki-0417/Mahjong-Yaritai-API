@@ -282,6 +282,26 @@ paths:
                 properties:
                   learning_question:
                     "$ref": "#/components/schemas/LearningQuestion"
+  "/me/profile":
+    get:
+      summary: get profile
+      tags:
+      - Profile
+      operationId: getProfile
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - profile
+                properties:
+                  profile:
+                    "$ref": "#/components/schemas/User"
   "/me/withdrawal/summary":
     get:
       summary: show withdrawal summary
