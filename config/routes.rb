@@ -43,7 +43,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :what_to_discard_problems, only: %i[index create destroy] do
+  resources :what_to_discard_problems, only: %i[index create update destroy] do
     resources :comments, module: :what_to_discard_problems, only: %i[index create destroy] do
       resources :replies, module: :comments, only: %i[index]
     end

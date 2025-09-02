@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_08_30_164131) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_01_125316) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -144,6 +144,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_30_164131) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "points"
+    t.text "description"
     t.index ["dora_id"], name: "index_what_to_discard_problems_on_dora_id"
     t.index ["hand10_id"], name: "index_what_to_discard_problems_on_hand10_id"
     t.index ["hand11_id"], name: "index_what_to_discard_problems_on_hand11_id"

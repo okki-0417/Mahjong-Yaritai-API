@@ -33,6 +33,18 @@ class WhatToDiscardProblem < ApplicationRecord
     votes.exists?(user_id: user.id)
   end
 
+  def liked_by?(user)
+    likes.exists?(user_id: user.id)
+  end
+
+  def votes_by(**user_ids)
+    votes.where(user_id: user_ids)
+  end
+
+  def likes_by(**user_ids)
+    likes.where(user_id: user_ids)
+  end
+
   private
 
     def confirm_no_more_than_four_duplicated_tiles

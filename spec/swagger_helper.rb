@@ -97,6 +97,7 @@ updated_at],
               hand12_id
               hand13_id
               tsumo_id
+              description
               comments_count
               likes_count
               votes_count
@@ -126,6 +127,7 @@ updated_at],
               hand12_id: { type: :integer },
               hand13_id: { type: :integer },
               tsumo_id: { type: :integer },
+              description: { type: :string, nullable: true },
               comments_count: { type: :integer },
               likes_count: { type: :integer },
               votes_count: { type: :integer },
@@ -138,7 +140,7 @@ updated_at],
           WhatToDiscardProblem_NoRel: {
             type: :object,
             required: %w[user_id round turn wind point_east point_south point_west point_north
-dora_id hand1_id hand2_id hand3_id hand4_id hand5_id hand6_id hand7_id hand8_id hand9_id hand10_id hand11_id hand12_id hand13_id tsumo_id comments_count likes_count votes_count created_at updated_at],
+dora_id hand1_id hand2_id hand3_id hand4_id hand5_id hand6_id hand7_id hand8_id hand9_id hand10_id hand11_id hand12_id hand13_id tsumo_id description comments_count likes_count votes_count created_at updated_at],
             properties: {
               id: { type: :integer },
               user_id:  { type: :integer },

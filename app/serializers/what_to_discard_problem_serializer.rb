@@ -23,6 +23,7 @@ class WhatToDiscardProblemSerializer < ActiveModel::Serializer
     hand12_id
     hand13_id
     tsumo_id
+    description
     comments_count
     likes_count
     votes_count

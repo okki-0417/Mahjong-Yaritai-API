@@ -22,6 +22,14 @@ FactoryBot.define do
     association(:hand12, factory: :tile)
     association(:hand13, factory: :tile)
     association(:tsumo, factory: :tile)
+    description do
+      <<~COMMENT
+        一萬の刻子があり、二三四と揃えば一気通貫も見える形。
+        ただし東が対子で残っており、役牌の可能性もある。スピードを取るなら東を残し、打九萬が無難。
+        一方で打東とすれば純チャンや一通の夢も見られるがリスクは増す。
+        今回の問題は『守備的に打九萬を選べるか』を意図して作成しました。
+      COMMENT
+    end
 
     trait :dev do
       dora_id { 1 }

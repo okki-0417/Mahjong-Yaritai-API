@@ -900,6 +900,8 @@ paths:
                     tsumo_id:
                       type: string
                       minLength: 1
+                    description:
+                      type: string
   "/what_to_discard_problems/{id}":
     parameters:
     - name: id
@@ -916,6 +918,112 @@ paths:
       responses:
         '401':
           description: unauthorized
+    put:
+      summary: update what_to_discard_problem
+      tags:
+      - WhatToDiscardProblem
+      operationId: updateWhatToDiscardProblem
+      parameters: []
+      responses:
+        '200':
+          description: '200'
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - what_to_discard_problem
+                properties:
+                  what_to_discard_problem:
+                    "$ref": "#/components/schemas/WhatToDiscardProblem"
+        '401':
+          description: unauthorized
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - what_to_discard_problem
+              properties:
+                what_to_discard_problem:
+                  type: object
+                  required:
+                  - round
+                  - turn
+                  - wind
+                  - points
+                  - dora_id
+                  - hand1_id
+                  - hand2_id
+                  - hand3_id
+                  - hand4_id
+                  - hand5_id
+                  - hand6_id
+                  - hand7_id
+                  - hand8_id
+                  - hand9_id
+                  - hand10_id
+                  - hand11_id
+                  - hand12_id
+                  - hand13_id
+                  - tsumo_id
+                  properties:
+                    round:
+                      type: string
+                    turn:
+                      type: string
+                    wind:
+                      type: string
+                    points:
+                      type: string
+                    dora_id:
+                      type: string
+                      minLength: 1
+                    hand1_id:
+                      type: string
+                      minLength: 1
+                    hand2_id:
+                      type: string
+                      minLength: 1
+                    hand3_id:
+                      type: string
+                      minLength: 1
+                    hand4_id:
+                      type: string
+                      minLength: 1
+                    hand5_id:
+                      type: string
+                      minLength: 1
+                    hand6_id:
+                      type: string
+                      minLength: 1
+                    hand7_id:
+                      type: string
+                      minLength: 1
+                    hand8_id:
+                      type: string
+                      minLength: 1
+                    hand9_id:
+                      type: string
+                      minLength: 1
+                    hand10_id:
+                      type: string
+                      minLength: 1
+                    hand11_id:
+                      type: string
+                      minLength: 1
+                    hand12_id:
+                      type: string
+                      minLength: 1
+                    hand13_id:
+                      type: string
+                      minLength: 1
+                    tsumo_id:
+                      type: string
+                      minLength: 1
+                    description:
+                      type: string
 servers:
 - url: http://murai.local:3001
 components:
@@ -1049,6 +1157,7 @@ components:
       - hand12_id
       - hand13_id
       - tsumo_id
+      - description
       - comments_count
       - likes_count
       - votes_count
@@ -1103,6 +1212,9 @@ components:
           type: integer
         tsumo_id:
           type: integer
+        description:
+          type: string
+          nullable: true
         comments_count:
           type: integer
         likes_count:
@@ -1146,6 +1258,7 @@ components:
       - hand12_id
       - hand13_id
       - tsumo_id
+      - description
       - comments_count
       - likes_count
       - votes_count

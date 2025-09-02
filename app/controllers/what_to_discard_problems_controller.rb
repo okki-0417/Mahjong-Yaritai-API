@@ -3,7 +3,7 @@
 class WhatToDiscardProblemsController < ApplicationController
   include CursorPaginationable
 
-  before_action :restrict_to_logged_in_user, only: %i[create destroy]
+  before_action :restrict_to_logged_in_user, only: %i[create update destroy]
 
   def index
     base_relation = WhatToDiscardProblem.preload(user: :avatar_attachment)
@@ -56,6 +56,20 @@ class WhatToDiscardProblemsController < ApplicationController
     end
   end
 
+  def update
+    problem = current_user.created_what_to_discard_problems.find(params[:id])
+
+    if problem.update(problem_params)
+      render json: problem,
+        serializer: WhatToDiscardProblemSerializer,
+        root: :what_to_discard_problem,
+        scope: { problem_ids_liked_by_me: [], votes_by_me: {} },
+        status: :ok
+    else
+      render json: validation_error_json(problem), status: :unprocessable_entity
+    end
+  end
+
   def destroy
     problem = current_user.created_what_to_discard_problems.find(params[:id])
 
@@ -88,7 +102,8 @@ class WhatToDiscardProblemsController < ApplicationController
         :hand11_id,
         :hand12_id,
         :hand13_id,
-        :tsumo_id
+        :tsumo_id,
+        :description,
       )
     end
 end
