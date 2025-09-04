@@ -23,13 +23,11 @@ RSpec.describe "auth/verifications", type: :request do
         },
       }
 
-      let(:form) { Auth::VerificationForm.new(token:) }
       let(:request_params) { { auth_verification: { token: } } }
       let(:token) { "000000" }
 
-      before do
-        allow(Auth::VerificationForm).to receive(:new).and_return(form)
-      end
+      let(:auth_request) { create(:auth_request, token:) }
+      before { allow(AuthRequest).to receive(:find_by).and_return(auth_request) }
 
       response(403, "forbidden") do
         let(:current_user) { create(:user) }
@@ -39,7 +37,7 @@ RSpec.describe "auth/verifications", type: :request do
       end
 
       response(422, "unprocessable_entity") do
-        before { allow(form).to receive(:valid?).and_return(false) }
+        before { allow(auth_request).to receive(:within_valid_period?).and_return(false) }
 
         schema type: :object,
           properties: {
@@ -52,9 +50,8 @@ RSpec.describe "auth/verifications", type: :request do
 
       response(204, "ok") do
         before do
-          allow(form).to receive(:valid?).and_return(true)
-          allow(form).to receive(:user).and_return(nil)
-          allow(form).to receive(:auth_request).and_return(create(:auth_request))
+          allow(auth_request).to receive(:within_valid_period?).and_return(true)
+          allow(auth_request).to receive(:requested_user).and_return(nil)
         end
 
         run_test!
@@ -62,8 +59,9 @@ RSpec.describe "auth/verifications", type: :request do
 
       response(201, "created") do
         before do
-          allow(form).to receive(:valid?).and_return(true)
-          allow(form).to receive(:user).and_return(create(:user))
+          user = create(:user, email: auth_request.email)
+          allow(auth_request).to receive(:within_valid_period?).and_return(true)
+          allow(auth_request).to receive(:requested_user).and_return(user)
         end
 
         schema type: :object,

@@ -11,8 +11,12 @@ class AuthRequest < ApplicationRecord
   before_validation :generate_token, on: :create
   before_validation :set_expired_at, on: :create
 
-  def expired?
-    expired_at < Time.current
+  def within_valid_period?
+    expired_at > Time.current
+  end
+
+  def requested_user
+    User.find_by(email:)
   end
 
   private
