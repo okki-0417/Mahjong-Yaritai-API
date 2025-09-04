@@ -23,10 +23,15 @@ RSpec.describe "auth/verifications", type: :request do
         },
       }
 
-      response(403, "forbidden") do
-        let(:request_params) { { auth_verification: { token: } } }
-        let(:token) { "000000" }
+      let(:form) { Auth::VerificationForm.new(token:) }
+      let(:request_params) { { auth_verification: { token: } } }
+      let(:token) { "000000" }
 
+      before do
+        allow(Auth::VerificationForm).to receive(:new).and_return(form)
+      end
+
+      response(403, "forbidden") do
         let(:current_user) { create(:user) }
         include_context "logged_in_rswag"
 
@@ -34,43 +39,38 @@ RSpec.describe "auth/verifications", type: :request do
       end
 
       response(422, "unprocessable_entity") do
-        let(:request_params) { { auth_verification: { token: } } }
-        let(:token) { "000000" }
-
-        before { allow(AuthRequest).to receive(:find_by).and_return(nil) }
+        before { allow(form).to receive(:valid?).and_return(false) }
 
         schema type: :object,
-               properties: {
-                 errors: {
-                   "$ref" => "#/components/schemas/Errors",
-                 },
-               },
-               required: %w[errors]
+          properties: {
+            errors: { "$ref" => "#/components/schemas/Errors" },
+          },
+          required: %w[errors]
 
         run_test!
       end
 
       response(204, "ok") do
-        let(:request_params) { { auth_verification: { token: } } }
-        let(:token) { authorization.token }
-        let!(:authorization) { create(:auth_request) }
+        before do
+          allow(form).to receive(:valid?).and_return(true)
+          allow(form).to receive(:user).and_return(nil)
+          allow(form).to receive(:auth_request).and_return(create(:auth_request))
+        end
 
         run_test!
       end
 
       response(201, "created") do
-        let(:request_params) { { auth_verification: { token: } } }
-        let(:token) { authorization.token }
-        let!(:authorization) { create(:auth_request, email: user.email) }
-        let!(:user) { create(:user) }
+        before do
+          allow(form).to receive(:valid?).and_return(true)
+          allow(form).to receive(:user).and_return(create(:user))
+        end
 
         schema type: :object,
-               properties: {
-                 auth_verification: {
-                   "$ref" => "#/components/schemas/User",
-                 },
-               },
-               required: %w[auth_verification]
+          required: %w[user],
+          properties: {
+            user: { "$ref" => "#/components/schemas/User" },
+          }
 
         run_test!
       end

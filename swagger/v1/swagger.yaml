@@ -129,7 +129,6 @@ paths:
                   properties:
                     email:
                       type: string
-                      maxLength: 64
   "/auth/verification":
     post:
       summary: create auth_verification
@@ -159,11 +158,11 @@ paths:
             application/json:
               schema:
                 type: object
-                properties:
-                  auth_verification:
-                    "$ref": "#/components/schemas/User"
                 required:
-                - auth_verification
+                - user
+                properties:
+                  user:
+                    "$ref": "#/components/schemas/User"
       requestBody:
         content:
           application/json:

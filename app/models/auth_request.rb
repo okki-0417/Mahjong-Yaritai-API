@@ -3,9 +3,8 @@
 class AuthRequest < ApplicationRecord
   TOKEN_LENGTH = 6
   EXPIRATION_PERIOD = 15.minutes
-  EMAIL_LENGTH = 64
 
-  validates :email, presence: true, length: { maximum: EMAIL_LENGTH }
+  validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :token, presence: true
   validates :expired_at, presence: true
 

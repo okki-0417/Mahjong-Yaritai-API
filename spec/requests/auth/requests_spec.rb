@@ -16,7 +16,7 @@ RSpec.describe "auth_requests", type: :request do
             type: :object,
             required: %w[email],
             properties: {
-              email: { type: :string, maxLength: AuthRequest::EMAIL_LENGTH },
+              email: { type: :string },
             },
           },
         },
