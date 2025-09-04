@@ -11,12 +11,12 @@ RSpec.describe "me/withdrawals/summaries", type: :request do
 
       response(401, "unauthorized") do
         schema type: :object,
-               properties: {
-                 errors: {
-                   "$ref" => "#/components/schemas/Errors",
-                 },
-               },
-               required: %w[errors]
+          properties: {
+            errors: {
+              "$ref" => "#/components/schemas/Errors",
+            },
+          },
+          required: %w[errors]
 
         run_test!
       end
@@ -30,12 +30,12 @@ RSpec.describe "me/withdrawals/summaries", type: :request do
         end
 
         schema type: :object,
-               required: %w[withdrawal_summary],
-               properties: {
-                 withdrawal_summary: {
-                   "$ref" => "#/components/schemas/WithdrawalSummary",
-                 },
-               }
+          required: %w[withdrawal_summary],
+          properties: {
+            withdrawal_summary: {
+              "$ref" => "#/components/schemas/WithdrawalSummary",
+            },
+          }
 
         after do |example|
           example.metadata[:response][:content] = {

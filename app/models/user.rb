@@ -31,6 +31,27 @@ class User < ApplicationRecord
     update_attribute(:remember_digest, nil)
   end
 
+  def withdraw
+    ActiveRecord::Base.transaction do
+      created_what_to_discard_problems.destroy_all
+      created_comments.destroy_all
+      created_likes.destroy_all
+      created_what_to_discard_problem_votes.destroy_all
+
+      destroy!
+    end
+
+    true
+  rescue ActiveRecord::RecordNotDestroyed
+    false
+  end
+
+  def withdrawal_summary
+    {
+      what_to_discard_problems_count: created_what_to_discard_problems.count,
+    }
+  end
+
   private
 
     def self.digest(string)
