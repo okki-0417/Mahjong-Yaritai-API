@@ -11,10 +11,10 @@ RSpec.describe "learnings/questions", type: :request do
       operationId "getLearningQuestions"
       produces "application/json"
 
-      response(200, "ok") do
-        let(:category) { create(:learning_category) }
-        let(:category_id) { category.id }
+      let(:category) { create(:learning_category) }
+      let(:category_id) { category.id }
 
+      response(200, "ok") do
         before { create_list(:learning_question, 3, category: category) }
 
         schema type: :object,
@@ -47,11 +47,12 @@ RSpec.describe "learnings/questions", type: :request do
       operationId "getLearningQuestion"
       produces "application/json"
 
+      let(:id) { question.id }
+
       response(200, "ok") do
         let(:category) { create(:learning_category) }
         let(:question) { create(:learning_question, category: category) }
         let(:category_id) { category.id }
-        let(:id) { question.id }
 
         schema type: :object,
           required: %w[learning_question],
