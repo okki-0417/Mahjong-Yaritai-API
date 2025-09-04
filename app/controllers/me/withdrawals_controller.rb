@@ -5,7 +5,7 @@ class Me::WithdrawalsController < Me::BaseController
     user_email = current_user.email
     user_name = current_user.name
 
-    if current_user.withdraw
+    if current_user.delete_account
       reset_session
 
       WithdrawalMailer.withdrawal_completed(user_email, user_name).deliver_later
