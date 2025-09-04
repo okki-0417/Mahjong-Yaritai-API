@@ -2,14 +2,9 @@ source "https://rubygems.org"
 
 gem "active_model_serializers"
 gem "aws-sdk-s3", require: false
-gem "bcrypt"
+gem "bcrypt", "~> 3.1.7"
 gem "bootsnap", require: false
 gem "dotenv-rails"
-gem "graphql"
-gem "image_processing", "~> 1.2"
-gem "jbuilder"
-gem "kamal", require: false
-gem "kaminari"
 gem "pg"
 gem "puma", ">= 5.0"
 gem "rack-cors"
@@ -19,7 +14,6 @@ gem "redis-store"
 gem "rswag-api"
 gem "rswag-ui"
 gem "sidekiq"
-gem "stackprof"
 gem "sentry-ruby"
 gem "sentry-rails"
 

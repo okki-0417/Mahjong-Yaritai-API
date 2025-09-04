@@ -6,8 +6,7 @@ class User < ApplicationRecord
 
   validates :name, presence: true, length: { maximum: USER_NAME_LENGTH }
   validates :profile_text, length: { maximum: PROFILE_TEXT_LENGTH }
-  EMAIL_REGEXP = /\A[a-zA-Z0-9.!\#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\z/
-  validates :email, presence: true, uniqueness: true, format: { with: EMAIL_REGEXP }
+  validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
 
   has_one_attached :avatar
   has_many :created_what_to_discard_problems, class_name: :WhatToDiscardProblem, dependent: :destroy

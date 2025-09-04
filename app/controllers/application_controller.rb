@@ -3,7 +3,6 @@
 class ApplicationController < ActionController::API
   include Authenticatable
   include ErrorJsonRenderable
-  include Paginationable
 
   include Rails.application.routes.url_helpers
   include ActionController::RequestForgeryProtection

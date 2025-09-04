@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module CursorPaginationable
-  def cursor_paginate(relation, cursor: nil, limit: 20)
+  def query_with_cursor_pagination(relation, cursor: nil, limit: 20)
     limit = [ limit.to_i, 100 ].min
     limit = 20 if limit <= 0
 

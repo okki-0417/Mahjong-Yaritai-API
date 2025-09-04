@@ -6,10 +6,8 @@ class WhatToDiscardProblemsController < ApplicationController
   before_action :restrict_to_logged_in_user, only: %i[create update destroy]
 
   def index
-    base_relation = WhatToDiscardProblem.preload(user: :avatar_attachment)
-
-    result = cursor_paginate(
-      base_relation,
+    result = query_with_cursor_pagination(
+      WhatToDiscardProblem.preload(user: :avatar_attachment),
       cursor: params[:cursor],
       limit: params[:limit]
     )

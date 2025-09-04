@@ -4,8 +4,6 @@ Rails.application.routes.draw do
   mount Rswag::Ui::Engine => "/api-docs"
   mount Rswag::Api::Engine => "/api-docs"
 
-  post "/graphql", to: "graphql#execute"
-
   # 他のルーティング定義の下に追加
   mount ActiveStorage::Engine => "/rails/active_storage"
 
@@ -60,8 +58,6 @@ Rails.application.routes.draw do
       end
     end
   end
-
-  post "/graphql", to: "graphql#execute"
 
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
