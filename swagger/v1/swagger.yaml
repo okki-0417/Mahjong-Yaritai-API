@@ -809,9 +809,7 @@ paths:
                     items:
                       "$ref": "#/components/schemas/WhatToDiscardProblem"
                   meta:
-                    type: object
-                    properties:
-                      "$ref": "#/components/schemas/CursorPagination"
+                    "$ref": "#/components/schemas/Meta"
     post:
       summary: create what_to_discard_problem
       tags:
@@ -1383,48 +1381,26 @@ components:
         properties:
           message:
             type: string
-    Pagination:
+    CursorPagination:
       type: object
       required:
-      - total_pages
-      - current_page
-      - prev_page
-      - next_page
-      - first_page
-      - last_page
+      - has_next
+      - limit
       properties:
-        total_pages:
-          type: integer
-        current_page:
-          type: integer
-        prev_page:
+        next:
           type: integer
           nullable: true
-        next_page:
+        has_next:
+          type: boolean
+        limit:
           type: integer
-          nullable: true
-        first_page:
-          type: integer
-        last_page:
-          type: integer
-    CursorPagination:
+    Meta:
       type: object
       required:
       - cursor
       properties:
         cursor:
-          type: object
-          required:
-          - has_next
-          - limit
-          properties:
-            next:
-              type: integer
-              nullable: true
-            has_next:
-              type: boolean
-            limit:
-              type: integer
+          "$ref": "#/components/schemas/CursorPagination"
     Session:
       type: object
       required:

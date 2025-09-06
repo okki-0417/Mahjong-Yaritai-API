@@ -22,10 +22,7 @@ RSpec.describe "what_to_discard_problems", type: :request do
               type: :array,
               items: { "$ref" => "#/components/schemas/WhatToDiscardProblem" },
             },
-            meta: {
-              type: :object,
-              properties: { "$ref" => "#/components/schemas/CursorPagination" },
-            },
+            meta: { "$ref" => "#/components/schemas/Meta" },
           }
 
         after do |example|

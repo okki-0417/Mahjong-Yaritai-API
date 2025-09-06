@@ -203,31 +203,20 @@ dora_id hand1_id hand2_id hand3_id hand4_id hand5_id hand6_id hand7_id hand8_id 
               },
             },
           },
-          Pagination: {
+          CursorPagination: {
             type: :object,
-            required: %w[total_pages current_page prev_page next_page first_page last_page],
+            required: %w[has_next limit],
             properties: {
-              total_pages: { type: :integer },
-              current_page: { type: :integer },
-              prev_page: { type: :integer, nullable: true },
-              next_page: { type: :integer, nullable: true },
-              first_page: { type: :integer },
-              last_page: { type: :integer },
+              next: { type: :integer, nullable: true },
+              has_next: { type: :boolean },
+              limit: { type: :integer },
             },
           },
-          CursorPagination: {
+          Meta: {
             type: :object,
             required: %w[cursor],
             properties: {
-              cursor: {
-                type: :object,
-                required: %w[has_next limit],
-                properties: {
-                  next: { type: :integer, nullable: true },
-                  has_next: { type: :boolean },
-                  limit: { type: :integer },
-                },
-              },
+              cursor: { "$ref" => "#/components/schemas/CursorPagination" },
             },
           },
           Session: {
