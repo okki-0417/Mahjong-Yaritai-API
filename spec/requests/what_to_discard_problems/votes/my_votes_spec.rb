@@ -11,10 +11,10 @@ RSpec.describe "what_to_discard_problems/votes/my_votes", type: :request do
       operationId "getWhatToDiscardProblemMyVote"
       produces "application/json"
 
-      response(200, "successful") do
-        let(:what_to_discard_problem_id) { what_to_discard_problem.id }
-        let(:what_to_discard_problem) { create(:what_to_discard_problem) }
+      let(:what_to_discard_problem_id) { what_to_discard_problem.id }
+      let(:what_to_discard_problem) { create(:what_to_discard_problem) }
 
+      response(200, "successful") do
         before { create(:what_to_discard_problem_vote, what_to_discard_problem:, user: current_user) }
 
         let(:current_user) { create(:user) }
@@ -60,32 +60,26 @@ RSpec.describe "what_to_discard_problems/votes/my_votes", type: :request do
         },
       }
 
-      response(401, "unauthorized") do
-        let(:what_to_discard_problem_id) { what_to_discard_problem.id }
-        let(:what_to_discard_problem) { create(:what_to_discard_problem) }
-        let(:request_params) { { what_to_discard_problem_my_vote: { tile_id: create(:tile).id } } }
+      let(:what_to_discard_problem_id) { what_to_discard_problem.id }
+      let(:what_to_discard_problem) { create(:what_to_discard_problem) }
+      let(:request_params) { { what_to_discard_problem_my_vote: { tile_id: create(:tile).id } } }
 
+      response(401, "unauthorized") do
         run_test!
       end
 
       response(422, "unprocessable_entity") do
-        let(:what_to_discard_problem_id) { what_to_discard_problem.id }
-        let(:what_to_discard_problem) { create(:what_to_discard_problem) }
-        let(:request_params) { { what_to_discard_problem_my_vote: { tile_id: create(:tile).id } } }
-
         let(:current_user) { create(:user) }
         include_context "logged_in_rswag"
 
-        before { allow_any_instance_of(WhatToDiscardProblem::Vote).to receive(:save).and_return(false) }
+        before do
+          allow_any_instance_of(WhatToDiscardProblem::Vote).to receive(:save).and_return(false)
+        end
 
         run_test!
       end
 
       response(201, "created") do
-        let(:what_to_discard_problem_id) { what_to_discard_problem.id }
-        let(:what_to_discard_problem) { create(:what_to_discard_problem) }
-        let(:request_params) { { what_to_discard_problem_my_vote: { tile_id: create(:tile).id } } }
-
         let(:current_user) { create(:user) }
         include_context "logged_in_rswag"
 
@@ -111,17 +105,14 @@ RSpec.describe "what_to_discard_problems/votes/my_votes", type: :request do
       operationId "deleteWhatToDiscardProblemMyVote"
       produces "application/json"
 
-      response(401, "unauthorized") do
-        let(:what_to_discard_problem_id) { what_to_discard_problem.id }
-        let(:what_to_discard_problem) { create(:what_to_discard_problem) }
+      let(:what_to_discard_problem_id) { what_to_discard_problem.id }
+      let(:what_to_discard_problem) { create(:what_to_discard_problem) }
 
+      response(401, "unauthorized") do
         run_test!
       end
 
       response(204, "no_content") do
-        let(:what_to_discard_problem_id) { what_to_discard_problem.id }
-        let(:what_to_discard_problem) { create(:what_to_discard_problem) }
-
         let(:current_user) { create(:user) }
         include_context "logged_in_rswag"
 
