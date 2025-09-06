@@ -632,8 +632,6 @@ paths:
       - WhatToDiscardProblem::Like::MyLike
       operationId: getWhatToDiscardProblemMyLike
       responses:
-        '204':
-          description: no_content
         '200':
           description: successful
           content:
@@ -813,8 +811,7 @@ paths:
                   meta:
                     type: object
                     properties:
-                      cursor:
-                        "$ref": "#/components/schemas/CursorPagination"
+                      "$ref": "#/components/schemas/CursorPagination"
     post:
       summary: create what_to_discard_problem
       tags:
@@ -1181,8 +1178,6 @@ components:
       - votes_count
       - created_at
       - updated_at
-      - is_liked_by_me
-      - my_vote_tile_id
       properties:
         id:
           type: integer
@@ -1239,11 +1234,6 @@ components:
           type: integer
         votes_count:
           type: integer
-        is_liked_by_me:
-          type: boolean
-        my_vote_tile_id:
-          type: integer
-          nullable: true
         created_at:
           type: string
           format: date_time
@@ -1420,16 +1410,21 @@ components:
     CursorPagination:
       type: object
       required:
-      - has_next
-      - limit
+      - cursor
       properties:
-        next:
-          type: integer
-          nullable: true
-        has_next:
-          type: boolean
-        limit:
-          type: integer
+        cursor:
+          type: object
+          required:
+          - has_next
+          - limit
+          properties:
+            next:
+              type: integer
+              nullable: true
+            has_next:
+              type: boolean
+            limit:
+              type: integer
     Session:
       type: object
       required:
