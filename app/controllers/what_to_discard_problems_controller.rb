@@ -6,37 +6,18 @@ class WhatToDiscardProblemsController < ApplicationController
   before_action :restrict_to_logged_in_user, only: %i[create update destroy]
 
   def index
-    result = query_with_cursor_pagination(
+    data = query_with_cursor_pagination(
       WhatToDiscardProblem.preload(user: :avatar_attachment),
       cursor: params[:cursor],
-      limit: params[:limit]
+      limit: params[:limit],
     )
 
-    problems = result[:records]
-    problem_ids = problems.map(&:id)
-
-    problem_ids_liked_by_me = if logged_in?
-      current_user.created_likes
-        .where(likable_type: WhatToDiscardProblem.name, likable_id: problem_ids)
-        .pluck(:likable_id)
-    else
-      []
-    end
-
-    votes_by_me = if logged_in?
-      current_user.created_what_to_discard_problem_votes
-        .where(what_to_discard_problem_id: problem_ids)
-        .pluck(:what_to_discard_problem_id, :tile_id)
-        .to_h
-    else
-      {}
-    end
+    problems = data[:records]
+    meta = data[:meta]
 
     render json: problems,
-      each_serializer: WhatToDiscardProblemSerializer,
       root: :what_to_discard_problems,
-      scope: { problem_ids_liked_by_me:, votes_by_me: },
-      meta: result[:meta],
+      meta:,
       status: :ok
   end
 
@@ -45,9 +26,7 @@ class WhatToDiscardProblemsController < ApplicationController
 
     if problem.save
       render json: problem,
-        serializer: WhatToDiscardProblemSerializer,
         root: :what_to_discard_problem,
-        scope: { problem_ids_liked_by_me: [], votes_by_me: {} },
         status: :created
     else
       render json: validation_error_json(problem), status: :unprocessable_entity
@@ -59,9 +38,7 @@ class WhatToDiscardProblemsController < ApplicationController
 
     if problem.update(problem_params)
       render json: problem,
-        serializer: WhatToDiscardProblemSerializer,
         root: :what_to_discard_problem,
-        scope: { problem_ids_liked_by_me: [], votes_by_me: {} },
         status: :ok
     else
       render json: validation_error_json(problem), status: :unprocessable_entity

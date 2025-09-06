@@ -10,10 +10,7 @@ class WhatToDiscardProblems::Likes::MyLikesController < ApplicationController
       user_id: current_user&.id,
     )
 
-    return render json: { my_like: nil }, status: :no_content unless my_like
-
     render json: my_like,
-      serializer: LikeSerializer,
       root: :my_like,
       status: :ok
   end

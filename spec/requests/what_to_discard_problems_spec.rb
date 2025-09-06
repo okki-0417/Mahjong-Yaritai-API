@@ -24,9 +24,7 @@ RSpec.describe "what_to_discard_problems", type: :request do
             },
             meta: {
               type: :object,
-              properties: {
-                cursor: { "$ref" => "#/components/schemas/CursorPagination" },
-              },
+              properties: { "$ref" => "#/components/schemas/CursorPagination" },
             },
           }
 

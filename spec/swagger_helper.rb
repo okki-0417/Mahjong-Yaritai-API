@@ -103,8 +103,7 @@ updated_at],
               votes_count
               created_at
               updated_at
-              is_liked_by_me
-              my_vote_tile_id],
+            ],
             properties: {
               id: { type: :integer },
               user:  { "$ref" => "#/components/schemas/User" },
@@ -131,8 +130,6 @@ updated_at],
               comments_count: { type: :integer },
               likes_count: { type: :integer },
               votes_count: { type: :integer },
-              is_liked_by_me: { type: :boolean },
-              my_vote_tile_id: { type: :integer, nullable: true },
               created_at: { type: :string, format: :date_time },
               updated_at: { type: :string, format: :date_time },
             },
@@ -220,11 +217,17 @@ dora_id hand1_id hand2_id hand3_id hand4_id hand5_id hand6_id hand7_id hand8_id 
           },
           CursorPagination: {
             type: :object,
-            required: %w[has_next limit],
+            required: %w[cursor],
             properties: {
-              next: { type: :integer, nullable: true },
-              has_next: { type: :boolean },
-              limit: { type: :integer },
+              cursor: {
+                type: :object,
+                required: %w[has_next limit],
+                properties: {
+                  next: { type: :integer, nullable: true },
+                  has_next: { type: :boolean },
+                  limit: { type: :integer },
+                },
+              },
             },
           },
           Session: {

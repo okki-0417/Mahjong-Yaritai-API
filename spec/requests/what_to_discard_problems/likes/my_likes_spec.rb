@@ -9,20 +9,10 @@ RSpec.describe "what_to_discard_problems/likes/my_likes", type: :request do
       operationId "getWhatToDiscardProblemMyLike"
       produces "application/json"
 
-      response(204, "no_content") do
-        let(:what_to_discard_problem_id) { what_to_discard_problem.id }
-        let(:what_to_discard_problem) { create(:what_to_discard_problem) }
-
-        let(:current_user) { create(:user) }
-        include_context "logged_in_rswag"
-
-        run_test!
-      end
+      let(:what_to_discard_problem_id) { what_to_discard_problem.id }
+      let(:what_to_discard_problem) { create(:what_to_discard_problem) }
 
       response(200, "successful") do
-        let(:what_to_discard_problem_id) { what_to_discard_problem.id }
-        let(:what_to_discard_problem) { create(:what_to_discard_problem) }
-
         before { create(:like, likable: what_to_discard_problem, user: current_user) }
 
         let(:current_user) { create(:user) }
@@ -51,17 +41,14 @@ RSpec.describe "what_to_discard_problems/likes/my_likes", type: :request do
       operationId "createWhatToDiscardProblemMyLike"
       produces "application/json"
 
-      response(401, "unauthorized") do
         let(:what_to_discard_problem_id) { what_to_discard_problem.id }
         let(:what_to_discard_problem) { create(:what_to_discard_problem) }
 
+      response(401, "unauthorized") do
         run_test!
       end
 
       response(422, "unprocessable_entity") do
-        let(:what_to_discard_problem_id) { what_to_discard_problem.id }
-        let(:what_to_discard_problem) { create(:what_to_discard_problem) }
-
         let(:current_user) { create(:user) }
         include_context "logged_in_rswag"
 
@@ -71,9 +58,6 @@ RSpec.describe "what_to_discard_problems/likes/my_likes", type: :request do
       end
 
       response(201, "created") do
-        let(:what_to_discard_problem_id) { what_to_discard_problem.id }
-        let(:what_to_discard_problem) { create(:what_to_discard_problem) }
-
         let(:current_user) { create(:user) }
         include_context "logged_in_rswag"
 
@@ -99,17 +83,14 @@ RSpec.describe "what_to_discard_problems/likes/my_likes", type: :request do
       operationId "deleteWhatToDiscardProblemMyLike"
       produces "application/json"
 
-      response(401, "unauthorized") do
-        let(:what_to_discard_problem_id) { what_to_discard_problem.id }
-        let(:what_to_discard_problem) { create(:what_to_discard_problem) }
+      let(:what_to_discard_problem_id) { what_to_discard_problem.id }
+      let(:what_to_discard_problem) { create(:what_to_discard_problem) }
 
+      response(401, "unauthorized") do
         run_test!
       end
 
       response(204, "no_content") do
-        let(:what_to_discard_problem_id) { what_to_discard_problem.id }
-        let(:what_to_discard_problem) { create(:what_to_discard_problem) }
-
         let(:current_user) { create(:user) }
         include_context "logged_in_rswag"
 
