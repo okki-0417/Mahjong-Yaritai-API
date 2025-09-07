@@ -178,7 +178,6 @@ dora_id hand1_id hand2_id hand3_id hand4_id hand5_id hand6_id hand7_id hand8_id 
             properties: {
               tile_id: { type: :integer },
               count: { type: :integer },
-              is_voted_bys_me: { type: :boolean },
             },
           },
           Tile: {

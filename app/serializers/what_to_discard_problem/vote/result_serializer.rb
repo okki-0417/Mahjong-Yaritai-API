@@ -4,7 +4,6 @@ class WhatToDiscardProblem::Vote::ResultSerializer < ActiveModel::Serializer
   attributes %i[
     tile_id
     count
-    is_voted_by_me
   ]
 
   def tile_id
@@ -13,9 +12,5 @@ class WhatToDiscardProblem::Vote::ResultSerializer < ActiveModel::Serializer
 
   def count
     object&.[](:count)
-  end
-
-  def is_voted_by_me
-    object&.[](:is_voted_by_me)
   end
 end
