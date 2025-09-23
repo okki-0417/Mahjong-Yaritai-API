@@ -1277,6 +1277,7 @@ components:
       required:
       - id
       - name
+      - is_following
       - created_at
       - updated_at
       properties:
@@ -1290,6 +1291,8 @@ components:
         avatar_url:
           type: string
           nullable: true
+        is_following:
+          type: boolean
         created_at:
           type: string
           format: date_time

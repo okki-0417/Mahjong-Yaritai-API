@@ -35,6 +35,7 @@ class UsersController < ApplicationController
     render json: user,
       serializer: UserSerializer,
       root: :user,
+      current_user: current_user,
       status: :ok
   end
 

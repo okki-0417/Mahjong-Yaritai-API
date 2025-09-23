@@ -6,6 +6,7 @@ class UserSerializer < ActiveModel::Serializer
     name
     profile_text
     avatar_url
+    is_following
     created_at
     updated_at
   ]
@@ -18,5 +19,11 @@ class UserSerializer < ActiveModel::Serializer
     rescue
       Rails.application.routes.url_helpers.url_for(object.avatar)
     end
+  end
+
+  def is_following
+    return false unless instance_options[:current_user]
+
+    instance_options[:current_user].following?(object)
   end
 end

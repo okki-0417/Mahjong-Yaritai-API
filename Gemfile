@@ -16,8 +16,11 @@ gem "rswag-ui"
 gem "sidekiq"
 gem "sentry-ruby"
 gem "sentry-rails"
+gem "graphql"
+gem "graphql-batch"
 
 group :development do
+  gem "graphiql-rails"
   gem "brakeman", require: false
   gem "letter_opener_web"
   gem "rubocop-rails-omakase", require: false
