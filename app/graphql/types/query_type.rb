@@ -41,6 +41,33 @@ module Types
       User.find_by(id: id)
     end
 
+    field :what_to_discard_problem, Types::WhatToDiscardProblemType, null: true,
+      description: "Get what to discard problem by ID" do
+      argument :id, ID, required: true
+    end
+
+    def what_to_discard_problem(id:)
+      WhatToDiscardProblem.preload(
+        :user,
+        :dora,
+        :hand1,
+        :hand2,
+        :hand3,
+        :hand4,
+        :hand5,
+        :hand6,
+        :hand7,
+        :hand8,
+        :hand9,
+        :hand10,
+        :hand11,
+        :hand12,
+        :hand13,
+        :tsumo,
+        user: :avatar_attachment,
+      ).find_by(id: id)
+    end
+
     field :what_to_discard_problems, Types::WhatToDiscardProblemConnectionType, null: false,
       description: "Get what to discard problems with cursor pagination",
       connection: false do
