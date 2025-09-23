@@ -11,7 +11,7 @@ fi
 echo "Running pre-commit hook..."
 
 # Use --force-exclusion flag to ensure .rubocop.yml Exclude patterns are respected
-bin/rubocop --force-exclusion $files -a
+docker compose exec -T app bundle exec rubocop --force-exclusion $files -a
 
 if [ $? -ne 0 ]; then
   echo "RuboCop failed. Commit aborted."
