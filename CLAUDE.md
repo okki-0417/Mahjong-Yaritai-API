@@ -1,153 +1,162 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+このファイルは、Claude Code (claude.ai/code) がこのリポジトリで作業する際のガイダンスを提供します。
 
-## Project Overview
+## プロジェクト概要
 
-This is a Rails 7.2.1 API-only application for a Mahjong game platform called "Mahjong Yaritai". The application focuses on "what to discard" problems where users analyze Mahjong hands and vote on which tile to discard.
+「麻雀ヤリタイ」の Rails 7.2.1 API専用アプリケーションです。ユーザーが麻雀の手牌を分析し、どの牌を切るべきかを投票する「何切る問題」に特化したプラットフォームです。
 
-### Core Architecture
+### コアアーキテクチャ
 
-- **Framework**: Rails 7.2.1 (API-only mode)
-- **Database**: PostgreSQL with Redis for sessions and background jobs
-- **Authentication**: Custom email-only authentication system (no passwords)
-- **Background Jobs**: Sidekiq with Redis
-- **File Storage**: ActiveStorage (local in dev, S3 in production)
-- **APIs**: REST endpoints with OpenAPI 3.0.1 documentation + GraphQL
-- **Serialization**: ActiveModel::Serializer
+- **フレームワーク**: Rails 7.2.1 (API専用モード)
+- **データベース**: PostgreSQL + Redis (セッション・バックグラウンドジョブ用)
+- **認証**: カスタムメール認証システム（パスワードなし）
+- **バックグラウンドジョブ**: Sidekiq (Redis使用)
+- **ファイルストレージ**: ActiveStorage (開発:ローカル、本番:S3)
+- **API**: REST エンドポイント + OpenAPI 3.0.1 ドキュメント + GraphQL
+- **シリアライゼーション**: ActiveModel::Serializer
 
-## Key Domain Models
+## 主要ドメインモデル
 
-### Authentication System
-- **AuthRequest**: Stores email authentication tokens (6-digit codes, 15min expiry)
-- **User**: Core user model with avatar (ActiveStorage), email-based auth only
-- No password authentication - uses temporary tokens sent via email
+### 認証システム
+- **AuthRequest**: メール認証トークン管理（6桁コード、15分有効）
+- **User**: ユーザーモデル（アバター付き、メール認証のみ）
+- パスワード認証なし - メールで送信される一時トークンを使用
 
-### Mahjong Domain
-- **Tile**: 34 different Mahjong tiles (suits: man, pin, sou, honor)
-- **WhatToDiscardProblem**: 13-tile hand + 1 drawn tile, users vote on discard
-- **WhatToDiscardProblem::Vote**: User votes on which tile to discard
-- **Comments & Likes**: Standard social features on problems
+### 麻雀ドメイン
+- **Tile**: 34種類の麻雀牌（萬子、筒子、索子、字牌）
+- **WhatToDiscardProblem**: 13枚の手牌 + 1枚のツモ牌、ユーザーが何を切るか投票
+- **WhatToDiscardProblem::Vote**: ユーザーの投票
+- **Comments & Likes**: 問題に対するソーシャル機能
 
-### Key Relationships
+### 主要な関連
 ```ruby
 User has_many :created_what_to_discard_problems
-WhatToDiscardProblem belongs_to 14 tiles (hand1_id..hand13_id, tsumo_id, dora_id)
+WhatToDiscardProblem belongs_to 14牌 (hand1_id..hand13_id, tsumo_id, dora_id)
 WhatToDiscardProblem has_many :votes, :comments, :likes
 ```
 
-## Development Environment
+## 開発環境
 
-### Docker Setup
-All commands should use Docker Compose:
+### Docker セットアップ
+すべてのコマンドは Docker Compose を使用：
 ```bash
-# Start services
+# サービス起動
 docker compose up
 
-# Run Rails commands
-docker compose exec app bundle exec rails [command]
+# Rails コマンド実行
+docker compose exec app bundle exec rails [コマンド]
 
-# Database operations
+# データベース操作
 docker compose exec app bundle exec rails db:create db:migrate db:seed
 
-# Console
+# コンソール
 docker compose exec app bundle exec rails console
 
-# Tests
+# テスト
 docker compose exec app bundle exec rspec
 docker compose exec app bundle exec rspec spec/specific_file_spec.rb
 ```
 
-### Key Services
-- **app**: Rails application (port 3001)
-- **sidekiq**: Background job worker
-- **db**: PostgreSQL database
-- **redis**: Session store and job queue
+### 主要サービス
+- **app**: Rails アプリケーション (ポート 3001)
+- **sidekiq**: バックグラウンドジョブワーカー
+- **db**: PostgreSQL データベース
+- **redis**: セッションストア・ジョブキュー
 
-## Testing & Documentation
+## テストとドキュメント
 
-### RSpec Testing
+### RSpec + Rswag テスト
+Rswag を使用して RSpec テストから OpenAPI (Swagger) ドキュメントを自動生成：
+
 ```bash
-# Run all tests
+# 全テスト実行
 docker compose exec app bundle exec rspec
 
-# Run specific test
+# 特定テスト実行
 docker compose exec app bundle exec rspec spec/requests/users_spec.rb
 
-# Generate API docs from tests
+# RSpec テストから swagger.yml を自動生成
 docker compose exec app bundle exec rails rswag:specs:swaggerize
 ```
 
-### API Documentation
-- Swagger UI available at `/api-docs`
-- Generated from rswag specs in `spec/requests/`
-- OpenAPI 3.0.1 specification
+### Rswag の特徴
+- **テストとドキュメントの統合**: RSpec テストがそのまま API ドキュメントになる
+- **自動生成**: `spec/requests/` のテストから `swagger/v1/swagger.yaml` を生成
+- **リクエスト/レスポンスの検証**: テスト実行時に OpenAPI スキーマに対して自動検証
+- **実例の記録**: テストで使用した実際のリクエスト/レスポンスをドキュメントに含める
 
-## Key Configuration Patterns
+### API ドキュメント
+- Swagger UI: `/api-docs` で利用可能
+- 生成元: `spec/requests/` の rswag スペック
+- 出力先: `swagger/v1/swagger.yaml`
+- OpenAPI 3.0.1 仕様準拠
 
-### Environment-Specific Settings
-- **Development**: Uses `:local` storage, `:sidekiq` jobs, letter_opener_web for emails
-- **Production**: Uses `:amazon` storage (S3), SMTP email, custom logging
-- **Test**: Uses `:test` storage, `:test` job adapter
+## 主要な設定パターン
 
-### Custom Middleware & Logging
-- `CustomLogger`: Filters out health check logs and frequent session checks
-- Session management via Redis with different security settings per environment
+### 環境別設定
+- **開発**: `:local` ストレージ、`:sidekiq` ジョブ、letter_opener_web でメール確認
+- **本番**: `:amazon` ストレージ (S3)、SMTP メール、カスタムロギング
+- **テスト**: `:test` ストレージ、`:test` ジョブアダプター
 
-### Authentication Flow
-1. POST `/auth/request` with email → sends 6-digit token
-2. POST `/auth/verification` with token → returns user data + sets session
-3. Session managed via Redis, expires after 1 month
+### カスタムミドルウェアとロギング
+- `CustomLogger`: ヘルスチェックログと頻繁なセッションチェックをフィルター
+- Redis による環境別セキュリティ設定でのセッション管理
 
-## API Structure
+### 認証フロー
+1. POST `/auth/request` でメール送信 → 6桁トークン送信
+2. POST `/auth/verification` でトークン検証 → ユーザーデータ返却 + セッション設定
+3. Redis でセッション管理、1ヶ月後に期限切れ
 
-### Namespaced Controllers
-- `Auth::` - Authentication endpoints
-- `Me::` - User-specific actions (profile, withdrawal)
-- `WhatToDiscardProblems::` - Nested resources (comments, votes, likes)
+## API 構造
 
-### Key Endpoints
-- `GET /session` - Current user session (called frequently by frontend)
-- `POST /what_to_discard_problems` - Create new problem
-- `GET /what_to_discard_problems/:id/votes/result` - Get voting results
-- `POST /me/withdrawal` - User account deletion with email notification
+### 名前空間付きコントローラー
+- `Auth::` - 認証エンドポイント
+- `Me::` - ユーザー固有アクション（プロフィール、退会）
+- `WhatToDiscardProblems::` - ネストされたリソース（コメント、投票、いいね）
 
-## Background Jobs & Email
+### 主要エンドポイント
+- `GET /session` - 現在のユーザーセッション（フロントエンドから頻繁に呼び出し）
+- `POST /what_to_discard_problems` - 新規問題作成
+- `GET /what_to_discard_problems/:id/votes/result` - 投票結果取得
+- `POST /me/withdrawal` - ユーザーアカウント削除（メール通知付き）
 
-### Sidekiq Configuration
-- Uses Redis for job queue
-- Separate Docker container for workers
-- Handles email delivery and file processing via ActiveJob
+## バックグラウンドジョブとメール
 
-### Email System
-- Development: letter_opener_web
-- Production: SMTP via Gmail
-- Automated emails: auth tokens, withdrawal confirmations
+### Sidekiq 設定
+- Redis をジョブキューに使用
+- ワーカー用の独立 Docker コンテナ
+- ActiveJob 経由でメール配信とファイル処理を実行
 
-## File Storage & Assets
+### メールシステム
+- 開発: letter_opener_web
+- 本番: Gmail 経由の SMTP
+- 自動メール: 認証トークン、退会確認
 
-### ActiveStorage Setup
-- Development/Test: Local disk storage
-- Production: AWS S3 with proper environment variables
-- Avatar URLs generated via serializers with fallback error handling
+## ファイルストレージとアセット
 
-## Special Architectural Notes
+### ActiveStorage 設定
+- 開発/テスト: ローカルディスクストレージ
+- 本番: AWS S3（適切な環境変数設定）
+- シリアライザー経由でアバター URL 生成（エラーハンドリング付き）
 
-### Cursor-Based Pagination
-Custom implementation in `Paginationable` concern for better performance than offset pagination.
+## 特別なアーキテクチャメモ
 
-### Custom Validators
-- Tile sequence validation for Mahjong hand sorting (理牌 validation)
-- Localized error messages in Japanese
+### カーソルベースのページネーション
+`Paginationable` concern でのカスタム実装、オフセットページネーションより高パフォーマンス
 
-### Session Security
-- Different session configurations per environment
-- Redis-based sessions with proper cookie settings
-- CSRF protection disabled (API-only)
+### カスタムバリデーター
+- 麻雀手牌の並び順バリデーション（理牌バリデーション）
+- 日本語ローカライズエラーメッセージ
 
-## Environment Variables
+### セッションセキュリティ
+- 環境別の異なるセッション設定
+- Redis ベースセッション（適切な Cookie 設定）
+- CSRF 保護無効（API 専用）
 
-### Required for Development
+## 環境変数
+
+### 開発環境で必要
 ```
 REDIS_HOST=redis
 REDIS_PORT=6379
@@ -155,7 +164,7 @@ HOST_NAME=localhost:3001
 USER_AGENT=your-health-check-agent
 ```
 
-### Required for Production
+### 本番環境で必要
 ```
 AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=
@@ -166,22 +175,64 @@ MAIL_ADDRESS=
 MAIL_PASSWORD=
 ```
 
-## Database Commands
+## データベースコマンド
 
 ```bash
-# Create and setup
+# 作成とセットアップ
 docker compose exec app bundle exec rails db:create db:migrate
 
-# Seed with Mahjong tiles and test data
+# 麻雀牌とテストデータのシード
 docker compose exec app bundle exec rails db:seed
 
-# Reset database
+# データベースリセット
 docker compose exec app bundle exec rails db:drop db:create db:migrate db:seed
 ```
 
-## Deployment
+## デプロイメント
 
-- Configured for Kamal deployment
-- Render deployment ready
-- Sentry error monitoring integrated
-- Custom health check endpoints at `/` and `/up`
+- Kamal デプロイメント設定済み
+- Render デプロイメント対応
+- Sentry エラー監視統合
+- カスタムヘルスチェックエンドポイント: `/` と `/up`
+
+## Rswag テストパターン
+
+### 基本構造
+```ruby
+RSpec.describe "リソース名", type: :request do
+  path "/エンドポイント" do
+    get("説明") do
+      tags "タグ名"
+      operationId "操作ID"
+      produces "application/json"
+
+      parameter name: :パラメータ名, in: :query, type: :string
+
+      response(200, "成功") do
+        schema type: :object, properties: { ... }
+        run_test!
+      end
+    end
+  end
+end
+```
+
+### テストからSwagger生成
+- テストファイル: `spec/requests/*_spec.rb`
+- 生成コマンド: `docker compose exec app bundle exec rails rswag:specs:swaggerize`
+- 出力: `swagger/v1/swagger.yaml`
+
+## データベーススキーマ要点
+
+### 主要テーブル
+- `users`: メールベース認証、20文字以内の名前
+- `tiles`: 34種類の麻雀牌（suit, ordinal_number_in_suit）
+- `what_to_discard_problems`: 14牌（hand1-13, tsumo, dora）+ メタ情報
+- `what_to_discard_problem_votes`: ユーザーの投票（ユニーク制約）
+- `comments`: ポリモーフィック、自己参照（返信）
+- `likes`: ポリモーフィック、ユーザーごとにユニーク
+- `auth_requests`: 6桁トークン、15分有効期限
+
+### インデックスとカウンターキャッシュ
+- ユニークインデックス: email, user_id + what_to_discard_problem_id
+- カウンターキャッシュ: comments_count, likes_count, votes_count, replies_count
