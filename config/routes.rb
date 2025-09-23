@@ -25,7 +25,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :users, only: %i[show create destroy]
+  resources :users, only: %i[show create destroy] do
+    resource :follow, module: :users, only: %i[create destroy]
+    resources :followers, module: :users, only: %i[index]
+    resources :following, module: :users, only: %i[index]
+  end
 
   resource :session, only: %i[show destroy]
 

@@ -420,6 +420,180 @@ paths:
                     "$ref": "#/components/schemas/Errors"
         '204':
           description: no_content
+  "/users/{user_id}/followers":
+    parameters:
+    - name: user_id
+      in: path
+      description: User ID
+      required: true
+      schema:
+        type: string
+    get:
+      summary: list followers
+      tags:
+      - Follow
+      operationId: getUserFollowers
+      parameters:
+      - name: cursor
+        in: query
+        required: false
+        description: Cursor for pagination
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        description: Number of items per page (max 100)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - users
+                - meta
+                properties:
+                  users:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/User"
+                  meta:
+                    "$ref": "#/components/schemas/Meta"
+  "/users/{user_id}/following":
+    parameters:
+    - name: user_id
+      in: path
+      description: User ID
+      required: true
+      schema:
+        type: string
+    get:
+      summary: list following
+      tags:
+      - Follow
+      operationId: getUserFollowing
+      parameters:
+      - name: cursor
+        in: query
+        required: false
+        description: Cursor for pagination
+        schema:
+          type: string
+      - name: limit
+        in: query
+        required: false
+        description: Number of items per page (max 100)
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - users
+                - meta
+                properties:
+                  users:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/User"
+                  meta:
+                    "$ref": "#/components/schemas/Meta"
+  "/users/{user_id}/follow":
+    parameters:
+    - name: user_id
+      in: path
+      description: User ID
+      required: true
+      schema:
+        type: string
+    post:
+      summary: create follow
+      tags:
+      - Follow
+      operationId: createFollow
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+        '422':
+          description: unprocessable entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+    delete:
+      summary: delete follow
+      tags:
+      - Follow
+      operationId: deleteFollow
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '401':
+          description: unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        message:
+                          type: string
+        '404':
+          description: not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
   "/users":
     post:
       summary: create user
@@ -1346,8 +1520,6 @@ components:
           type: integer
         count:
           type: integer
-        is_voted_bys_me:
-          type: boolean
     Tile:
       type: object
       required:

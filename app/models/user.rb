@@ -14,6 +14,12 @@ class User < ApplicationRecord
   has_many :created_likes, class_name: :Like, dependent: :destroy
   has_many :created_what_to_discard_problem_votes, class_name: "WhatToDiscardProblem::Vote", dependent: :destroy
 
+  # フォロー関連
+  has_many :active_follows, class_name: "Follow", foreign_key: "follower_id", dependent: :destroy
+  has_many :passive_follows, class_name: "Follow", foreign_key: "followee_id", dependent: :destroy
+  has_many :following, through: :active_follows, source: :followee
+  has_many :followers, through: :passive_follows, source: :follower
+
   attr_accessor :remember_token
 
   def remember
@@ -37,6 +43,8 @@ class User < ApplicationRecord
       created_comments.destroy_all
       created_likes.destroy_all
       created_what_to_discard_problem_votes.destroy_all
+      active_follows.destroy_all
+      passive_follows.destroy_all
 
       destroy!
     end
@@ -54,6 +62,18 @@ class User < ApplicationRecord
       likes_count: created_likes.count,
       what_to_discard_problem_votes_count: created_what_to_discard_problem_votes.count,
     }
+  end
+
+  def follow(other_user)
+    active_follows.create(followee: other_user)
+  end
+
+  def unfollow(other_user)
+    active_follows.find_by(followee: other_user)&.destroy
+  end
+
+  def following?(other_user)
+    following.include?(other_user)
   end
 
   private

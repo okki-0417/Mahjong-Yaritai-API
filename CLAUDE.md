@@ -232,7 +232,210 @@ end
 - `comments`: ポリモーフィック、自己参照（返信）
 - `likes`: ポリモーフィック、ユーザーごとにユニーク
 - `auth_requests`: 6桁トークン、15分有効期限
+- `follows`: フォロー関係（follower_id, followee_id、ユニーク制約）
 
 ### インデックスとカウンターキャッシュ
-- ユニークインデックス: email, user_id + what_to_discard_problem_id
+- ユニークインデックス: email, user_id + what_to_discard_problem_id, follower_id + followee_id
 - カウンターキャッシュ: comments_count, likes_count, votes_count, replies_count
+
+## Factory Bot パターン
+
+### 基本的な使い方
+```ruby
+# 単一レコード作成
+user = create(:user)
+
+# 複数レコード作成
+users = create_list(:user, 3)
+
+# ビルド（DBに保存しない）
+user = build(:user)
+
+# 属性オーバーライド
+user = create(:user, name: "カスタム名", email: "custom@example.com")
+```
+
+### Association の定義方法
+```ruby
+# spec/factories/users.rb
+FactoryBot.define do
+  factory :user do
+    sequence(:name) { |n| "テストユーザー#{n}" }
+    sequence(:email) { |n| "user#{SecureRandom.urlsafe_base64}@example.com" }
+  end
+end
+
+# spec/factories/follows.rb
+FactoryBot.define do
+  factory :follow do
+    association :follower, factory: :user
+    association :followee, factory: :user
+  end
+end
+
+# spec/factories/comments.rb
+FactoryBot.define do
+  factory :comment do
+    association :user
+    association :commentable, factory: :what_to_discard_problem
+    parent_comment_id { nil }
+    content { "test content" }
+  end
+end
+```
+
+### Sequence の使用
+```ruby
+# 連番生成
+sequence(:name) { |n| "テストユーザー#{n}" }
+
+# ランダム値生成
+sequence(:email) { |n| "user#{SecureRandom.urlsafe_base64}@example.com" }
+
+# 循環パターン
+sequence(:suit) { |n| n % 3 }
+sequence(:ordinal_number_in_suit) { |n| n % 9 + 1 }
+```
+
+### Trait パターン
+```ruby
+# 特定の状態を持つファクトリー
+factory :what_to_discard_problem do
+  # 通常の設定
+  association :user
+
+  trait :dev do
+    # 開発用の固定ID
+    dora_id { 1 }
+    hand1_id { 1 }
+  end
+end
+
+# 使用例
+create(:what_to_discard_problem, :dev)
+```
+
+## RSpec + Rswag テストパターン
+
+### 基本構造
+```ruby
+require "swagger_helper"
+
+RSpec.describe "リソース名", type: :request do
+  path "/エンドポイント" do
+    parameter name: :パラメータ名, in: :path, type: :string
+
+    get("説明") do
+      tags "タグ名"
+      operationId "操作ID"
+      produces "application/json"
+
+      response(200, "成功") do
+        # テストデータ作成
+        let(:resource) { create(:resource) }
+
+        # スキーマ定義
+        schema type: :object,
+          properties: { ... }
+
+        run_test!
+      end
+    end
+  end
+end
+```
+
+### 認証が必要なエンドポイント
+```ruby
+response(200, "成功") do
+  let(:current_user) { create(:user) }
+  include_context "logged_in_rswag"
+
+  # テストロジック
+  run_test!
+end
+
+response(401, "unauthorized") do
+  # current_userを設定しない
+  run_test!
+end
+```
+
+### リクエストボディのテスト
+```ruby
+post("作成") do
+  parameter name: :request_params, in: :body, schema: {
+    type: :object,
+    required: %w[resource],
+    properties: {
+      resource: {
+        type: :object,
+        properties: {
+          name: { type: :string }
+        }
+      }
+    }
+  }
+
+  response(201, "created") do
+    let(:request_params) do
+      {
+        resource: {
+          name: "テスト"
+        }
+      }
+    end
+
+    run_test!
+  end
+end
+```
+
+### ファイルアップロードのテスト
+```ruby
+parameter name: :avatar, in: :formData, schema: {
+  type: :object,
+  properties: {
+    avatar: { type: :string, format: :binary }
+  }
+}
+
+response(200, "ok") do
+  let(:avatar) {
+    fixture_file_upload(
+      File.join(Rails.root, "spec/fixtures/images/test.png")
+    )
+  }
+
+  run_test!
+end
+```
+
+### レスポンス例の記録
+```ruby
+response(200, "ok") do
+  after do |example|
+    example.metadata[:response][:content] = {
+      "application/json" => {
+        example: JSON.parse(response.body, symbolize_names: true)
+      }
+    }
+  end
+
+  run_test!
+end
+```
+
+### よく使うマッチャー
+```ruby
+# Factory Bot
+create(:model)          # DBに保存
+build(:model)           # インスタンス作成のみ
+create_list(:model, 3)  # 複数作成
+
+# RSpec
+expect(user).to be_valid
+expect(user.errors).to be_present
+expect(response).to have_http_status(:ok)
+expect(json_response).to include(key: value)
+```
