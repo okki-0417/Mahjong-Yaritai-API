@@ -30,7 +30,53 @@ module Types
     field :hand13, Types::TileType, null: false
     field :tsumo, Types::TileType, null: false
 
+    # 認証関連のフィールド
+    field :is_liked_by_me, Boolean, null: false
+    field :my_vote, Types::WhatToDiscardProblemVoteType, null: true
+
+    # 投票結果
+    field :vote_results, [ Types::WhatToDiscardProblemVoteResultType ], null: false
+
+    # コメント
+    field :comments, [ Types::CommentType ], null: false do
+      argument :parent_comment_id, ID, required: false
+      argument :limit, Integer, required: false
+      argument :cursor, String, required: false
+    end
+
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
+
+    def is_liked_by_me
+      return false unless context[:current_user]
+
+      object.likes.exists?(user: context[:current_user])
+    end
+
+    def my_vote
+      return nil unless context[:current_user]
+
+      object.votes.find_by(user: context[:current_user])
+    end
+
+    def vote_results
+      vote_counts = object.votes.group(:tile_id).count
+      total_votes = object.votes_count
+
+      vote_counts.map do |tile_id, count|
+        {
+          tile_id: tile_id,
+          count: count,
+          total_votes: total_votes,
+        }
+      end
+    end
+
+    def comments(parent_comment_id: nil, limit: 10, cursor: nil)
+      scope = object.comments
+      scope = scope.where(parent_comment_id: parent_comment_id)
+      scope = scope.where("id > ?", cursor) if cursor
+      scope.limit(limit).includes(:user)
+    end
   end
 end
