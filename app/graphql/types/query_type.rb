@@ -105,5 +105,30 @@ module Types
         },
       }
     end
+
+    field :learning_categories, [Types::LearningCategoryType], null: false,
+      description: "Get all learning categories"
+
+    def learning_categories
+      LearningCategory.includes(:learning_questions)
+    end
+
+    field :learning_category, Types::LearningCategoryType, null: true,
+      description: "Get learning category by ID" do
+      argument :id, ID, required: true
+    end
+
+    def learning_category(id:)
+      LearningCategory.includes(:learning_questions).find_by(id: id)
+    end
+
+    field :learning_questions, [Types::LearningQuestionType], null: false,
+      description: "Get learning questions by category" do
+      argument :learning_category_id, ID, required: true
+    end
+
+    def learning_questions(learning_category_id:)
+      LearningQuestion.includes(:learning_category).where(learning_category_id: learning_category_id)
+    end
   end
 end
