@@ -154,7 +154,7 @@ module Types
         bookmarks = bookmarks.where("bookmarks.id < ?", cursor.to_i)
       end
 
-      bookmarks = bookmarks.limit(limit + 1)
+      bookmarks = bookmarks.order(id: :desc).limit(limit + 1)
 
       has_next_page = bookmarks.size > limit
       bookmarks = bookmarks.first(limit) if has_next_page

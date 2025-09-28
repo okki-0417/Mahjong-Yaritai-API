@@ -4,11 +4,11 @@ require "rails_helper"
 
 RSpec.describe "GraphQL", type: :request do
   describe "bookmarkedWhatToDiscardProblems query" do
-    let(:user) { create(:user) }
-    let(:current_user) { user }
-    let!(:problem1) { create(:what_to_discard_problem) }
-    let!(:problem2) { create(:what_to_discard_problem) }
-    let!(:problem3) { create(:what_to_discard_problem) }
+    let(:current_user) { create(:user) }
+    let(:other_user) { create(:user) }
+    let!(:problem1) { create(:what_to_discard_problem, user: other_user) }
+    let!(:problem2) { create(:what_to_discard_problem, user: other_user) }
+    let!(:problem3) { create(:what_to_discard_problem, user: other_user) }
 
     let(:query) do
       <<~GRAPHQL
@@ -39,8 +39,8 @@ RSpec.describe "GraphQL", type: :request do
 
     context "when user has bookmarked problems" do
       before do
-        create(:bookmark, user: user, bookmarkable: problem1)
-        create(:bookmark, user: user, bookmarkable: problem3)
+        create(:bookmark, user: current_user, bookmarkable: problem1)
+        create(:bookmark, user: current_user, bookmarkable: problem3)
       end
 
       it "returns bookmarked problems" do
