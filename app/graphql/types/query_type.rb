@@ -79,7 +79,25 @@ module Types
       limit = [ limit.to_i, 100 ].min
       limit = 20 if limit <= 0
 
-      relation = WhatToDiscardProblem.preload(user: :avatar_attachment)
+      relation = WhatToDiscardProblem.preload(
+        :user,
+        :dora,
+        :hand1,
+        :hand2,
+        :hand3,
+        :hand4,
+        :hand5,
+        :hand6,
+        :hand7,
+        :hand8,
+        :hand9,
+        :hand10,
+        :hand11,
+        :hand12,
+        :hand13,
+        :tsumo,
+        user: :avatar_attachment,
+      )
 
       if cursor.present?
         relation = relation.where("what_to_discard_problems.id < ?", cursor.to_i)
@@ -148,7 +166,25 @@ module Types
       # ユーザーのブックマークを取得（ポリモーフィック関連を利用）
       bookmarks = current_user.created_bookmarks
         .where(bookmarkable_type: "WhatToDiscardProblem")
-        .includes(bookmarkable: [ :user, user: :avatar_attachment ])
+        .includes(bookmarkable: [
+          :user,
+          :dora,
+          :hand1,
+          :hand2,
+          :hand3,
+          :hand4,
+          :hand5,
+          :hand6,
+          :hand7,
+          :hand8,
+          :hand9,
+          :hand10,
+          :hand11,
+          :hand12,
+          :hand13,
+          :tsumo,
+          user: :avatar_attachment,
+        ])
 
       if cursor.present?
         bookmarks = bookmarks.where("bookmarks.id < ?", cursor.to_i)
