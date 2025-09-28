@@ -26,6 +26,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resource :session, only: %i[show destroy]
+
   namespace :me do
     resource :profile, only: %i[show update]
   end
