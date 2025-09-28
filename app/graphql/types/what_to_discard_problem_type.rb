@@ -13,6 +13,7 @@ module Types
     field :votes_count, Integer, null: false
     field :comments_count, Integer, null: false
     field :likes_count, Integer, null: false
+    field :bookmarks_count, Integer, null: false
 
     field :dora, Types::TileType, null: false
     field :hand1, Types::TileType, null: false
@@ -32,6 +33,7 @@ module Types
 
     # 認証関連のフィールド
     field :is_liked_by_me, Boolean, null: false
+    field :is_bookmarked_by_me, Boolean, null: false
     field :my_vote, Types::WhatToDiscardProblemVoteType, null: true
 
     # 投票結果
@@ -51,6 +53,12 @@ module Types
       return false unless context[:current_user]
 
       object.likes.exists?(user: context[:current_user])
+    end
+
+    def is_bookmarked_by_me
+      return false unless context[:current_user]
+
+      object.bookmarks.exists?(user: context[:current_user])
     end
 
     def my_vote

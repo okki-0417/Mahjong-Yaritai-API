@@ -4,6 +4,7 @@ class WhatToDiscardProblem < ApplicationRecord
   belongs_to :user
   has_many :comments, as: :commentable, dependent: :destroy
   has_many :likes, as: :likable, dependent: :destroy
+  has_many :bookmarks, as: :bookmarkable, dependent: :destroy
   has_many :votes, class_name: "WhatToDiscardProblem::Vote", dependent: :destroy
 
   belongs_to :dora, class_name: :Tile
@@ -35,6 +36,10 @@ class WhatToDiscardProblem < ApplicationRecord
 
   def liked_by?(user)
     likes.exists?(user_id: user.id)
+  end
+
+  def bookmarked_by?(user)
+    bookmarks.exists?(user_id: user.id)
   end
 
   def votes_by(**user_ids)

@@ -130,5 +130,49 @@ module Types
     def learning_questions(learning_category_id:)
       LearningQuestion.includes(:learning_category).where(learning_category_id: learning_category_id)
     end
+
+    field :bookmarked_what_to_discard_problems, Types::WhatToDiscardProblemConnectionType, null: false,
+      description: "Get bookmarked what to discard problems with cursor pagination",
+      connection: false do
+      argument :limit, Integer, required: false, default_value: 20
+      argument :cursor, String, required: false
+    end
+
+    def bookmarked_what_to_discard_problems(limit: 20, cursor: nil)
+      current_user = context[:current_user]
+      return { edges: [], page_info: { has_next_page: false, end_cursor: nil } } unless current_user
+
+      limit = [ limit.to_i, 100 ].min
+      limit = 20 if limit <= 0
+
+      # ユーザーのブックマークを取得（ポリモーフィック関連を利用）
+      bookmarks = current_user.created_bookmarks
+        .where(bookmarkable_type: "WhatToDiscardProblem")
+        .includes(bookmarkable: [ :user, user: :avatar_attachment ])
+
+      if cursor.present?
+        bookmarks = bookmarks.where("bookmarks.id < ?", cursor.to_i)
+      end
+
+      bookmarks = bookmarks.limit(limit + 1)
+
+      has_next_page = bookmarks.size > limit
+      bookmarks = bookmarks.first(limit) if has_next_page
+
+      end_cursor = has_next_page ? bookmarks.last&.id&.to_s : nil
+
+      {
+        edges: bookmarks.map do |bookmark|
+          {
+            node: bookmark.bookmarkable,
+            cursor: bookmark.id.to_s,
+          }
+        end,
+        page_info: {
+          has_next_page: has_next_page,
+          end_cursor: end_cursor,
+        },
+      }
+    end
   end
 end

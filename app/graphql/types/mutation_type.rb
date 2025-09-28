@@ -8,6 +8,9 @@ module Types
     field :create_what_to_discard_problem_like, mutation: Mutations::CreateWhatToDiscardProblemLike
     field :delete_what_to_discard_problem_like, mutation: Mutations::DeleteWhatToDiscardProblemLike
 
+    field :create_what_to_discard_problem_bookmark, mutation: Mutations::CreateWhatToDiscardProblemBookmark
+    field :delete_what_to_discard_problem_bookmark, mutation: Mutations::DeleteWhatToDiscardProblemBookmark
+
     field :create_follow, mutation: Mutations::CreateFollow
     field :delete_follow, mutation: Mutations::DeleteFollow
 
