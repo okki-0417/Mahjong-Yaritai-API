@@ -47,6 +47,7 @@ module Types
     end
 
     def what_to_discard_problem(id:)
+      # 牌とその他の関連を効率的にpreload
       WhatToDiscardProblem.preload(
         :user,
         :dora,
@@ -64,6 +65,9 @@ module Types
         :hand12,
         :hand13,
         :tsumo,
+        :likes,
+        :bookmarks,
+        :votes,
         user: :avatar_attachment,
       ).find_by(id: id)
     end
@@ -79,6 +83,7 @@ module Types
       limit = [ limit.to_i, 100 ].min
       limit = 20 if limit <= 0
 
+      # 牌とその他の関連を効率的にpreload
       relation = WhatToDiscardProblem.preload(
         :user,
         :dora,
@@ -96,6 +101,9 @@ module Types
         :hand12,
         :hand13,
         :tsumo,
+        :likes,
+        :bookmarks,
+        :votes,
         user: :avatar_attachment,
       )
 
@@ -156,6 +164,12 @@ module Types
       argument :cursor, String, required: false
     end
 
+    field :followed_users, [ Types::UserType ], null: false,
+      description: "Get users that current user is following"
+
+    field :followers, [ Types::UserType ], null: false,
+      description: "Get users that are following current user"
+
     def bookmarked_what_to_discard_problems(limit: 20, cursor: nil)
       current_user = context[:current_user]
       return { edges: [], page_info: { has_next_page: false, end_cursor: nil } } unless current_user
@@ -164,6 +178,7 @@ module Types
       limit = 20 if limit <= 0
 
       # ユーザーのブックマークを取得（ポリモーフィック関連を利用）
+      # 牌とその他の関連を効率的にpreload
       bookmarks = current_user.created_bookmarks
         .where(bookmarkable_type: "WhatToDiscardProblem")
         .includes(bookmarkable: [
@@ -183,6 +198,9 @@ module Types
           :hand12,
           :hand13,
           :tsumo,
+          :likes,
+          :bookmarks,
+          :votes,
           user: :avatar_attachment,
         ])
 
@@ -209,6 +227,20 @@ module Types
           end_cursor: end_cursor,
         },
       }
+    end
+
+    def followed_users
+      current_user = context[:current_user]
+      return [] unless current_user
+
+      current_user.following.includes(avatar_attachment: :blob).order("follows.created_at DESC")
+    end
+
+    def followers
+      current_user = context[:current_user]
+      return [] unless current_user
+
+      current_user.followers.includes(avatar_attachment: :blob).order("follows.created_at DESC")
     end
   end
 end

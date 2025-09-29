@@ -12,6 +12,8 @@ RSpec.describe "Queries::User", type: :request do
           profileText
           avatarUrl
           isFollowing
+          followingCount
+          followersCount
         }
       }
     GQL

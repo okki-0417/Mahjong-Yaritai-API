@@ -31,6 +31,7 @@ module Types
     field :hand13, Types::TileType, null: false
     field :tsumo, Types::TileType, null: false
 
+
     # 認証関連のフィールド
     field :is_liked_by_me, Boolean, null: false
     field :is_bookmarked_by_me, Boolean, null: false
@@ -52,30 +53,32 @@ module Types
     def is_liked_by_me
       return false unless context[:current_user]
 
-      object.likes.exists?(user: context[:current_user])
+      current_user_likes.any?
     end
 
     def is_bookmarked_by_me
       return false unless context[:current_user]
 
-      object.bookmarks.exists?(user: context[:current_user])
+      current_user_bookmarks.any?
     end
 
     def my_vote
       return nil unless context[:current_user]
 
-      object.votes.find_by(user: context[:current_user])
+      current_user_votes.first
     end
 
     def vote_results
-      vote_counts = object.votes.group(:tile_id).count
+      vote_counts = object.votes.group_by(&:tile_id).transform_values(&:count)
       total_votes = object.votes_count
 
+      # 牌情報を効率的に取得するためにDataLoaderを使用
       vote_counts.map do |tile_id, count|
         {
           tile_id: tile_id,
           count: count,
           total_votes: total_votes,
+          tile: dataloader.with(Sources::TileSource).load(tile_id),
         }
       end
     end
@@ -85,6 +88,20 @@ module Types
       scope = scope.where(parent_comment_id: parent_comment_id)
       scope = scope.where("id > ?", cursor) if cursor
       scope.limit(limit).includes(:user)
+    end
+
+    private
+
+      def current_user_likes
+        @current_user_likes ||= object.likes.select { |like| like.user_id == context[:current_user].id }
+      end
+
+    def current_user_bookmarks
+      @current_user_bookmarks ||= object.bookmarks.select { |bookmark| bookmark.user_id == context[:current_user].id }
+    end
+
+    def current_user_votes
+      @current_user_votes ||= object.votes.select { |vote| vote.user_id == context[:current_user].id }
     end
   end
 end

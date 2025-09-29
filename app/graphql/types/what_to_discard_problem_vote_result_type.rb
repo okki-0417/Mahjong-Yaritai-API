@@ -6,7 +6,8 @@ module Types
     field :tile, Types::TileType, null: false
 
     def tile
-      Tile.find(object[:tile_id])
+      # 改良されたTileSourceを使用してN+1を防ぐ
+      object[:tile] || dataloader.with(Sources::TileSource).load(object[:tile_id])
     end
 
     def percentage
