@@ -28,10 +28,6 @@ Rails.application.routes.draw do
 
   resource :session, only: %i[show destroy]
 
-  namespace :me do
-    resource :profile, only: %i[show update]
-  end
-
   namespace :learnings do
     resources :categories, only: %i[index show] do
       resources :questions, only: %i[index show]

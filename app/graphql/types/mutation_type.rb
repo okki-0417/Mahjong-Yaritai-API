@@ -24,5 +24,9 @@ module Types
     field :create_user, mutation: Mutations::CreateUser
     field :update_user, mutation: Mutations::UpdateUser
     field :withdraw_user, mutation: Mutations::WithdrawUser
+
+    field :request_auth, mutation: Mutations::RequestAuth
+    field :verify_auth, mutation: Mutations::VerifyAuth
+    field :logout, mutation: Mutations::Logout
   end
 end

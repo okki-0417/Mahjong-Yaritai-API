@@ -4,6 +4,7 @@ module Types
   class UserType < Types::BaseObject
     field :id, ID, null: false
     field :name, String, null: false
+    field :email, String, null: true
     field :profile_text, String, null: true
     field :avatar_url, String, null: true
     field :is_following, Boolean, null: false

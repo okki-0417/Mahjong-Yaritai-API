@@ -439,3 +439,276 @@ expect(user.errors).to be_present
 expect(response).to have_http_status(:ok)
 expect(json_response).to include(key: value)
 ```
+
+## GraphQL開発パターン
+
+### GraphQLミューテーションの実装
+
+#### BaseMutation の特徴
+- `GraphQL::Schema::RelayClassicMutation` を継承
+- 自動的にInputオブジェクトが生成される
+- argumentsは常に `input` パラメータにラップされる
+
+#### ミューテーション実装パターン
+```ruby
+module Mutations
+  class ExampleMutation < BaseMutation
+    description "Example mutation description"
+
+    # field定義を先に書く
+    field :success, Boolean, null: false
+    field :errors, [String], null: false
+    field :result, Types::ExampleType, null: true
+
+    # argument定義をfieldの後に書く
+    argument :param1, String, required: true
+    argument :param2, ID, required: false
+
+    def resolve(param1:, param2: nil)
+      # ビジネスロジック
+      if success_condition
+        { success: true, errors: [], result: result_object }
+      else
+        { success: false, errors: ["Error message"], result: nil }
+      end
+    rescue StandardError => e
+      Rails.logger.error "Mutation error: #{e.message}"
+      { success: false, errors: ["Unexpected error"], result: nil }
+    end
+  end
+end
+```
+
+#### MutationType への追加
+```ruby
+module Types
+  class MutationType < Types::BaseObject
+    field :example_mutation, mutation: Mutations::ExampleMutation
+  end
+end
+```
+
+### GraphQL Context とセッション管理
+
+#### セッション情報へのアクセス
+```ruby
+def resolve(...)
+  current_user = context[:current_user]
+  session = context[:session]
+
+  # セッション更新
+  context[:session][:key] = value
+  context[:current_user] = updated_user
+end
+```
+
+#### 認証チェックパターン
+```ruby
+def resolve(...)
+  if context[:current_user].blank?
+    return { success: false, errors: ["Authentication required"] }
+  end
+
+  # 認証済みユーザー向け処理
+end
+```
+
+### GraphQLテストパターン
+
+#### 基本的なテスト構造
+```ruby
+require "rails_helper"
+
+RSpec.describe "GraphQL ExampleMutation", type: :request do
+  describe "exampleMutation" do
+    let(:mutation) do
+      <<~GRAPHQL
+        mutation ExampleMutation($input: ExampleMutationInput!) {
+          exampleMutation(input: $input) {
+            success
+            errors
+            result {
+              id
+              name
+            }
+          }
+        }
+      GRAPHQL
+    end
+
+    let(:variables) { { input: { param1: "value1" } } }
+
+    it "succeeds with valid input" do
+      post "/graphql", params: {
+        query: mutation,
+        variables: variables.to_json
+      }
+
+      expect(response).to have_http_status(:ok)
+      json = JSON.parse(response.body)
+      data = json["data"]["exampleMutation"]
+
+      expect(data["success"]).to be true
+      expect(data["errors"]).to be_empty
+    end
+  end
+end
+```
+
+#### 認証が必要なテスト
+```ruby
+context "when authenticated" do
+  let(:user) { create(:user) }
+
+  before do
+    allow_any_instance_of(GraphqlController).to receive(:current_user).and_return(user)
+  end
+
+  it "allows authenticated access" do
+    post "/graphql", params: {
+      query: mutation,
+      variables: variables.to_json
+    }
+
+    # テストロジック
+  end
+end
+
+context "when not authenticated" do
+  before do
+    allow_any_instance_of(GraphqlController).to receive(:current_user).and_return(nil)
+  end
+
+  it "rejects unauthenticated access" do
+    # テストロジック
+  end
+end
+```
+
+#### パラメータの渡し方
+```ruby
+# 正しい - variables は JSON 文字列として渡す
+post "/graphql", params: {
+  query: mutation,
+  variables: variables.to_json
+}
+
+# 間違い - ハッシュのまま渡すとエラー
+post "/graphql", params: {
+  query: mutation,
+  variables: variables  # これはNG
+}
+```
+
+#### よくあるテストパターン
+```ruby
+# データベース変更のテスト
+expect {
+  post "/graphql", params: { query: mutation, variables: variables.to_json }
+}.to change(Model, :count).by(1)
+
+# メール送信のテスト
+expect {
+  post "/graphql", params: { query: mutation, variables: variables.to_json }
+}.to change(ActionMailer::Base.deliveries, :count).by(1)
+
+# レスポンス内容のテスト
+json = JSON.parse(response.body)
+data = json["data"]["mutationName"]
+expect(data["fieldName"]).to eq expected_value
+```
+
+### GraphQLスキーマの動作確認
+
+#### Introspection クエリ
+```bash
+# 利用可能なミューテーション一覧を確認
+curl -X POST http://localhost:3001/graphql \
+  -H "Content-Type: application/json" \
+  -d '{"query":"query IntrospectionQuery { __schema { mutationType { fields { name args { name type { name } } } } } }"}'
+```
+
+#### 直接ミューテーションテスト
+```bash
+# requestAuth のテスト
+curl -X POST http://localhost:3001/graphql \
+  -H "Content-Type: application/json" \
+  -d '{"query":"mutation { requestAuth(input: { email: \"test@example.com\" }) { success errors message } }"}'
+
+# verifyAuth のテスト
+curl -X POST http://localhost:3001/graphql \
+  -H "Content-Type: application/json" \
+  -d '{"query":"mutation { verifyAuth(input: { email: \"test@example.com\", token: \"123456\" }) { success errors user { id name } } }"}'
+```
+
+### 開発時のよくあるハマりポイント
+
+#### 1. RelayClassicMutation の Input オブジェクト
+```ruby
+# GraphQLクエリ側
+mutation ExampleMutation($input: ExampleMutationInput!) {
+  exampleMutation(input: $input) {
+    # ...
+  }
+}
+
+# フロントエンド側の変数
+const variables = {
+  input: {  // inputオブジェクトでラップが必要
+    email: "test@example.com",
+    token: "123456"
+  }
+}
+```
+
+#### 2. フィールドとアーギュメントの定義順序
+```ruby
+# 正しい順序
+field :success, Boolean, null: false
+field :errors, [String], null: false
+argument :email, String, required: true
+
+# 推奨しない（動くが読みにくい）
+argument :email, String, required: true
+field :success, Boolean, null: false
+```
+
+#### 3. エラーハンドリングの統一
+```ruby
+# 成功時
+{ success: true, errors: [], result: object }
+
+# バリデーションエラー
+{ success: false, errors: model.errors.full_messages, result: nil }
+
+# システムエラー
+{ success: false, errors: ["System error occurred"], result: nil }
+```
+
+#### 4. null/not_null の適切な設定
+```ruby
+# エラー配列は空配列を返すので null: false
+field :errors, [String], null: false
+
+# 成功時のみデータがあるので null: true
+field :user, Types::UserType, null: true
+
+# 必ず値があるので null: false
+field :success, Boolean, null: false
+```
+
+### デバッグのベストプラクティス
+
+#### GraphQL エラーの調査
+1. Rails ログでエラー詳細を確認
+2. GraphQL Playground（開発時）で手動テスト
+3. RSpec テストで期待値と実際の値を比較
+
+#### 開発フロー
+1. GraphQL ミューテーション実装
+2. curl での動作確認
+3. RSpec テストの作成・実行
+4. フロントエンド GraphQL クエリ作成
+5. Apollo Client での統合テスト
+
+これらのパターンを参考に、効率的なGraphQL開発を進めることができます。
