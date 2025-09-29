@@ -7,11 +7,9 @@ module Types
     def self.coerce_input(input, context)
       # Railsのmultipart parameterを処理
       # Railsのmultipart parsingによってActionDispatch::Http::UploadedFileが提供される
-      if input.is_a?(ActionDispatch::Http::UploadedFile) || input.is_a?(Rack::Test::UploadedFile)
+      raise GraphQL::CoercionError, "Expected uploaded file, got #{input.class}" unless input.is_a?(ActionDispatch::Http::UploadedFile) || input.is_a?(Rack::Test::UploadedFile)
+
         input
-      else
-        raise GraphQL::CoercionError, "Expected uploaded file, got #{input.class}"
-      end
     end
 
     def self.coerce_result(value, context)
