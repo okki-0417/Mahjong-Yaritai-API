@@ -18,13 +18,13 @@ module Mutations
         {
           success: true,
           errors: [],
-          message: "Authentication token sent to your email"
+          message: "Authentication token sent to your email",
         }
       else
         {
           success: false,
           errors: auth_request.errors.full_messages,
-          message: nil
+          message: nil,
         }
       end
     rescue StandardError => e
@@ -32,7 +32,7 @@ module Mutations
       {
         success: false,
         errors: [ "System error occurred" ],
-        message: nil
+        message: nil,
       }
     end
   end

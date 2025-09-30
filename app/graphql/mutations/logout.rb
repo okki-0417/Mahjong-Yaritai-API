@@ -13,19 +13,19 @@ module Mutations
         context[:current_user] = nil
         {
           success: true,
-          errors: []
+          errors: [],
         }
       else
         {
           success: false,
-          errors: [ "No user logged in" ]
+          errors: [ "No user logged in" ],
         }
       end
     rescue StandardError => e
       Rails.logger.error "Logout mutation error: #{e.message}"
       {
         success: false,
-        errors: [ "Logout failed" ]
+        errors: [ "Logout failed" ],
       }
     end
   end
