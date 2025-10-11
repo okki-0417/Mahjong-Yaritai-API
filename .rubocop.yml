@@ -78,3 +78,12 @@ Style/SymbolArray:
 
 Style/GuardClause:
   Enabled: true
+
+Layout/TrailingEmptyLines:
+  Enabled: true
+
+Style/TrailingCommaInArguments:
+  EnforcedStyleForMultiline: consistent_comma
+
+Style/TrailingCommaInBlockArgs:
+  EnforcedStyleForMultiline: consistent_comma

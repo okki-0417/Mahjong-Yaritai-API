@@ -3,69 +3,112 @@
 require "rails_helper"
 
 RSpec.describe "Comment Mutations", type: :request do
-  let(:user) { create(:user) }
-  let(:problem) { create(:what_to_discard_problem) }
+  include GraphqlHelper
 
-  def execute_mutation(mutation, variables, current_user: nil)
-    if current_user
-      allow_any_instance_of(GraphqlController).to receive(:current_user).and_return(current_user)
-    else
-      allow_any_instance_of(GraphqlController).to receive(:current_user).and_return(nil)
+  describe "createWhatToDiscardProblemComment" do
+    subject do
+      execute_mutation(mutation, variables, context: { current_user: })
+      JSON.parse(response.body, symbolize_names: true)
     end
 
-    post "/graphql", params: { query: mutation, variables: variables }, as: :json
-  end
-
-  describe "createComment" do
+    let(:current_user) { create(:user) }
+    let(:variables) { { whatToDiscardProblemId: problem.id.to_s, content: "Test comment" } }
+    let(:problem) { create(:what_to_discard_problem) }
     let(:mutation) do
       <<~GQL
-        mutation($whatToDiscardProblemId: ID!, $content: String!) {
-          createComment(input: {
+        mutation($whatToDiscardProblemId: ID!, $content: String!, $parentCommentId: ID) {
+          createWhatToDiscardProblemComment(input: {
             whatToDiscardProblemId: $whatToDiscardProblemId
             content: $content
+            parentCommentId: $parentCommentId
           }) {
             comment {
               id
               content
               userId
             }
-            errors
           }
         }
       GQL
     end
 
-    it "creates a comment" do
-      execute_mutation(
-        mutation,
-        { whatToDiscardProblemId: problem.id.to_s, content: "Test comment" },
-        current_user: user
-      )
-      json = JSON.parse(response.body, symbolize_names: true)
+    context "ログインしていない場合" do
+      let(:current_user) { nil }
 
-      expect(json[:data][:createComment][:comment][:content]).to eq("Test comment")
-      expect(json[:data][:createComment][:comment][:userId]).to eq(user.id.to_s)
+      it "エラーが返ること" do
+        json = subject
+
+        expect(json[:data][:createWhatToDiscardProblemComment]).to be_nil
+        expect(json[:errors].any?).to be true
+      end
+
+      context "ログインしている時" do
+        let(:current_user) { create(:user) }
+
+        context "saveが失敗する場合" do
+          before do
+            errors = double(full_messages: [ "バリデーションエラー" ])
+            comment = instance_double(Comment, save: false, errors:)
+            allow(current_user.created_comments).to receive(:new).and_return(comment)
+          end
+
+          it "バリデーションエラーが返ること" do
+            json = subject
+
+            expect(json[:data][:createWhatToDiscardProblemComment]).to be_nil
+            expect(json[:errors].any?).to be true
+          end
+        end
+
+        context "saveが成功する場合" do
+          it "コメントが作成できること" do
+            json = subject
+
+            expect(json[:data][:createWhatToDiscardProblemComment]).to be_present
+          end
+        end
+      end
     end
   end
 
-  describe "deleteComment" do
+  describe "deleteWhatToDiscardProblemComment" do
+    subject do
+      execute_mutation(mutation, variables, context: { current_user: })
+      JSON.parse(response.body, symbolize_names: true)
+    end
+
+    let(:current_user) { create(:user) }
+    let(:problem) { create(:what_to_discard_problem) }
+    let(:comment) { create(:comment, user: current_user, commentable: problem) }
+    let(:variables) { { commentId: comment.id.to_s } }
     let(:mutation) do
       <<~GQL
         mutation($commentId: ID!) {
-          deleteComment(input: { commentId: $commentId }) {
+          deleteWhatToDiscardProblemComment(input: { commentId: $commentId }) {
             success
-            errors
           }
         }
       GQL
     end
 
-    it "deletes a comment" do
-      comment = create(:comment, user: user, commentable: problem)
-      execute_mutation(mutation, { commentId: comment.id.to_s }, current_user: user)
-      json = JSON.parse(response.body, symbolize_names: true)
+    context "ログインしていない場合" do
+      let(:current_user) { nil }
+      let(:comment) { create(:comment, commentable: problem) }
 
-      expect(json[:data][:deleteComment][:success]).to eq(true)
+      it "エラーが返ること" do
+        json = subject
+
+        expect(json[:data][:deleteWhatToDiscardProblemComment]).to be_nil
+        expect(json[:errors].any?).to be true
+      end
+    end
+
+    context "削除が成功する場合" do
+      it "コメントが削除できること" do
+        json = subject
+
+        expect(json[:data][:deleteWhatToDiscardProblemComment][:success]).to eq(true)
+      end
     end
   end
 end
