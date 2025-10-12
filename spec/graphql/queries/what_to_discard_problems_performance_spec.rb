@@ -3,49 +3,33 @@
 require "rails_helper"
 
 RSpec.describe "Queries::WhatToDiscardProblems Performance Test", type: :request do
+  include GraphqlHelper
+
   let(:current_user) { create(:user) }
   let(:problems_query) do
     <<~GQL
-      query($limit: Int) {
-        whatToDiscardProblems(limit: $limit) {
+      query {
+        whatToDiscardProblems {
           edges {
             node {
               id
-              dora {
-                id
-                suit
-                ordinalNumberInSuit
-              }
-              hand1 {
-                id
-                suit
-                ordinalNumberInSuit
-              }
-              hand2 {
-                id
-                suit
-                ordinalNumberInSuit
-              }
-              hand3 {
-                id
-                suit
-                ordinalNumberInSuit
-              }
-              voteResults {
-                tileId
-                count
-                tile {
-                  id
-                  suit
-                  ordinalNumberInSuit
-                }
-              }
+              doraId
+              hand1Id
+              hand2Id
+              hand3Id
               user {
                 id
                 name
                 avatarUrl
               }
+              likesCount
+              bookmarksCount
+              votesCount
             }
+          }
+          pageInfo {
+            hasNextPage
+            endCursor
           }
         }
       }
@@ -57,120 +41,32 @@ RSpec.describe "Queries::WhatToDiscardProblems Performance Test", type: :request
       query($id: ID!) {
         whatToDiscardProblem(id: $id) {
           id
-          dora {
-            id
-            suit
-            ordinalNumberInSuit
-          }
-          hand1 {
-            id
-            suit
-            ordinalNumberInSuit
-          }
-          hand2 {
-            id
-            suit
-            ordinalNumberInSuit
-          }
-          hand3 {
-            id
-            suit
-            ordinalNumberInSuit
-          }
-          hand4 {
-            id
-            suit
-            ordinalNumberInSuit
-          }
-          hand5 {
-            id
-            suit
-            ordinalNumberInSuit
-          }
-          hand6 {
-            id
-            suit
-            ordinalNumberInSuit
-          }
-          hand7 {
-            id
-            suit
-            ordinalNumberInSuit
-          }
-          hand8 {
-            id
-            suit
-            ordinalNumberInSuit
-          }
-          hand9 {
-            id
-            suit
-            ordinalNumberInSuit
-          }
-          hand10 {
-            id
-            suit
-            ordinalNumberInSuit
-          }
-          hand11 {
-            id
-            suit
-            ordinalNumberInSuit
-          }
-          hand12 {
-            id
-            suit
-            ordinalNumberInSuit
-          }
-          hand13 {
-            id
-            suit
-            ordinalNumberInSuit
-          }
-          tsumo {
-            id
-            suit
-            ordinalNumberInSuit
-          }
-          voteResults {
-            tileId
-            count
-            tile {
-              id
-              suit
-              ordinalNumberInSuit
-            }
-          }
+          doraId
+          hand1Id
+          hand2Id
+          hand3Id
+          hand4Id
+          hand5Id
+          hand6Id
+          hand7Id
+          hand8Id
+          hand9Id
+          hand10Id
+          hand11Id
+          hand12Id
+          hand13Id
+          tsumoId
           user {
             id
             name
             avatarUrl
           }
+          likesCount
+          bookmarksCount
+          votesCount
         }
       }
     GQL
-  end
-
-  def execute_problems_query(variables: {})
-    post "/graphql",
-      params: { query: problems_query, variables: variables },
-      as: :json
-  end
-
-  def execute_problem_detail_query(variables: {})
-    post "/graphql",
-      params: { query: problem_detail_query, variables: variables },
-      as: :json
-  end
-
-  before do
-    # セッションベースの認証をセットアップ
-    post "/auth/verification",
-      params: { token: "123456", email: current_user.email },
-      as: :json
-
-    # セッションを手動で設定
-    allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(current_user)
   end
 
   describe "performance improvement verification" do
@@ -183,9 +79,9 @@ RSpec.describe "Queries::WhatToDiscardProblems Performance Test", type: :request
       end
     end
 
-    it "should execute problems list query efficiently" do
+    it "問題一覧クエリが効率的に実行されること" do
       query_count = count_queries do
-        execute_problems_query(variables: { limit: 5 })
+        execute_query(problems_query, {})
       end
 
       json = JSON.parse(response.body, symbolize_names: true)
@@ -196,16 +92,15 @@ RSpec.describe "Queries::WhatToDiscardProblems Performance Test", type: :request
       edges = json[:data][:whatToDiscardProblems][:edges]
       expect(edges.length).to eq(5)
 
-      # DataLoaderを使用することで、大幅にクエリ数が削減されることを期待
-      puts "Problems list query count: #{query_count}"
+      # preloadを使用することで、クエリ数が削減されることを期待
       expect(query_count).to be < 30 # 現実的な期待値に調整
     end
 
-    it "should execute problem detail query efficiently" do
+    it "問題詳細クエリが効率的に実行されること" do
       problem = problems.first
 
       query_count = count_queries do
-        execute_problem_detail_query(variables: { id: problem.id.to_s })
+        execute_query(problem_detail_query, { id: problem.id.to_s })
       end
 
       json = JSON.parse(response.body, symbolize_names: true)
@@ -216,7 +111,6 @@ RSpec.describe "Queries::WhatToDiscardProblems Performance Test", type: :request
       problem_data = json[:data][:whatToDiscardProblem]
       expect(problem_data[:id]).to eq(problem.id.to_s)
 
-      puts "Problem detail query count: #{query_count}"
       expect(query_count).to be < 30 # 現実的な期待値に調整
     end
   end

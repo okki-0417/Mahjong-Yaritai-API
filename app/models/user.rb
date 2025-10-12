@@ -14,8 +14,8 @@ class User < ApplicationRecord
   has_many :created_likes, class_name: :Like, dependent: :destroy
   has_many :created_bookmarks, class_name: :Bookmark, dependent: :destroy
   has_many :created_what_to_discard_problem_votes, class_name: "WhatToDiscardProblem::Vote", dependent: :destroy
+  has_many :bookmarked_what_to_discard_problems, through: :created_bookmarks, source: :bookmarkable, source_type: :WhatToDiscardProblem
 
-  # フォロー関連
   has_many :active_follows, class_name: "Follow", foreign_key: "follower_id", dependent: :destroy
   has_many :passive_follows, class_name: "Follow", foreign_key: "followee_id", dependent: :destroy
   has_many :following, through: :active_follows, source: :followee

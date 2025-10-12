@@ -2,11 +2,13 @@
 
 module Resolvers
   class SessionResolver < BaseResolver
+    include Authenticatable
+
     type Types::SessionType, null: false
 
     def resolve
       {
-        is_logged_in: current_user.present?,
+        is_logged_in: logged_in?,
         user: current_user,
       }
     end

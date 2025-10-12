@@ -13,8 +13,16 @@ module Authenticatable
     context[:current_user] = nil
   end
 
+  def current_user
+    context[:current_user]
+  end
+
   def logged_in?
-    context[:current_user].present?
+    current_user.present?
+  end
+
+  def require_authentication!
+    raise GraphQL::ExecutionError, "ログインしてください" unless logged_in?
   end
 
   private

@@ -3,53 +3,43 @@
 require "rails_helper"
 
 RSpec.describe "Queries::User", type: :request do
-  let(:query) do
-    <<~GQL
-      query($id: ID!) {
-        user(id: $id) {
-          id
-          name
-          profileText
-          avatarUrl
-          isFollowing
-          followingCount
-          followersCount
-        }
-      }
-    GQL
-  end
-
-  def execute_query(variables:, current_user: nil)
-    if current_user
-      allow_any_instance_of(GraphqlController).to receive(:current_user).and_return(current_user)
-    else
-      allow_any_instance_of(GraphqlController).to receive(:current_user).and_return(nil)
-    end
-
-    post "/graphql",
-      params: { query: query, variables: variables },
-      as: :json
-  end
+  include GraphqlHelper
 
   describe "user" do
+    subject do
+      execute_query(query, variables, context: { current_user: })
+      JSON.parse(response.body, symbolize_names: true)
+    end
+
     let(:target_user) { create(:user, name: "Test User") }
+    let(:current_user) { nil }
+    let(:variables) { { id: target_user.id.to_s } }
+    let(:query) do
+      <<~GQL
+        query($id: ID!) {
+          user(id: $id) {
+            id
+            name
+            profileText
+            avatarUrl
+            isFollowing
+          }
+        }
+      GQL
+    end
 
-    context "when user exists" do
-      it "returns user information" do
-        execute_query(variables: { id: target_user.id })
+    context "ユーザーが存在する場合" do
+      it "ユーザー情報を返すこと" do
+        json = subject
 
-        json = JSON.parse(response.body, symbolize_names: true)
-
-        expect(response).to have_http_status(:ok)
-        expect(json[:data][:user]).to include(
-          id: target_user.id.to_s,
-          name: "Test User",
-          profileText: target_user.profile_text
-        )
+        expect(json[:errors]).to be_nil
+        expect(json[:data][:user][:id]).to eq(target_user.id.to_s)
+        expect(json[:data][:user][:name]).to eq("Test User")
+        expect(json[:data][:user][:profileText]).to eq(target_user.profile_text)
       end
     end
 
-    context "when user has avatar" do
+    context "アバターがある場合" do
       before do
         target_user.avatar.attach(
           io: File.open(Rails.root.join("spec/fixtures/images/test.png")),
@@ -58,50 +48,42 @@ RSpec.describe "Queries::User", type: :request do
         )
       end
 
-      it "returns avatar_url" do
-        execute_query(variables: { id: target_user.id })
-
-        json = JSON.parse(response.body, symbolize_names: true)
+      it "avatarUrlを返すこと" do
+        json = subject
 
         expect(json[:data][:user][:avatarUrl]).to be_present
       end
     end
 
-    context "when current user is not following" do
-      let(:current_user) { create(:user) }
-
-      it "returns isFollowing: false" do
-        execute_query(variables: { id: target_user.id }, current_user: current_user)
-
-        json = JSON.parse(response.body, symbolize_names: true)
+    context "ログインしていない場合" do
+      it "isFollowing: falseを返すこと" do
+        json = subject
 
         expect(json[:data][:user][:isFollowing]).to eq(false)
       end
     end
 
-    context "when current user is following" do
+    context "フォローしていない場合" do
+      let(:current_user) { create(:user) }
+
+      it "isFollowing: falseを返すこと" do
+        json = subject
+
+        expect(json[:data][:user][:isFollowing]).to eq(false)
+      end
+    end
+
+    context "フォローしている場合" do
       let(:current_user) { create(:user) }
 
       before do
         create(:follow, follower: current_user, followee: target_user)
       end
 
-      it "returns isFollowing: true" do
-        execute_query(variables: { id: target_user.id }, current_user: current_user)
-
-        json = JSON.parse(response.body, symbolize_names: true)
+      it "isFollowing: trueを返すこと" do
+        json = subject
 
         expect(json[:data][:user][:isFollowing]).to eq(true)
-      end
-    end
-
-    context "when user not logged in" do
-      it "returns isFollowing: false" do
-        execute_query(variables: { id: target_user.id })
-
-        json = JSON.parse(response.body, symbolize_names: true)
-
-        expect(json[:data][:user][:isFollowing]).to eq(false)
       end
     end
   end
