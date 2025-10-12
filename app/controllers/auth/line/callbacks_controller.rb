@@ -51,60 +51,60 @@ class Auth::Line::CallbacksController < ApplicationController
 
   private
 
-    def exchange_code_for_token(code)
-      uri = URI("https://api.line.me/oauth2/v2.1/token")
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
+  def exchange_code_for_token(code)
+    uri = URI("https://api.line.me/oauth2/v2.1/token")
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
 
-      request = Net::HTTP::Post.new(uri)
-      request["Content-Type"] = "application/x-www-form-urlencoded"
-      request.body = URI.encode_www_form({
-        grant_type: "authorization_code",
-        code:,
-        redirect_uri: ENV.fetch("LINE_REDIRECT_URI"),
-        client_id: ENV.fetch("LINE_CHANNEL_ID"),
-        client_secret: ENV.fetch("LINE_CHANNEL_SECRET"),
-      })
+    request = Net::HTTP::Post.new(uri)
+    request["Content-Type"] = "application/x-www-form-urlencoded"
+    request.body = URI.encode_www_form({
+      grant_type: "authorization_code",
+      code:,
+      redirect_uri: ENV.fetch("LINE_REDIRECT_URI"),
+      client_id: ENV.fetch("LINE_CHANNEL_ID"),
+      client_secret: ENV.fetch("LINE_CHANNEL_SECRET"),
+    })
 
-      response = http.request(request)
+    response = http.request(request)
 
-      if response.code == "200"
-        data = JSON.parse(response.body)
-        {
-          access_token: data["access_token"],
-          id_token: data["id_token"],
-          refresh_token: data["refresh_token"],
-        }
-      else
-        error_data = JSON.parse(response.body) rescue {}
-        { error: error_data["error_description"] || "Failed to exchange code for token" }
-      end
-    rescue => e
-      { error: e.message }
+    if response.code == "200"
+      data = JSON.parse(response.body)
+      {
+        access_token: data["access_token"],
+        id_token: data["id_token"],
+        refresh_token: data["refresh_token"],
+      }
+    else
+      error_data = JSON.parse(response.body) rescue {}
+      { error: error_data["error_description"] || "Failed to exchange code for token" }
     end
+  rescue => e
+    { error: e.message }
+  end
 
-    def verify_id_token(id_token)
-      # LINE IDトークンを検証
-      uri = URI("https://api.line.me/oauth2/v2.1/verify")
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
+  def verify_id_token(id_token)
+    # LINE IDトークンを検証
+    uri = URI("https://api.line.me/oauth2/v2.1/verify")
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
 
-      request = Net::HTTP::Post.new(uri)
-      request["Content-Type"] = "application/x-www-form-urlencoded"
-      request.body = URI.encode_www_form({
-        id_token:,
-        client_id: ENV.fetch("LINE_CHANNEL_ID"),
-      })
+    request = Net::HTTP::Post.new(uri)
+    request["Content-Type"] = "application/x-www-form-urlencoded"
+    request.body = URI.encode_www_form({
+      id_token:,
+      client_id: ENV.fetch("LINE_CHANNEL_ID"),
+    })
 
-      response = http.request(request)
+    response = http.request(request)
 
-      if response.code == "200"
-        data = JSON.parse(response.body)
-        { email: data["email"] }
-      else
-        { error: "IDトークンの検証に失敗しました" }
-      end
-    rescue => e
-      { error: e.message }
+    if response.code == "200"
+      data = JSON.parse(response.body)
+      { email: data["email"] }
+    else
+      { error: "IDトークンの検証に失敗しました" }
     end
+  rescue => e
+    { error: e.message }
+  end
 end

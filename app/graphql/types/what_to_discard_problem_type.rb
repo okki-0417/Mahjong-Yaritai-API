@@ -15,6 +15,24 @@ module Types
     field :likes_count, Integer, null: false
     field :bookmarks_count, Integer, null: false
 
+    # Tile IDs
+    field :dora_id, ID, null: false
+    field :hand1_id, ID, null: false
+    field :hand2_id, ID, null: false
+    field :hand3_id, ID, null: false
+    field :hand4_id, ID, null: false
+    field :hand5_id, ID, null: false
+    field :hand6_id, ID, null: false
+    field :hand7_id, ID, null: false
+    field :hand8_id, ID, null: false
+    field :hand9_id, ID, null: false
+    field :hand10_id, ID, null: false
+    field :hand11_id, ID, null: false
+    field :hand12_id, ID, null: false
+    field :hand13_id, ID, null: false
+    field :tsumo_id, ID, null: false
+
+    # Tile objects
     field :dora, Types::TileType, null: false
     field :hand1, Types::TileType, null: false
     field :hand2, Types::TileType, null: false
@@ -92,9 +110,9 @@ module Types
 
     private
 
-      def current_user_likes
-        @current_user_likes ||= object.likes.select { |like| like.user_id == context[:current_user].id }
-      end
+    def current_user_likes
+      @current_user_likes ||= object.likes.select { |like| like.user_id == context[:current_user].id }
+    end
 
     def current_user_bookmarks
       @current_user_bookmarks ||= object.bookmarks.select { |bookmark| bookmark.user_id == context[:current_user].id }

@@ -3,59 +3,51 @@
 require "rails_helper"
 
 RSpec.describe "Queries::WhatToDiscardProblems N+1 Prevention", type: :request do
-  let(:current_user) { create(:user) }
-  let(:query) do
-    <<~GQL
-      query($limit: Int) {
-        whatToDiscardProblems(limit: $limit) {
-          edges {
-            node {
-              id
-              isLikedByMe
-              isBookmarkedByMe
-              myVote {
+  include GraphqlHelper
+
+  describe "N+1 prevention test" do
+    subject do
+      execute_query(query, variables, context: { current_user: })
+      JSON.parse(response.body, symbolize_names: true)
+    end
+
+    let(:current_user) { create(:user) }
+    let(:variables) { {} }
+    let(:query) do
+      <<~GQL
+        query {
+          whatToDiscardProblems {
+            edges {
+              node {
                 id
-                tileId
-              }
-              voteResults {
-                tileId
-                count
-                percentage
-                tile {
+                isLikedByMe
+                isBookmarkedByMe
+                myVote {
                   id
-                  suit
-                  ordinalNumberInSuit
+                  tileId
                 }
-              }
-              user {
-                id
-                name
-                avatarUrl
+                voteResults {
+                  tileId
+                  count
+                  percentage
+                  tile {
+                    id
+                    suit
+                    ordinalNumberInSuit
+                  }
+                }
+                user {
+                  id
+                  name
+                  avatarUrl
+                }
               }
             }
           }
         }
-      }
-    GQL
-  end
+      GQL
+    end
 
-  def execute_query(variables: {})
-    post "/graphql",
-      params: { query: query, variables: variables },
-      as: :json
-  end
-
-  before do
-    # セッションベースの認証をセットアップ
-    post "/auth/verification",
-      params: { token: "123456", email: current_user.email },
-      as: :json
-
-    # セッションを手動で設定
-    allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(current_user)
-  end
-
-  describe "N+1 prevention test" do
     let!(:problems) { create_list(:what_to_discard_problem, 3) }
 
     before do
@@ -68,12 +60,9 @@ RSpec.describe "Queries::WhatToDiscardProblems N+1 Prevention", type: :request d
       end
     end
 
-    it "returns user-specific data correctly" do
-      execute_query(variables: { limit: 10 })
+    it "ユーザー固有のデータを正しく返すこと" do
+      json = subject
 
-      json = JSON.parse(response.body, symbolize_names: true)
-
-      expect(response).to have_http_status(:ok)
       expect(json[:errors]).to be_nil
 
       edges = json[:data][:whatToDiscardProblems][:edges]

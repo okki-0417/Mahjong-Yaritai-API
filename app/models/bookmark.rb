@@ -9,11 +9,11 @@ class Bookmark < ApplicationRecord
 
   private
 
-    def prevent_self_bookmark
-      return unless bookmarkable_type == "WhatToDiscardProblem"
+  def prevent_self_bookmark
+    return unless bookmarkable_type == "WhatToDiscardProblem"
 
-      return unless bookmarkable&.user_id == user_id
+    return unless bookmarkable&.user_id == user_id
 
-        errors.add(:base, "自分の問題はブックマークできません")
-    end
+    errors.add(:base, "自分の問題はブックマークできません")
+  end
 end

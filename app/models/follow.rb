@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Follow < ApplicationRecord
   belongs_to :follower, class_name: "User"
   belongs_to :followee, class_name: "User"
@@ -7,7 +9,7 @@ class Follow < ApplicationRecord
 
   private
 
-    def cannot_follow_self
-      errors.add(:followee_id, "自分自身をフォローすることはできません") if follower_id == followee_id
-    end
+  def cannot_follow_self
+    errors.add(:followee_id, "自分自身をフォローすることはできません") if follower_id == followee_id
+  end
 end

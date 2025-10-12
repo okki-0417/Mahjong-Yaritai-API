@@ -12,15 +12,15 @@ class Auth::Line::LoginUrlsController < ApplicationController
 
   private
 
-    def build_line_login_url(state)
-      params = {
-        response_type: "code",
-        client_id: ENV.fetch("LINE_CHANNEL_ID"),
-        redirect_uri: ENV.fetch("LINE_REDIRECT_URI"),
-        state:,
-        scope: "openid email",
-      }
+  def build_line_login_url(state)
+    params = {
+      response_type: "code",
+      client_id: ENV.fetch("LINE_CHANNEL_ID"),
+      redirect_uri: ENV.fetch("LINE_REDIRECT_URI"),
+      state:,
+      scope: "openid email",
+    }
 
-      "https://access.line.me/oauth2/v2.1/authorize?#{params.to_query}"
-    end
+    "https://access.line.me/oauth2/v2.1/authorize?#{params.to_query}"
+  end
 end
