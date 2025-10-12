@@ -27,9 +27,9 @@ module Authenticatable
 
   private
 
-    def reset_session
-      context[:session].keys.each do |key|
-        context[:session].delete(key)
-      end
+  def reset_session
+    context[:session].keys.each do |key|
+      context[:session].delete(key)
     end
+  end
 end

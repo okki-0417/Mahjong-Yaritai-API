@@ -110,9 +110,9 @@ module Types
 
     private
 
-      def current_user_likes
-        @current_user_likes ||= object.likes.select { |like| like.user_id == context[:current_user].id }
-      end
+    def current_user_likes
+      @current_user_likes ||= object.likes.select { |like| like.user_id == context[:current_user].id }
+    end
 
     def current_user_bookmarks
       @current_user_bookmarks ||= object.bookmarks.select { |bookmark| bookmark.user_id == context[:current_user].id }

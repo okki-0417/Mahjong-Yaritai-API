@@ -5,17 +5,17 @@ module Mutations
     class Logout < BaseMutation
       include Authenticatable
 
-    description "Logout current user"
+      description "Logout current user"
 
-    field :success, Boolean, null: false
+      field :success, Boolean, null: false
 
-    def resolve
-      raise GraphQL::ExecutionError, "ログインしてください" unless logged_in?
+      def resolve
+        raise GraphQL::ExecutionError, "ログインしてください" unless logged_in?
 
-      logout
+        logout
 
-      { success: true }
-      end
+        { success: true }
+        end
     end
   end
 end

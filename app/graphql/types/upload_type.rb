@@ -9,7 +9,7 @@ module Types
       # Railsのmultipart parsingによってActionDispatch::Http::UploadedFileが提供される
       raise GraphQL::CoercionError, "Expected uploaded file, got #{input.class}" unless input.is_a?(ActionDispatch::Http::UploadedFile) || input.is_a?(Rack::Test::UploadedFile)
 
-        input
+      input
     end
 
     def self.coerce_result(value, context)

@@ -22,9 +22,9 @@ class Comment < ApplicationRecord
 
   private
 
-    def parent_comment?
-      parent_comment_id.blank?
-    end
+  def parent_comment?
+    parent_comment_id.blank?
+  end
 
   def check_parent_comment_association
     return if parent_comment?

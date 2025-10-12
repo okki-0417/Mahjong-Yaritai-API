@@ -17,11 +17,11 @@ class AuthRequest < ApplicationRecord
 
   private
 
-    def generate_token
-      self.token ||= SecureRandom.random_number(10**TOKEN_LENGTH).to_s.rjust(TOKEN_LENGTH, "0")
-    end
+  def generate_token
+    self.token ||= SecureRandom.random_number(10**TOKEN_LENGTH).to_s.rjust(TOKEN_LENGTH, "0")
+  end
 
-    def set_expired_at
-      self.expired_at ||= EXPIRATION_PERIOD.from_now
-    end
+  def set_expired_at
+    self.expired_at ||= EXPIRATION_PERIOD.from_now
+  end
 end

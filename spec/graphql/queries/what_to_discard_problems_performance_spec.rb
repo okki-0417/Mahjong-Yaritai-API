@@ -117,13 +117,13 @@ RSpec.describe "Queries::WhatToDiscardProblems Performance Test", type: :request
 
   private
 
-    def count_queries(&block)
-      query_count = 0
-      callback = lambda do |*args|
-        query_count += 1 unless args[4][:name] =~ /SCHEMA|TRANSACTION/
-      end
-
-      ActiveSupport::Notifications.subscribed(callback, "sql.active_record", &block)
-      query_count
+  def count_queries(&block)
+    query_count = 0
+    callback = lambda do |*args|
+      query_count += 1 unless args[4][:name] =~ /SCHEMA|TRANSACTION/
     end
+
+    ActiveSupport::Notifications.subscribed(callback, "sql.active_record", &block)
+    query_count
+  end
 end

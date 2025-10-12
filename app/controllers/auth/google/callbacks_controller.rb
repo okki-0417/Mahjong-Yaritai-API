@@ -50,32 +50,32 @@ class Auth::Google::CallbacksController < ApplicationController
 
   private
 
-    def exchange_code_for_token(code)
-      uri = URI("https://oauth2.googleapis.com/token")
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
+  def exchange_code_for_token(code)
+    uri = URI("https://oauth2.googleapis.com/token")
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
 
-      request = Net::HTTP::Post.new(uri)
-      request["Content-Type"] = "application/x-www-form-urlencoded"
-      request.body = URI.encode_www_form({
-        client_id: ENV.fetch("GOOGLE_CLIENT_ID"),
-        client_secret: ENV.fetch("GOOGLE_CLIENT_SECRET"),
-        code:,
-        redirect_uri: ENV.fetch("GOOGLE_REDIRECT_URI"),
-        grant_type: "authorization_code",
-      })
+    request = Net::HTTP::Post.new(uri)
+    request["Content-Type"] = "application/x-www-form-urlencoded"
+    request.body = URI.encode_www_form({
+      client_id: ENV.fetch("GOOGLE_CLIENT_ID"),
+      client_secret: ENV.fetch("GOOGLE_CLIENT_SECRET"),
+      code:,
+      redirect_uri: ENV.fetch("GOOGLE_REDIRECT_URI"),
+      grant_type: "authorization_code",
+    })
 
-      response = http.request(request)
+    response = http.request(request)
 
-      if response.code == "200"
-        data = JSON.parse(response.body)
-        { access_token: data["access_token"], id_token: data["id_token"] }
-      else
-        { error: "Failed to exchange code for token" }
-      end
-    rescue => e
-      { error: e.message }
+    if response.code == "200"
+      data = JSON.parse(response.body)
+      { access_token: data["access_token"], id_token: data["id_token"] }
+    else
+      { error: "Failed to exchange code for token" }
     end
+  rescue => e
+    { error: e.message }
+  end
 
   def fetch_google_user_info(access_token)
     uri = URI("https://www.googleapis.com/oauth2/v2/userinfo")
