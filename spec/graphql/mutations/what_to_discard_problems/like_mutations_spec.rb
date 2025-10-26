@@ -80,7 +80,7 @@ RSpec.describe "Like Mutations", type: :request do
       <<~GQL
         mutation($whatToDiscardProblemId: ID!) {
           deleteWhatToDiscardProblemLike(input: { whatToDiscardProblemId: $whatToDiscardProblemId }) {
-            success
+            id
           }
         }
       GQL
@@ -116,7 +116,7 @@ RSpec.describe "Like Mutations", type: :request do
           like  # いいねを作成
           json = subject
 
-          expect(json[:data][:deleteWhatToDiscardProblemLike][:success]).to eq(true)
+          expect(json[:data][:deleteWhatToDiscardProblemLike]).to be_present
         end
       end
     end

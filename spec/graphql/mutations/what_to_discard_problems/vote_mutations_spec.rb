@@ -82,7 +82,7 @@ RSpec.describe "Vote Mutations", type: :request do
       <<~GQL
         mutation($whatToDiscardProblemId: ID!) {
           deleteWhatToDiscardProblemVote(input: { whatToDiscardProblemId: $whatToDiscardProblemId }) {
-            success
+            id
           }
         }
       GQL
@@ -117,7 +117,7 @@ RSpec.describe "Vote Mutations", type: :request do
           vote  # 投票を作成
           json = subject
 
-          expect(json[:data][:deleteWhatToDiscardProblemVote][:success]).to eq(true)
+          expect(json[:data][:deleteWhatToDiscardProblemVote]).to be_present
         end
       end
     end

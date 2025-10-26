@@ -79,7 +79,7 @@ RSpec.describe "Bookmark Mutations", type: :request do
       <<~GQL
         mutation($problemId: ID!) {
           deleteWhatToDiscardProblemBookmark(input: { problemId: $problemId }) {
-            success
+            id
           }
         }
       GQL
@@ -115,7 +115,7 @@ RSpec.describe "Bookmark Mutations", type: :request do
           bookmark  # ブックマークを作成
           json = subject
 
-          expect(json[:data][:deleteWhatToDiscardProblemBookmark][:success]).to eq(true)
+          expect(json[:data][:deleteWhatToDiscardProblemBookmark]).to be_present
         end
       end
     end

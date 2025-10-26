@@ -85,7 +85,7 @@ RSpec.describe "Comment Mutations", type: :request do
       <<~GQL
         mutation($commentId: ID!) {
           deleteWhatToDiscardProblemComment(input: { commentId: $commentId }) {
-            success
+            id
           }
         }
       GQL
@@ -107,7 +107,7 @@ RSpec.describe "Comment Mutations", type: :request do
       it "コメントが削除できること" do
         json = subject
 
-        expect(json[:data][:deleteWhatToDiscardProblemComment][:success]).to eq(true)
+        expect(json[:data][:deleteWhatToDiscardProblemComment]).to be_present
       end
     end
   end

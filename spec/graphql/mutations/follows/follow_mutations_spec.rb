@@ -79,7 +79,7 @@ RSpec.describe "Follow Mutations", type: :request do
       <<~GQL
         mutation($userId: ID!) {
           deleteFollow(input: { userId: $userId }) {
-            success
+            id
           }
         }
       GQL
@@ -102,7 +102,7 @@ RSpec.describe "Follow Mutations", type: :request do
           follow  # フォローを作成
           json = subject
 
-          expect(json[:data][:deleteFollow][:success]).to eq(true)
+          expect(json[:data][:deleteFollow]).to be_present
         end
       end
     end
