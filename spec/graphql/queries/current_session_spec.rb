@@ -3,86 +3,68 @@
 require "rails_helper"
 
 RSpec.describe "Queries::CurrentSession", type: :request do
-  let(:query) do
-    <<~GQL
-      query {
-        currentSession {
-          isLoggedIn
-          userId
-          user {
-            id
-            name
-            avatarUrl
-          }
-        }
-      }
-    GQL
-  end
-
-  def execute_query(user: nil)
-    if user
-      # ログインヘルパーを使用してセッションを設定
-      allow_any_instance_of(GraphqlController).to receive(:current_user).and_return(user)
-    else
-      allow_any_instance_of(GraphqlController).to receive(:current_user).and_return(nil)
-    end
-
-    post "/graphql",
-      params: { query: query },
-      as: :json
-  end
+  include GraphqlHelper
 
   describe "currentSession" do
-    context "when user is not logged in" do
-      it "returns session with isLoggedIn: false" do
-        execute_query
+    subject do
+      execute_query(query, variables, context: { current_user: })
+      JSON.parse(response.body, symbolize_names: true)
+    end
 
-        json = JSON.parse(response.body, symbolize_names: true)
+    let(:variables) { {} }
+    let(:query) do
+      <<~GQL
+        query {
+          currentSession {
+            isLoggedIn
+            user {
+              id
+              name
+              avatarUrl
+            }
+          }
+        }
+      GQL
+    end
 
-        expect(response).to have_http_status(:ok)
-        expect(json[:data][:currentSession]).to include(
-          isLoggedIn: false,
-          userId: nil,
-          user: nil
-        )
+    context "ログインしていない場合" do
+      let(:current_user) { nil }
+
+      it "isLoggedIn: falseを返すこと" do
+        json = subject
+
+        expect(json[:errors]).to be_nil
+        expect(json[:data][:currentSession][:isLoggedIn]).to eq(false)
+        expect(json[:data][:currentSession][:user]).to be_nil
       end
     end
 
-    context "when user is logged in" do
-      let(:user) { create(:user, name: "Test User") }
+    context "ログインしている場合" do
+      let(:current_user) { create(:user, name: "Test User") }
 
-      it "returns session with user information" do
-        execute_query(user: user)
+      it "ユーザー情報を返すこと" do
+        json = subject
 
-        json = JSON.parse(response.body, symbolize_names: true)
-
-        expect(response).to have_http_status(:ok)
-        expect(json[:data][:currentSession]).to include(
-          isLoggedIn: true,
-          userId: user.id
-        )
-        expect(json[:data][:currentSession][:user]).to include(
-          id: user.id.to_s,
-          name: "Test User"
-        )
+        expect(json[:errors]).to be_nil
+        expect(json[:data][:currentSession][:isLoggedIn]).to eq(true)
+        expect(json[:data][:currentSession][:user][:id]).to eq(current_user.id.to_s)
+        expect(json[:data][:currentSession][:user][:name]).to eq(current_user.name)
       end
     end
 
-    context "when user has avatar" do
-      let(:user) { create(:user) }
+    context "アバターがある場合" do
+      let(:current_user) { create(:user) }
 
       before do
-        user.avatar.attach(
+        current_user.avatar.attach(
           io: File.open(Rails.root.join("spec/fixtures/images/test.png")),
           filename: "test.png",
           content_type: "image/png"
         )
       end
 
-      it "returns avatar_url" do
-        execute_query(user: user)
-
-        json = JSON.parse(response.body, symbolize_names: true)
+      it "avatarUrlを返すこと" do
+        json = subject
 
         expect(json[:data][:currentSession][:user][:avatarUrl]).to be_present
       end

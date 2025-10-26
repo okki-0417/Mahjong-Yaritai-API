@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::API
-  include Authenticatable
+  include Controllers::Authenticatable
   include ErrorJsonRenderable
 
   include Rails.application.routes.url_helpers

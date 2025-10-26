@@ -5,18 +5,13 @@ Rails.application.routes.draw do
   mount Rswag::Ui::Engine => "/api-docs"
   mount Rswag::Api::Engine => "/api-docs"
 
-  # 他のルーティング定義の下に追加
   mount ActiveStorage::Engine => "/rails/active_storage"
 
   get "/", to: "health_check#show"
   get "/up", to: "health_check#show"
 
   namespace :auth do
-    resource :request, only: %i[create]
-    resource :verification, only: %i[create]
-
     namespace :google do
-      resource :login, only: %i[show]
       resource :callback, only: %i[create]
     end
 
@@ -26,13 +21,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resource :session, only: %i[show destroy]
-
-  namespace :learnings do
-    resources :categories, only: %i[index show] do
-      resources :questions, only: %i[index show]
-    end
-  end
+  resource :session, only: %i[show]
 
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
