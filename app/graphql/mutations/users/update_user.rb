@@ -18,7 +18,7 @@ module Mutations
 
         attributes = {}
         attributes[:name] = name if name.present?
-        attributes[:profile_text] = profile_text
+        attributes[:profile_text] = profile_text if profile_text.present?
 
         user.avatar.attach(avatar) if avatar.present?
 

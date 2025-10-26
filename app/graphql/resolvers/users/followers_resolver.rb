@@ -3,6 +3,8 @@
 module Resolvers
   module Users
     class FollowersResolver < BaseResolver
+      graphql_name "UserFollowersResolver"
+
       include Authenticatable
 
       type Types::UserType.connection_type, null: false

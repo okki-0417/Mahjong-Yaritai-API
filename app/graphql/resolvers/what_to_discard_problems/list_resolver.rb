@@ -3,6 +3,8 @@
 module Resolvers
   module WhatToDiscardProblems
     class ListResolver < BaseResolver
+      graphql_name "WhatToDiscardProblemListResolver"
+
       type Types::WhatToDiscardProblemType.connection_type, null: false
       description "Get all what to discard problems"
 

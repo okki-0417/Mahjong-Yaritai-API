@@ -2,30 +2,40 @@
 
 module Mutations
   module WhatToDiscardProblems
-    class CreateWhatToDiscardProblem < BaseMutation
+    class Create < BaseMutation
+      graphql_name "CreateWhatToDiscardProblem"
+
       include Authenticatable
 
       field :what_to_discard_problem, Types::WhatToDiscardProblemType, null: false
 
       argument :description, String, required: false
-      argument :dora_id, ID, required: true
-      argument :hand1_id, ID, required: true
-      argument :hand2_id, ID, required: true
-      argument :hand3_id, ID, required: true
-      argument :hand4_id, ID, required: true
-      argument :hand5_id, ID, required: true
-      argument :hand6_id, ID, required: true
-      argument :hand7_id, ID, required: true
-      argument :hand8_id, ID, required: true
-      argument :hand9_id, ID, required: true
-      argument :hand10_id, ID, required: true
-      argument :hand11_id, ID, required: true
-      argument :hand12_id, ID, required: true
-      argument :hand13_id, ID, required: true
-      argument :tsumo_id, ID, required: true
+      argument :round, String, required: false
+      argument :turn, Integer, required: false
+      argument :wind, String, required: false
+      argument :points, Integer, required: false
+      argument :dora_id, ID, required: false
+      argument :hand1_id, ID, required: false
+      argument :hand2_id, ID, required: false
+      argument :hand3_id, ID, required: false
+      argument :hand4_id, ID, required: false
+      argument :hand5_id, ID, required: false
+      argument :hand6_id, ID, required: false
+      argument :hand7_id, ID, required: false
+      argument :hand8_id, ID, required: false
+      argument :hand9_id, ID, required: false
+      argument :hand10_id, ID, required: false
+      argument :hand11_id, ID, required: false
+      argument :hand12_id, ID, required: false
+      argument :hand13_id, ID, required: false
+      argument :tsumo_id, ID, required: false
 
       def resolve(
         description: nil,
+        round: nil,
+        turn: nil,
+        wind: nil,
+        points: nil,
         dora_id:,
         hand1_id:,
         hand2_id:,
@@ -46,6 +56,10 @@ module Mutations
 
         problem = context[:current_user].created_what_to_discard_problems.new(
           description:,
+          round:,
+          turn:,
+          wind:,
+          points:,
           dora_id:,
           hand1_id:,
           hand2_id:,
@@ -60,7 +74,7 @@ module Mutations
           hand11_id:,
           hand12_id:,
           hand13_id:,
-          tsumo_id:
+          tsumo_id:,
         )
 
         if problem.save

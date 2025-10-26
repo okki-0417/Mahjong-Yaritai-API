@@ -3,8 +3,9 @@
 module Resolvers
   module Users
     class ShowResolver < BaseResolver
+      graphql_name "UserShowResolver"
+
       type Types::UserType, null: true
-      description "Get a user by ID"
 
       argument :id, ID, required: true
 

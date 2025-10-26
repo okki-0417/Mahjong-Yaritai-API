@@ -2,13 +2,19 @@
 
 module Mutations
   module WhatToDiscardProblems
-    class UpdateWhatToDiscardProblem < BaseMutation
+    class Update < BaseMutation
+      graphql_name "UpdateWhatToDiscardProblem"
+
       include Authenticatable
 
       field :what_to_discard_problem, Types::WhatToDiscardProblemType, null: false
 
       argument :id, ID, required: true
       argument :description, String, required: false
+      argument :round, String, required: false
+      argument :turn, Integer, required: false
+      argument :wind, String, required: false
+      argument :points, Integer, required: false
       argument :dora_id, ID, required: false
       argument :hand1_id, ID, required: false
       argument :hand2_id, ID, required: false

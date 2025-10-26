@@ -14,16 +14,5 @@ module Types
     def user
       object.user
     end
-
-    field :replies, [ Types::CommentType ], null: false do
-      argument :limit, Integer, required: false
-      argument :cursor, String, required: false
-    end
-
-    def replies(limit: 10, cursor: nil)
-      scope = object.class.where(parent_comment_id: object.id)
-      scope = scope.where("id > ?", cursor) if cursor
-      scope.limit(limit).includes(:user)
-    end
   end
 end

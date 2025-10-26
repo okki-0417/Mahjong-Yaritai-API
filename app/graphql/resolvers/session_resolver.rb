@@ -2,6 +2,8 @@
 
 module Resolvers
   class SessionResolver < BaseResolver
+    graphql_name "CurrentSessionResolver"
+
     include Authenticatable
 
     type Types::SessionType, null: false

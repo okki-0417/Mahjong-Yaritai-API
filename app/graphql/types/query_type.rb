@@ -22,11 +22,17 @@ module Types
     # They will be entry points for queries on your schema.
 
     field :current_session, resolver: Resolvers::SessionResolver
+
     field :user, resolver: Resolvers::Users::ShowResolver
-    field :what_to_discard_problem, resolver: Resolvers::WhatToDiscardProblems::ShowResolver
-    field :what_to_discard_problems, resolver: Resolvers::WhatToDiscardProblems::ListResolver
-    field :bookmarked_what_to_discard_problems, resolver: Resolvers::WhatToDiscardProblems::BookmarksResolver
     field :following, resolver: Resolvers::Users::FollowingResolver
     field :followers, resolver: Resolvers::Users::FollowersResolver
+
+    field :what_to_discard_problems, resolver: Resolvers::WhatToDiscardProblems::ListResolver
+    field :what_to_discard_problem, resolver: Resolvers::WhatToDiscardProblems::ShowResolver
+    field :bookmarked_what_to_discard_problems, resolver: Resolvers::WhatToDiscardProblems::BookmarksResolver
+    field :what_to_discard_problem_vote_results, resolver: Resolvers::WhatToDiscardProblems::VoteResultsResolver
+
+    field :comments, resolver: Resolvers::Comments::ParentsResolver
+    field :replies, resolver: Resolvers::Comments::RepliesResolver
   end
 end

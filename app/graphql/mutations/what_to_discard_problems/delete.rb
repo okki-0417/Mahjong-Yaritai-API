@@ -2,10 +2,12 @@
 
 module Mutations
   module WhatToDiscardProblems
-    class DeleteWhatToDiscardProblem < BaseMutation
+    class Delete < BaseMutation
+      graphql_name "DeleteWhatToDiscardProblem"
+
       include Authenticatable
 
-      field :success, Boolean, null: false
+      field :id, ID, null: false
 
       argument :id, ID, required: true
 
@@ -13,9 +15,10 @@ module Mutations
         raise GraphQL::ExecutionError, "ログインしてください" unless logged_in?
 
         problem = context[:current_user].created_what_to_discard_problems.find(id)
+        problem_id = problem.id
 
         if problem.destroy
-          { success: true }
+          { id: problem_id }
         else
           problem.errors.full_messages.each do |message|
             context.add_error(GraphQL::ExecutionError.new(message))

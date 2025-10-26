@@ -7,29 +7,28 @@ module Mutations
 
       field :user, Types::UserType, null: true
 
-      argument :email, String, required: true
       argument :token, String, required: true
 
-      def resolve(email:, token:)
+      def resolve(token:)
         raise GraphQL::ExecutionError, "既にログインしています" if logged_in?
 
-        auth_request = AuthRequest.find_by(email:, token:)
+        email = context[:session][:pending_auth_email]
+        context[:session].delete(:pending_auth_email)
+        raise GraphQL::ExecutionError, "認証リクエストが見つかりません" unless email
 
-        raise GraphQL::ExecutionError, "メールアドレスまたはトークンが無効です" unless auth_request
+        auth_request = AuthRequest.find_by(email:, token:)
+        raise GraphQL::ExecutionError, "トークンが無効です" unless auth_request
 
         if auth_request.expired?
           auth_request.destroy
           raise GraphQL::ExecutionError, "トークンの有効期限が切れています"
         end
 
-        user = User.find_by(email:)
-
-        auth_request.destroy
-
-        if user.present?
+        if user = User.find_by(email:)
           login(user)
           { user: }
         else
+          context[:session][:auth_request_id] = auth_request.id
           { user: nil }
         end
       end

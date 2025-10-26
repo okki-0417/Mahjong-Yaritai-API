@@ -18,7 +18,7 @@ class AuthRequest < ApplicationRecord
   private
 
   def generate_token
-    self.token ||= SecureRandom.random_number(10**TOKEN_LENGTH).to_s.rjust(TOKEN_LENGTH, "0")
+    self.token ||= SecureRandom.alphanumeric(TOKEN_LENGTH)
   end
 
   def set_expired_at

@@ -5,7 +5,7 @@ module Mutations
     class DeleteFollow < BaseMutation
       include Authenticatable
 
-      field :success, Boolean, null: false
+      field :id, ID, null: false
 
       argument :user_id, ID, required: true
 
@@ -13,9 +13,10 @@ module Mutations
         raise GraphQL::ExecutionError, "ログインしてください" unless logged_in?
 
         follow = context[:current_user].active_follows.find_by!(followee_id: user_id)
+        follow_id = follow.id
 
         if follow.destroy
-          { success: true }
+          { id: follow_id }
         else
           follow.errors.full_messages.each do |message|
             context.add_error(GraphQL::ExecutionError.new(message))

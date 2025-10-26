@@ -11,16 +11,16 @@ RSpec.describe "User Mutations", type: :request do
       JSON.parse(response.body, symbolize_names: true)
     end
 
-    let(:email) { "test@example.com" }
     let(:name) { "Test User" }
     let(:auth_request) { create(:auth_request, email:) }
+    let(:email) { "xxx@xxx.com" }
     let(:session_params) { { auth_request_id: auth_request.id } }
-    let(:variables) { { email:, name: } }
+    let(:variables) { { name:, profile_text: } }
+    let(:profile_text) { "This is a test user." }
     let(:mutation) do
       <<~GQL
-        mutation($email: String!, $name: String!, $profileText: String, $avatar: Upload) {
+        mutation($name: String!, $profileText: String, $avatar: Upload) {
           createUser(input: {
-            email: $email
             name: $name
             profileText: $profileText
             avatar: $avatar

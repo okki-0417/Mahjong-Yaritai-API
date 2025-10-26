@@ -3,6 +3,8 @@
 module Resolvers
   module WhatToDiscardProblems
     class BookmarksResolver < BaseResolver
+      graphql_name "WhatToDiscardProblemBookmarksResolver"
+
       include Authenticatable
 
       type Types::WhatToDiscardProblemType.connection_type, null: false

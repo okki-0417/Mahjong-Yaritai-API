@@ -3,6 +3,8 @@
 module Resolvers
   module WhatToDiscardProblems
     class ShowResolver < BaseResolver
+      graphql_name "WhatToDiscardProblemShowResolver"
+
       type Types::WhatToDiscardProblemType, null: true
       description "Get a single what to discard problem by ID"
 
