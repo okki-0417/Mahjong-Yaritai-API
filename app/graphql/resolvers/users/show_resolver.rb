@@ -10,7 +10,7 @@ module Resolvers
       argument :id, ID, required: true
 
       def resolve(id:)
-        User.find_by(id: id)
+        User.find(id)
       end
     end
   end
