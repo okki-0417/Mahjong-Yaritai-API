@@ -160,4 +160,45 @@ RSpec.describe "Auth Mutations", type: :request do
       end
     end
   end
+
+  describe "logout" do
+    subject do
+      execute_mutation(mutation, variables, context: { current_user:, session: })
+      JSON.parse(response.body, symbolize_names: true)
+    end
+
+    let(:current_user) { create(:user) }
+    let(:session) { { user_id: current_user.id, remember_user_id: current_user.id } }
+    let(:variables) { {} }
+    let(:mutation) do
+      <<~GQL
+        mutation {
+          logout(input: {}) {
+            success
+          }
+        }
+      GQL
+    end
+
+    context "ログインしていない場合" do
+      let(:current_user) { nil }
+      let(:session) { {} }
+
+      it "エラーが返ること" do
+        json = subject
+
+        expect(json[:data][:logout]).to be_nil
+        expect(json[:errors].any?).to be true
+      end
+    end
+
+    context "ログインしている場合" do
+      it "ログアウトできること" do
+        json = subject
+
+        expect(json[:data][:logout][:success]).to eq(true)
+        expect(session).to be_empty
+      end
+    end
+  end
 end

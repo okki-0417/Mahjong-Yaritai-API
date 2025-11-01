@@ -15,7 +15,7 @@ module Mutations
         logout
 
         { success: true }
-        end
+      end
     end
   end
 end
