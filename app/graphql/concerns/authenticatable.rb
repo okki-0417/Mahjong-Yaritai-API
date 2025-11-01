@@ -10,6 +10,7 @@ module Authenticatable
 
   def logout
     reset_session
+    forget_cookies
     context[:current_user] = nil
   end
 
@@ -29,5 +30,12 @@ module Authenticatable
 
   def reset_session
     context[:session].clear
+  end
+
+  def forget_cookies
+    return unless context[:cookies]
+
+    context[:cookies].delete(:user_id)
+    context[:cookies].delete(:remember_token)
   end
 end

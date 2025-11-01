@@ -5,9 +5,11 @@ class GraphqlController < ApplicationController
     query = params[:query]
     variables = prepare_variables(params[:variables])
     operation_name = params[:operationName]
-    context = { current_user:, session: }
+
+    context = { current_user:, session:, cookies: }
 
     result = MahjongYaritaiAppSchema.execute(query, variables:, operation_name:, context:)
+
     render json: result
   rescue StandardError => e
     raise e unless Rails.env.development?
