@@ -9,8 +9,9 @@ module Authenticatable
   end
 
   def logout
-    reset_session
+    forget_user_from_db
     forget_cookies
+    reset_session
     context[:current_user] = nil
   end
 
@@ -29,13 +30,27 @@ module Authenticatable
   private
 
   def reset_session
-    context[:session].clear
+    # セッションを破棄してセッションIDのcookieも削除
+    if context[:session].respond_to?(:destroy)
+      context[:session].destroy
+    else
+      context[:session].clear
+    end
+  end
+
+  def forget_user_from_db
+    return unless current_user
+
+    current_user.forget
   end
 
   def forget_cookies
     return unless context[:cookies]
 
-    context[:cookies].delete(:user_id)
-    context[:cookies].delete(:remember_token)
+    cookie_domain = Rails.env.production? ? ENV.fetch("ETLD_HOST") : "localhost"
+
+    # 設定時と同じdomainを指定して削除
+    context[:cookies].delete(:user_id, domain: cookie_domain)
+    context[:cookies].delete(:remember_token, domain: cookie_domain)
   end
 end
