@@ -12,8 +12,9 @@ module Mutations
 
         user = context[:current_user]
 
+        logout
+
         if user.destroy
-          logout
           { success: true }
         else
           user.errors.full_messages.each do |message|
