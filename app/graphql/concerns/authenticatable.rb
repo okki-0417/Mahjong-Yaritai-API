@@ -3,24 +3,48 @@
 module Authenticatable
   def login(user)
     reset_session
+
     context[:session][:user_id] = user.id
-    context[:session][:remember_user_id] = user.id
-    context[:current_user] = user
   end
 
-  def logout
-    forget_user_from_db
-    forget_cookies
-    reset_session
-    context[:current_user] = nil
+  def remember(user)
+    user.remember
+
+    context[:cookies].permanent.signed[:user_id] = {
+      value: user.id,
+      domain: Rails.env.production? ? ENV.fetch("ETLD_HOST") : "localhost",
+      same_site: :lax,
+      secure: Rails.env.production?,
+      httponly: true,
+    }
+
+    context[:cookies].permanent.signed[:remember_token] = {
+      value: user.remember_token,
+      domain: Rails.env.production? ? ENV.fetch("ETLD_HOST") : "localhost",
+      same_site: :lax,
+      secure: Rails.env.production?,
+      httponly: true,
+    }
   end
 
   def current_user
     context[:current_user]
   end
 
+  def forget(user)
+    user.forget
+    context[:cookies].delete(:user_id)
+    context[:cookies].delete(:remember_token)
+  end
+
+  def logout
+    forget(current_user)
+    reset_session
+    context[:current_user] = nil
+  end
+
   def logged_in?
-    current_user.present?
+    context[:current_user].present?
   end
 
   def require_authentication!
@@ -30,27 +54,10 @@ module Authenticatable
   private
 
   def reset_session
-    # セッションを破棄してセッションIDのcookieも削除
     if context[:session].respond_to?(:destroy)
       context[:session].destroy
     else
       context[:session].clear
     end
-  end
-
-  def forget_user_from_db
-    return unless current_user
-
-    current_user.forget
-  end
-
-  def forget_cookies
-    return unless context[:cookies]
-
-    cookie_domain = Rails.env.production? ? ENV.fetch("ETLD_HOST") : "localhost"
-
-    # 設定時と同じdomainを指定して削除
-    context[:cookies].delete(:user_id, domain: cookie_domain)
-    context[:cookies].delete(:remember_token, domain: cookie_domain)
   end
 end

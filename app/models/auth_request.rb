@@ -11,6 +11,8 @@ class AuthRequest < ApplicationRecord
   before_validation :generate_token, on: :create
   before_validation :set_expired_at, on: :create
 
+  scope :within_expiration, -> { where("expired_at > ?", Time.current) }
+
   def expired?
     Time.current > expired_at
   end

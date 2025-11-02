@@ -5,28 +5,26 @@ class Auth::Google::CallbacksController < ApplicationController
     code = params[:code]
 
     if code.blank?
-      return render json: error_json([ "Authorization code is missing" ]), status: :bad_request
+      return render json: error_json([ "認証コードがありません" ]), status: :bad_request
     end
 
-    # Exchange authorization code for access token
+    # コードからGoogleのアクセストークンを取得
     token_response = exchange_code_for_token(code)
 
     if token_response[:error]
       return render json: error_json([ token_response[:error] ]), status: :unprocessable_entity
     end
 
-    # Get user info from Google
+    # Googleからユーザー情報を取得
     user_info = fetch_google_user_info(token_response[:access_token])
 
     if user_info[:error]
       return render json: error_json([ user_info[:error] ]), status: :unprocessable_entity
     end
 
-    # Find or create user
     user = User.find_by(email: user_info[:email])
 
     if user
-      # User exists, log them in
       login user
       remember user
 
@@ -35,8 +33,6 @@ class Auth::Google::CallbacksController < ApplicationController
         root: :session,
         status: :ok
     else
-      # User doesn't exist, create auth request
-      # This will be used to complete the registration process
       auth_request = AuthRequest.new(email: user_info[:email])
 
       if auth_request.save

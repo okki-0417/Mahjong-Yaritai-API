@@ -9,7 +9,6 @@ class MahjongYaritaiAppSchema < GraphQL::Schema
   max_query_string_tokens(5000)
   validate_max_errors(100)
 
-  # グローバルエラーハンドリング
   rescue_from(ActiveRecord::RecordNotFound) do |err, obj, args, ctx, field|
     raise GraphQL::ExecutionError, "リソースが見つかりません"
   end

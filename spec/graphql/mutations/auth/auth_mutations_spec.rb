@@ -118,7 +118,7 @@ RSpec.describe "Auth Mutations", type: :request do
     context "トークンが期限切れの場合" do
       before do
         auth_request
-        allow_any_instance_of(AuthRequest).to receive(:expired?).and_return(true)
+        auth_request.update!(expired_at: 1.hour.ago)
       end
 
       it "エラーが返ること" do
