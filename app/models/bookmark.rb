@@ -7,6 +7,10 @@ class Bookmark < ApplicationRecord
   validates :user_id, uniqueness: { scope: %i[bookmarkable_type bookmarkable_id] }
   validate :prevent_self_bookmark
 
+  def bookmarked_by?(user)
+    user_id == user.id
+  end
+
   private
 
   def prevent_self_bookmark

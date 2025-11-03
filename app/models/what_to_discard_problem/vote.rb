@@ -8,4 +8,8 @@ class WhatToDiscardProblem::Vote < ApplicationRecord
   belongs_to :tile
 
   validates :user_id, uniqueness: { scope: :what_to_discard_problem }
+
+  def voted_by?(user)
+    user_id == user.id
+  end
 end

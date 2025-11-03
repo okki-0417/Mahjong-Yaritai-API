@@ -32,6 +32,7 @@ module Types
     field :tsumo_id, ID, null: false
 
     field :is_liked_by_me, Boolean, null: false
+    field :my_vote_tile_id, ID, null: true
     field :is_bookmarked_by_me, Boolean, null: false
 
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
@@ -40,27 +41,19 @@ module Types
     def is_liked_by_me
       return false unless context[:current_user]
 
-      current_user_likes.any?
+      object.likes.select { |like| like.liked_by?(context[:current_user]) }.any?
     end
 
     def is_bookmarked_by_me
       return false unless context[:current_user]
 
-      current_user_bookmarks.any?
+      object.bookmarks.select { |bookmark| bookmark.bookmarked_by?(context[:current_user]) }.any?
     end
 
-    private
+    def my_vote_tile_id
+      return nil unless context[:current_user]
 
-    def current_user_likes
-      @current_user_likes ||= object.likes.select { |like| like.user_id == context[:current_user].id }
-    end
-
-    def current_user_bookmarks
-      @current_user_bookmarks ||= object.bookmarks.select { |bookmark| bookmark.user_id == context[:current_user].id }
-    end
-
-    def current_user_votes
-      @current_user_votes ||= object.votes.select { |vote| vote.user_id == context[:current_user].id }
+      object.votes.find { |vote| vote.voted_by?(context[:current_user]) }&.tile_id
     end
   end
 end
