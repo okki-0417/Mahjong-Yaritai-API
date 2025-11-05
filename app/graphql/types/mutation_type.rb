@@ -13,20 +13,20 @@ module Types
     field :create_follow, mutation: Mutations::Follows::CreateFollow
     field :delete_follow, mutation: Mutations::Follows::DeleteFollow
 
-    field :create_what_to_discard_problem, mutation: Mutations::WhatToDiscardProblems::Create
-    field :update_what_to_discard_problem, mutation: Mutations::WhatToDiscardProblems::Update
-    field :delete_what_to_discard_problem, mutation: Mutations::WhatToDiscardProblems::Delete
+    field :create_what_to_discard_problem, mutation: Mutations::WhatToDiscardProblems::CreateWhatToDiscardProblem
+    field :update_what_to_discard_problem, mutation: Mutations::WhatToDiscardProblems::UpdateWhatToDiscardProblem
+    field :delete_what_to_discard_problem, mutation: Mutations::WhatToDiscardProblems::DeleteWhatToDiscardProblem
 
-    field :create_what_to_discard_problem_comment, mutation: Mutations::WhatToDiscardProblems::Comments::Create
-    field :delete_what_to_discard_problem_comment, mutation: Mutations::WhatToDiscardProblems::Comments::Delete
+    field :create_what_to_discard_problem_comment, mutation: Mutations::WhatToDiscardProblems::Comments::CreateWhatToDiscardProblemComment
+    field :delete_what_to_discard_problem_comment, mutation: Mutations::WhatToDiscardProblems::Comments::DeleteWhatToDiscardProblemComment
 
-    field :create_what_to_discard_problem_vote, mutation: Mutations::WhatToDiscardProblems::Votes::Create
-    field :delete_what_to_discard_problem_vote, mutation: Mutations::WhatToDiscardProblems::Votes::Delete
+    field :create_what_to_discard_problem_vote, mutation: Mutations::WhatToDiscardProblems::Votes::CreateWhatToDiscardProblemVote
+    field :delete_what_to_discard_problem_vote, mutation: Mutations::WhatToDiscardProblems::Votes::DeleteWhatToDiscardProblemVote
 
-    field :create_what_to_discard_problem_like, mutation: Mutations::WhatToDiscardProblems::Likes::Create
-    field :delete_what_to_discard_problem_like, mutation: Mutations::WhatToDiscardProblems::Likes::Delete
+    field :create_what_to_discard_problem_like, mutation: Mutations::WhatToDiscardProblems::Likes::CreateWhatToDiscardProblemLike
+    field :delete_what_to_discard_problem_like, mutation: Mutations::WhatToDiscardProblems::Likes::DeleteWhatToDiscardProblemLike
 
-    field :create_what_to_discard_problem_bookmark, mutation: Mutations::WhatToDiscardProblems::Bookmarks::Create
-    field :delete_what_to_discard_problem_bookmark, mutation: Mutations::WhatToDiscardProblems::Bookmarks::Delete
+    field :create_what_to_discard_problem_bookmark, mutation: Mutations::WhatToDiscardProblems::Bookmarks::CreateWhatToDiscardProblemBookmark
+    field :delete_what_to_discard_problem_bookmark, mutation: Mutations::WhatToDiscardProblems::Bookmarks::DeleteWhatToDiscardProblemBookmark
   end
 end

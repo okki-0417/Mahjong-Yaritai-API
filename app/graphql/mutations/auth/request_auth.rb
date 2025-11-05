@@ -17,7 +17,7 @@ module Mutations
         if auth_request.save
           AuthorizationMailer.send_authorization_token(auth_request).deliver_now
 
-          context[:session][:pending_auth_email] = email
+          session[:pending_auth_email] = email
 
           { success: true }
         else

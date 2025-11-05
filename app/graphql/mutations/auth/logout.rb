@@ -5,8 +5,6 @@ module Mutations
     class Logout < BaseMutation
       include Authenticatable
 
-      description "Logout current user"
-
       field :success, Boolean, null: false
 
       def resolve

@@ -18,21 +18,17 @@ module Types
       ids.map { |id| context.schema.object_from_id(id, context) }
     end
 
-    # Add root-level fields here.
-    # They will be entry points for queries on your schema.
+    field :current_session, resolver: Resolvers::Sessions::ShowSession
 
-    field :current_session, resolver: Resolvers::SessionResolver
+    field :user, resolver: Resolvers::Users::ShowUser
+    field :followings, resolver: Resolvers::Me::Followings::ListFollowings
+    field :followers, resolver: Resolvers::Me::Followers::ListFollowers
+    field :bookmarked_what_to_discard_problems, resolver: Resolvers::Me::Bookmarks::WhatToDiscardProblems::ListBookmarkedWhatToDiscardProblems
 
-    field :user, resolver: Resolvers::Users::ShowResolver
-    field :following, resolver: Resolvers::Users::FollowingResolver
-    field :followers, resolver: Resolvers::Users::FollowersResolver
-
-    field :what_to_discard_problems, resolver: Resolvers::WhatToDiscardProblems::ListResolver
-    field :what_to_discard_problem, resolver: Resolvers::WhatToDiscardProblems::ShowResolver
-    field :bookmarked_what_to_discard_problems, resolver: Resolvers::WhatToDiscardProblems::BookmarksResolver
-    field :what_to_discard_problem_vote_results, resolver: Resolvers::WhatToDiscardProblems::VoteResultsResolver
-
-    field :comments, resolver: Resolvers::Comments::ParentsResolver
-    field :replies, resolver: Resolvers::Comments::RepliesResolver
+    field :what_to_discard_problems, resolver: Resolvers::WhatToDiscardProblems::ListWhatToDiscardProblems
+    field :what_to_discard_problem, resolver: Resolvers::WhatToDiscardProblems::ShowWhatToDiscardProblem
+    field :what_to_discard_problem_vote_results, resolver: Resolvers::WhatToDiscardProblems::VoteResults::ListWhatToDiscardProblemVoteResults
+    field :what_to_discard_problem_comments, resolver: Resolvers::WhatToDiscardProblems::Comments::ListWhatToDiscardProblemComments
+    field :what_to_discard_problem_comment_replies, resolver: Resolvers::WhatToDiscardProblems::Comments::ListWhatToDiscardProblemCommentReplies
   end
 end

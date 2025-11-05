@@ -8,16 +8,15 @@ module Mutations
       field :success, Boolean, null: false
 
       def resolve
-        raise GraphQL::ExecutionError, "ログインしてください" unless logged_in?
+        require_authentication!
 
-        user = context[:current_user]
-
+        withdraw_user = current_user
         logout
 
-        if user.destroy
+        if withdraw_user.destroy
           { success: true }
         else
-          user.errors.full_messages.each do |message|
+          withdraw_user.errors.full_messages.each do |message|
             context.add_error(GraphQL::ExecutionError.new(message))
           end
           nil

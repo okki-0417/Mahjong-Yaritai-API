@@ -12,19 +12,20 @@ module Mutations
       def resolve(token:)
         raise GraphQL::ExecutionError, "既にログインしています" if logged_in?
 
-        email = context[:session]&.[](:pending_auth_email)
-        raise GraphQL::ExecutionError, "セッションが切れています" unless email
+        email = session[:pending_auth_email]
+        raise GraphQL::ExecutionError, "メールアドレスが未設定です" unless email
 
-        auth_request = AuthRequest.within_expiration.find_by(email:, token:)
+        auth_request = AuthRequest.find_by(email:, token:)
         raise GraphQL::ExecutionError, "認証リクエストが見つかりません" unless auth_request
+        raise GraphQL::ExecutionError, "認証が切れています" if auth_request.expired?
 
-        context[:session].delete(:pending_auth_email)
+        session.delete(:pending_auth_email)
 
         if user = User.find_by(email:)
           login(user)
           { user: }
         else
-          context[:session][:auth_request_id] = auth_request.id
+          session[:auth_request_id] = auth_request.id
           { user: nil }
         end
       end

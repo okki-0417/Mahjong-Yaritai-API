@@ -10,9 +10,9 @@ module Mutations
       argument :user_id, ID, required: true
 
       def resolve(user_id:)
-        raise GraphQL::ExecutionError, "ログインしてください" unless logged_in?
+        require_authentication!
 
-        follow = context[:current_user].active_follows.find_by!(followee_id: user_id)
+        follow = current_user.active_follows.find_by!(followee_id: user_id)
         follow_id = follow.id
 
         if follow.destroy

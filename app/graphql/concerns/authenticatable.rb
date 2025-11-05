@@ -2,12 +2,15 @@
 
 module Authenticatable
   def login(user)
-    reset_session
+    return unless user
 
+    reset_session
     context[:session][:user_id] = user.id
   end
 
   def remember(user)
+    return unless user
+
     user.remember
 
     context[:cookies].permanent.signed[:user_id] = {
@@ -31,8 +34,20 @@ module Authenticatable
     context[:current_user]
   end
 
+  def session
+    context[:session]
+  end
+
+  def cookies
+    context[:cookies]
+  end
+
   def forget(user)
+    return unless user
+
     user.forget
+    return unless context[:cookies]
+
     context[:cookies].delete(:user_id)
     context[:cookies].delete(:remember_token)
   end

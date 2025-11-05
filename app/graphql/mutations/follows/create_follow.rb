@@ -10,11 +10,9 @@ module Mutations
       field :follow, Types::FollowType, null: false
 
       def resolve(user_id:)
-        raise GraphQL::ExecutionError, "ログインしてください" unless logged_in?
+        require_authentication!
 
-        follow = context[:current_user].active_follows.new(
-          followee_id: user_id
-        )
+        follow = current_user.active_follows.new(followee_id: user_id)
 
         if follow.save
           { follow: }
