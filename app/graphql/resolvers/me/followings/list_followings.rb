@@ -12,7 +12,7 @@ module Resolvers
           return User.none unless logged_in?
 
           current_user
-            .following
+            .followings
             .preload(avatar_attachment: :blob)
             .order(id: :desc)
         end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_25_152847) do
+ActiveRecord::Schema[7.2].define(version: 2025_11_05_072326) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -48,17 +48,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_25_152847) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "expired_at", default: -> { "(now() + 'PT15M'::interval)" }, null: false
-  end
-
-  create_table "bookmarks", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.string "bookmarkable_type", null: false
-    t.bigint "bookmarkable_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index %w[bookmarkable_type bookmarkable_id], name: "index_bookmarks_on_bookmarkable"
-    t.index %w[user_id bookmarkable_type bookmarkable_id], name: "index_bookmarks_uniqueness", unique: true
-    t.index [ "user_id" ], name: "index_bookmarks_on_user_id"
   end
 
   create_table "comments", force: :cascade do |t|
@@ -166,7 +155,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_25_152847) do
     t.datetime "updated_at", null: false
     t.integer "points"
     t.text "description"
-    t.integer "bookmarks_count", default: 0, null: false
     t.index [ "dora_id" ], name: "index_what_to_discard_problems_on_dora_id"
     t.index [ "hand10_id" ], name: "index_what_to_discard_problems_on_hand10_id"
     t.index [ "hand11_id" ], name: "index_what_to_discard_problems_on_hand11_id"
@@ -187,7 +175,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_25_152847) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "bookmarks", "users"
   add_foreign_key "comments", "comments", column: "parent_comment_id"
   add_foreign_key "comments", "users"
   add_foreign_key "follows", "users", column: "followee_id"

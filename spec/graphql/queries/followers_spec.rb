@@ -40,11 +40,10 @@ RSpec.describe "Queries::Followers", type: :request do
     context "ログインしていない場合" do
       let(:current_user) { nil }
 
-      it "エラーが返ること" do
+      it "空のデータが返ること" do
         json = subject
 
-        expect(json[:errors].any?).to be true
-        expect(json[:errors][0][:message]).to eq("ログインしてください")
+        expect(json[:data][:followers][:edges]).to eq([])
       end
     end
 

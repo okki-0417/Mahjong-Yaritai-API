@@ -13,7 +13,6 @@ module Types
     field :votes_count, Integer, null: false
     field :comments_count, Integer, null: false
     field :likes_count, Integer, null: false
-    field :bookmarks_count, Integer, null: false
 
     field :dora_id, ID, null: false
     field :hand1_id, ID, null: false
@@ -33,7 +32,6 @@ module Types
 
     field :is_liked_by_me, Boolean, null: false
     field :my_vote_tile_id, ID, null: true
-    field :is_bookmarked_by_me, Boolean, null: false
 
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
@@ -42,12 +40,6 @@ module Types
       return false unless context[:current_user]
 
       object.likes.select { |like| like.liked_by?(context[:current_user]) }.any?
-    end
-
-    def is_bookmarked_by_me
-      return false unless context[:current_user]
-
-      object.bookmarks.select { |bookmark| bookmark.bookmarked_by?(context[:current_user]) }.any?
     end
 
     def my_vote_tile_id

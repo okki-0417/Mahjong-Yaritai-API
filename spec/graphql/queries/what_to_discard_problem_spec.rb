@@ -27,7 +27,6 @@ RSpec.describe "Queries::WhatToDiscardProblem", type: :request do
             votesCount
             commentsCount
             likesCount
-            bookmarksCount
             doraId
             hand1Id
             hand2Id

@@ -16,7 +16,7 @@ RSpec.describe "Queries::Following", type: :request do
     let(:query) do
       <<~GQL
         query {
-          following {
+          followings {
             edges {
               node {
                 id
@@ -40,11 +40,10 @@ RSpec.describe "Queries::Following", type: :request do
     context "ログインしていない場合" do
       let(:current_user) { nil }
 
-      it "エラーが返ること" do
+      it "空のデータが返ること" do
         json = subject
 
-        expect(json[:data]).to be_nil
-        expect(json[:errors].any?).to be true
+        expect(json[:data][:followings][:edges]).to eq([])
       end
     end
 
@@ -53,7 +52,7 @@ RSpec.describe "Queries::Following", type: :request do
         json = subject
 
         expect(json[:errors]).to be_nil
-        expect(json[:data][:following][:edges]).to eq([])
+        expect(json[:data][:followings][:edges]).to eq([])
       end
     end
 
@@ -70,9 +69,7 @@ RSpec.describe "Queries::Following", type: :request do
       it "フォローした順序の降順で返すこと" do
         json = subject
 
-        expect(json[:errors]).to be_nil
-
-        edges = json[:data][:following][:edges]
+        edges = json[:data][:followings][:edges]
         expect(edges.size).to eq(2)
 
         # 最新のフォローが最初に来る
@@ -96,7 +93,7 @@ RSpec.describe "Queries::Following", type: :request do
       it "avatarUrlが返ること" do
         json = subject
 
-        node = json[:data][:following][:edges][0][:node]
+        node = json[:data][:followings][:edges][0][:node]
         expect(node[:avatarUrl]).to be_present
       end
     end

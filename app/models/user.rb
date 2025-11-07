@@ -12,13 +12,11 @@ class User < ApplicationRecord
   has_many :created_what_to_discard_problems, class_name: :WhatToDiscardProblem, dependent: :destroy
   has_many :created_comments, class_name: :Comment, dependent: :destroy
   has_many :created_likes, class_name: :Like, dependent: :destroy
-  has_many :created_bookmarks, class_name: :Bookmark, dependent: :destroy
   has_many :created_what_to_discard_problem_votes, class_name: "WhatToDiscardProblem::Vote", dependent: :destroy
-  has_many :bookmarked_what_to_discard_problems, through: :created_bookmarks, source: :bookmarkable, source_type: :WhatToDiscardProblem
 
   has_many :active_follows, class_name: "Follow", foreign_key: "follower_id", dependent: :destroy
   has_many :passive_follows, class_name: "Follow", foreign_key: "followee_id", dependent: :destroy
-  has_many :following, through: :active_follows, source: :followee
+  has_many :followings, through: :active_follows, source: :followee
   has_many :followers, through: :passive_follows, source: :follower
 
   attr_accessor :remember_token
@@ -74,7 +72,7 @@ class User < ApplicationRecord
   end
 
   def following?(other_user)
-    following.include?(other_user)
+    followings.include?(other_user)
   end
 
   private

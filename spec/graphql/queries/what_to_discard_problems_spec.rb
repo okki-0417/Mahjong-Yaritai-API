@@ -34,7 +34,6 @@ RSpec.describe "Queries::WhatToDiscardProblems", type: :request do
                   avatarUrl
                 }
                 likesCount
-                bookmarksCount
                 votesCount
               }
               cursor
@@ -99,7 +98,6 @@ RSpec.describe "Queries::WhatToDiscardProblems", type: :request do
         node = json[:data][:whatToDiscardProblems][:edges][0][:node]
 
         expect(node[:likesCount]).to eq(0)
-        expect(node[:bookmarksCount]).to eq(0)
         expect(node[:votesCount]).to eq(0)
       end
     end

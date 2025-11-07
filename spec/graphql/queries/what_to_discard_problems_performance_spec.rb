@@ -23,7 +23,6 @@ RSpec.describe "Queries::WhatToDiscardProblems Performance Test", type: :request
                 avatarUrl
               }
               likesCount
-              bookmarksCount
               votesCount
             }
           }
@@ -62,7 +61,6 @@ RSpec.describe "Queries::WhatToDiscardProblems Performance Test", type: :request
             avatarUrl
           }
           likesCount
-          bookmarksCount
           votesCount
         }
       }

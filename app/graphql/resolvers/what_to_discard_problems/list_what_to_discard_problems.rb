@@ -10,7 +10,6 @@ module Resolvers
           .preload(
             :votes,
             :likes,
-            :bookmarks,
             user: :avatar_attachment,
           )
           .order(id: :desc)

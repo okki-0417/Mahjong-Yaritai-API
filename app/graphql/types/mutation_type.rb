@@ -25,8 +25,5 @@ module Types
 
     field :create_what_to_discard_problem_like, mutation: Mutations::WhatToDiscardProblems::Likes::CreateWhatToDiscardProblemLike
     field :delete_what_to_discard_problem_like, mutation: Mutations::WhatToDiscardProblems::Likes::DeleteWhatToDiscardProblemLike
-
-    field :create_what_to_discard_problem_bookmark, mutation: Mutations::WhatToDiscardProblems::Bookmarks::CreateWhatToDiscardProblemBookmark
-    field :delete_what_to_discard_problem_bookmark, mutation: Mutations::WhatToDiscardProblems::Bookmarks::DeleteWhatToDiscardProblemBookmark
   end
 end
