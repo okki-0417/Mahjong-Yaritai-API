@@ -172,6 +172,8 @@ services:
     image:
       url: metabase/metabase:latest
     envVars:
+      - key: MB_JETTY_PORT
+        value: ${PORT}
       - key: MB_DB_TYPE
         value: postgres
       - key: MB_DB_DBNAME
