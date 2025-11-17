@@ -4,7 +4,7 @@ databases:
     databaseName: mahjong_yaritai_database_name
     user: mahjong_yaritai_user
     region: singapore
-    plan: free
+    plan: basic
     ipAllowList: []
 
   - name: metabase_db
@@ -102,7 +102,7 @@ services:
     type: worker
     runtime: docker
     region: singapore
-    plan: free
+    plan: starter
     repo: https://github.com/okki-0417/Mahjong-Yaritai-API
     branch: main
     autoDeployTrigger: checksPass
