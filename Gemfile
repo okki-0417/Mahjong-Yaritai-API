@@ -14,8 +14,6 @@ gem "redis-store"
 gem "rswag-api"
 gem "rswag-ui"
 gem "sidekiq"
-gem "sentry-ruby"
-gem "sentry-rails"
 gem "graphql"
 gem "graphql-batch"
 
@@ -33,4 +31,9 @@ group :development, :test do
   gem "pry"
   gem "rspec-rails", "~> 8.0.1"
   gem "rswag-specs"
+end
+
+group :production do
+  gem "sentry-ruby"
+  gem "sentry-rails"
 end
