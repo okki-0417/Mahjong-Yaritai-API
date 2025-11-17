@@ -1,8 +1,16 @@
 databases:
   - name: mj_db
     postgresMajorVersion: 16
-    databaseName: mahjong-yaritai
+    databaseName: mahjong_yaritai_database_name
     user: mahjong_yaritai_user
+    region: singapore
+    plan: free
+    ipAllowList: []
+
+  - name: metabase_db
+    postgresMajorVersion: 16
+    databaseName: metabase_database_name
+    user: metabase_user
     region: singapore
     plan: free
     ipAllowList: []
@@ -24,7 +32,7 @@ services:
           name: mj_db
           property: host
       - key: DATABASE_NAME
-        value: mahjong-yaritai
+        value: mahjong_yaritai_database_name
       - key: DATABASE_PASSWORD
         fromDatabase:
           name: mj_db
@@ -106,7 +114,7 @@ services:
           name: mj_db
           property: host
       - key: DATABASE_NAME
-        value: mahjong-yaritai
+        value: mahjong_yaritai_database_name
       - key: DATABASE_PASSWORD
         fromDatabase:
           name: mj_db
@@ -154,4 +162,31 @@ services:
       - key: LINE_CHANNEL_SECRET
         sync: false
       - key: LINE_REDIRECT_URI
+        sync: false
+
+  - name: metabase
+    type: web
+    runtime: image
+    region: singapore
+    plan: free
+    image:
+      url: metabase/metabase:latest
+    envVars:
+      - key: MB_DB_TYPE
+        value: postgres
+      - key: MB_DB_DBNAME
+        value: metabase_database_name
+      - key: MB_DB_PORT
+        value: "5432"
+      - key: MB_DB_USER
+        value: metabase_user
+      - key: MB_DB_PASS
+        fromDatabase:
+          name: metabase_db
+          property: password
+      - key: MB_DB_HOST
+        fromDatabase:
+          name: metabase_db
+          property: host
+      - key: MB_ENCRYPTION_SECRET_KEY
         sync: false
