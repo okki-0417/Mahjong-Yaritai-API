@@ -4,7 +4,7 @@ databases:
     databaseName: mahjong_yaritai_database_name
     user: mahjong_yaritai_user
     region: singapore
-    plan: basic
+    plan: basic-256mb
     ipAllowList: []
 
   - name: metabase_db
