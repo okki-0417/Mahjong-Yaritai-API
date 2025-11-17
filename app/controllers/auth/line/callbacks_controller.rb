@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "net/http"
+
 class Auth::Line::CallbacksController < ApplicationController
   def create
     code = params[:code]

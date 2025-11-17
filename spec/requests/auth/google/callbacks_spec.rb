@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "swagger_helper"
+require "net/http"
 
 RSpec.describe "auth/google/callbacks", type: :request do
   path "/auth/google/callback" do
