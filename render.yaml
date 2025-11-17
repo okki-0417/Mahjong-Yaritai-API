@@ -27,6 +27,14 @@ services:
     healthCheckPath: /
     dockerfilePath: ./Dockerfile
     envVars:
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_REGION
+        value: ap-northeast-1
+      - key: AWS_S3_BUCKET
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
       - key: DATABASE_HOST
         fromDatabase:
           name: mj_db
@@ -39,9 +47,33 @@ services:
           property: password
       - key: DATABASE_USER
         value: mahjong_yaritai_user
+      - key: ETLD_HOST
+        sync: false
+      - key: FRONTEND_HOST
+        sync: false
+      - key: FRONTEND_ORIGIN
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_REDIRECT_URI
+        sync: false
       - key: HOST_NAME
         value: Must be fulfilled after the web server creation.
-      - key: ETLD_HOST
+      - key: LINE_CHANNEL_ID
+        sync: false
+      - key: LINE_CHANNEL_SECRET
+        sync: false
+      - key: LINE_REDIRECT_URI
+        sync: false
+      - key: MAIL_ADDRESS
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+      - key: RAILS_ENV
+        value: production
+      - key: RAILS_MASTER_KEY
         sync: false
       - key: REDIS_HOST
         fromService:
@@ -53,43 +85,11 @@ services:
           name: mj_redis
           type: keyvalue
           property: port
-      - key: FRONTEND_HOST
-        sync: false
-      - key: FRONTEND_ORIGIN
-        sync: false
-      - key: MAIL_ADDRESS
-        sync: false
-      - key: MAIL_PASSWORD
-        sync: false
-      - key: RAILS_ENV
-        value: production
-      - key: RAILS_MASTER_KEY
-        sync: false
       - key: SECRET_KEY_BASE
-        sync: false
-      - key: USER_AGENT
-        sync: false
-      - key: AWS_ACCESS_KEY_ID
-        sync: false
-      - key: AWS_SECRET_ACCESS_KEY
-        sync: false
-      - key: AWS_REGION
-        value: ap-northeast-1
-      - key: AWS_S3_BUCKET
         sync: false
       - key: SENTRY_DSN
         sync: false
-      - key: GOOGLE_CLIENT_ID
-        sync: false
-      - key: GOOGLE_CLIENT_SECRET
-        sync: false
-      - key: GOOGLE_REDIRECT_URI
-        sync: false
-      - key: LINE_CHANNEL_ID
-        sync: false
-      - key: LINE_CHANNEL_SECRET
-        sync: false
-      - key: LINE_REDIRECT_URI
+      - key: USER_AGENT
         sync: false
   - name: mj_redis
     type: keyvalue
@@ -109,6 +109,14 @@ services:
     dockerfilePath: ./Dockerfile
     dockerCommand: bundle exec sidekiq
     envVars:
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_REGION
+        value: ap-northeast-1
+      - key: AWS_S3_BUCKET
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
       - key: DATABASE_HOST
         fromDatabase:
           name: mj_db
@@ -121,36 +129,6 @@ services:
           property: password
       - key: DATABASE_USER
         value: mahjong_yaritai_user
-      - key: REDIS_HOST
-        fromService:
-          name: mj_redis
-          type: keyvalue
-          property: host
-      - key: REDIS_PORT
-        fromService:
-          name: mj_redis
-          type: keyvalue
-          property: port
-      - key: RAILS_ENV
-        value: production
-      - key: RAILS_MASTER_KEY
-        sync: false
-      - key: SECRET_KEY_BASE
-        sync: false
-      - key: AWS_ACCESS_KEY_ID
-        sync: false
-      - key: AWS_SECRET_ACCESS_KEY
-        sync: false
-      - key: AWS_REGION
-        value: ap-northeast-1
-      - key: AWS_S3_BUCKET
-        sync: false
-      - key: MAIL_ADDRESS
-        sync: false
-      - key: MAIL_PASSWORD
-        sync: false
-      - key: SENTRY_DSN
-        sync: false
       - key: GOOGLE_CLIENT_ID
         sync: false
       - key: GOOGLE_CLIENT_SECRET
@@ -163,6 +141,28 @@ services:
         sync: false
       - key: LINE_REDIRECT_URI
         sync: false
+      - key: MAIL_ADDRESS
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+      - key: RAILS_ENV
+        value: production
+      - key: RAILS_MASTER_KEY
+        sync: false
+      - key: REDIS_HOST
+        fromService:
+          name: mj_redis
+          type: keyvalue
+          property: host
+      - key: REDIS_PORT
+        fromService:
+          name: mj_redis
+          type: keyvalue
+          property: port
+      - key: SECRET_KEY_BASE
+        sync: false
+      - key: SENTRY_DSN
+        sync: false
 
   - name: metabase
     type: web
@@ -172,23 +172,23 @@ services:
     image:
       url: metabase/metabase:latest
     envVars:
-      - key: MB_JETTY_PORT
-        value: ${PORT}
-      - key: MB_DB_TYPE
-        value: postgres
       - key: MB_DB_DBNAME
         value: metabase_database_name
-      - key: MB_DB_PORT
-        value: "5432"
-      - key: MB_DB_USER
-        value: metabase_user
-      - key: MB_DB_PASS
-        fromDatabase:
-          name: metabase_db
-          property: password
       - key: MB_DB_HOST
         fromDatabase:
           name: metabase_db
           property: host
+      - key: MB_DB_PASS
+        fromDatabase:
+          name: metabase_db
+          property: password
+      - key: MB_DB_PORT
+        value: "5432"
+      - key: MB_DB_TYPE
+        value: postgres
+      - key: MB_DB_USER
+        value: metabase_user
       - key: MB_ENCRYPTION_SECRET_KEY
         sync: false
+      - key: MB_JETTY_PORT
+        value: ${PORT}
