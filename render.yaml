@@ -20,7 +20,7 @@ services:
     type: web
     runtime: docker
     region: singapore
-    plan: free
+    plan: starter
     repo: https://github.com/okki-0417/Mahjong-Yaritai-API
     branch: main
     autoDeployTrigger: checksPass
