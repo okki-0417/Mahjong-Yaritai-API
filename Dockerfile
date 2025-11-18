@@ -28,8 +28,8 @@ COPY entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh
 ENTRYPOINT ["entrypoint.sh"]
 
-EXPOSE 3001
+EXPOSE ${PORT:-3001}
 
 COPY . .
 
-CMD ["bin/rails", "server", "-b", "0.0.0.0", "-p", "3001"]
+CMD ["bin/rails", "server", "-b", "0.0.0.0", "-p", "${PORT:-3001}"]
