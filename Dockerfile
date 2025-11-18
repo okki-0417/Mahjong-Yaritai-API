@@ -28,8 +28,7 @@ COPY entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh
 ENTRYPOINT ["entrypoint.sh"]
 
-EXPOSE ${PORT:-3001}
-
 COPY . .
 
-CMD ["bin/rails", "server", "-b", "0.0.0.0", "-p", "${PORT:-3001}"]
+# PORTはapi/config/puma.rbで設定されている
+CMD ["bin/rails", "server", "-b", "0.0.0.0"]
