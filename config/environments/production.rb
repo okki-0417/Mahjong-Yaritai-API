@@ -47,6 +47,7 @@ Rails.application.configure do
   config.active_storage.service = :amazon
 
   config.hosts << ENV.fetch("HOST_NAME")
+  config.hosts << "www." + ENV.fetch("HOST_NAME")
   config.hosts << ENV.fetch("HEALTH_CHECK_HOST")
 
   config.assume_ssl = true
