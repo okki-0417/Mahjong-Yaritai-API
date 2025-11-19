@@ -27,8 +27,6 @@ Rails.application.configure do
 
   config.active_storage.service = :amazon
 
-  config.middleware.swap Rails::Rack::Logger, CustomLogger
-
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address:         "smtp.gmail.com",             # Gmail の SMTP サーバー
@@ -50,6 +48,8 @@ Rails.application.configure do
   config.hosts << "www." + ENV.fetch("HOST_NAME")
   config.hosts << ENV.fetch("HEALTH_CHECK_HOST")
 
+  config.enable_health_check = true
+
   config.assume_ssl = true
   config.force_ssl = true
 
@@ -63,7 +63,6 @@ Rails.application.configure do
 
   config.active_storage.draw_routes = false
 
-  config.eager_load = true
   config.i18n.fallbacks = true
   config.active_record.dump_schema_after_migration = false
   config.active_record.attributes_for_inspect = [ :id ]
