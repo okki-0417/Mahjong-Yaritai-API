@@ -1,5 +1,4 @@
 require "active_support/core_ext/integer/time"
-require "custom_logger"
 
 Rails.application.configure do
   config.enable_reloading = false
