@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   mount ActiveStorage::Engine => "/rails/active_storage"
 
   get "/", to: "rails/health#show"
+  get "/up", to: "rails/health#show"
 
   namespace :auth do
     namespace :google do
