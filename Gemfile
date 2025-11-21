@@ -29,7 +29,7 @@ group :development, :test do
   gem "debug"
   gem "factory_bot_rails"
   gem "pry"
-  gem "rspec-rails", "~> 8.0.1"
+  gem "rspec-rails", "~> 8.0.2"
   gem "rswag-specs"
 end
 
