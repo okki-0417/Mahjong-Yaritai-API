@@ -1,6 +1,6 @@
 require "active_support/core_ext/integer/time"
 require Rails.root.join("lib/customized_logger/formatter")
-require Rails.root.join("lib/customized_logger/health_check_silencer")
+require Rails.root.join("lib/customized_logger/silencer")
 
 Rails.application.configure do
   config.enable_reloading = false
