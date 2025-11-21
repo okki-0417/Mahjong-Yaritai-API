@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require "active_support/core_ext/integer/time"
+require Rails.root.join("lib/custom_logger")
+require Rails.root.join("lib/custom_logger/formatter")
 
 Rails.application.configure do
   config.enable_reloading = true
@@ -26,9 +28,10 @@ Rails.application.configure do
   config.session_store :redis_store
 
   config.log_level = :debug
-  config.log_tags = [ :request_id ]
 
-  config.logger = ActiveSupport::Logger.new("log/development.log")
+  logger = CustomLogger.new(Rails.root.join("log/development.log"))
+  logger.formatter = CustomLogger::Formatter.new
+  config.logger = ActiveSupport::TaggedLogging.new(logger)
 
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :letter_opener_web

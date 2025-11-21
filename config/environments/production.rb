@@ -1,4 +1,6 @@
 require "active_support/core_ext/integer/time"
+require Rails.root.join("lib/custom_logger")
+require Rails.root.join("lib/custom_logger/formatter")
 
 Rails.application.configure do
   config.enable_reloading = false
@@ -53,7 +55,10 @@ Rails.application.configure do
   config.force_ssl = true
 
   config.log_tags = [ :request_id ]
-  config.logger = ActiveSupport::TaggedLogging.new(ActiveSupport::Logger.new(STDOUT))
+
+  logger = CustomLogger.new(STDOUT)
+  logger.formatter = CustomLogger::Formatter.new
+  config.logger = ActiveSupport::TaggedLogging.new(logger)
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
 
   config.active_support.report_deprecations = false
