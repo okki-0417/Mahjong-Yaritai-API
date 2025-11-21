@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 require "active_support/core_ext/integer/time"
-require Rails.root.join("lib/custom_logger")
-require Rails.root.join("lib/custom_logger/formatter")
+require Rails.root.join("lib/customized_logger/formatter")
 
 Rails.application.configure do
   config.enable_reloading = true
@@ -29,8 +28,8 @@ Rails.application.configure do
 
   config.log_level = :debug
 
-  logger = CustomLogger.new(Rails.root.join("log/development.log"))
-  logger.formatter = CustomLogger::Formatter.new
+  logger = ActiveSupport::Logger.new(Rails.root.join("log/development.log"))
+  logger.formatter = CustomizedLogger::Formatter.new
   config.logger = ActiveSupport::TaggedLogging.new(logger)
 
   config.action_mailer.raise_delivery_errors = true

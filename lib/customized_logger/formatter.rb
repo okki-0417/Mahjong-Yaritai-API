@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CustomLogger
+module CustomizedLogger
   class Formatter < Logger::Formatter
     def call(severity, time, program_name, message)
       jst_formatted_log(severity, time, program_name, message)
