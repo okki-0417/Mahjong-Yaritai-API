@@ -20,6 +20,7 @@ class User < ApplicationRecord
 
   has_many :created_likes, class_name: :Like, dependent: :destroy
   has_many :liked_what_to_discard_problems, through: :created_likes, source: :likable, source_type: "WhatToDiscardProblem"
+  has_many :voted_what_to_discard_problems, through: :created_what_to_discard_problem_votes, source: :what_to_discard_problem
 
   attr_accessor :remember_token
 

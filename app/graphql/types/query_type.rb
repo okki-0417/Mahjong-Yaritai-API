@@ -31,5 +31,6 @@ module Types
     field :what_to_discard_problem_comment_replies, resolver: Resolvers::WhatToDiscardProblems::Comments::ListWhatToDiscardProblemCommentReplies
 
     field :liked_what_to_discard_problem_ids, resolver: Resolvers::WhatToDiscardProblems::LikedWhatToDiscardProblemIds
+    field :voted_tile_ids, resolver: Resolvers::WhatToDiscardProblems::VotedTileIds
   end
 end

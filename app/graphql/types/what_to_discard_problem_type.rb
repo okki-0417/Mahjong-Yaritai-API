@@ -30,15 +30,7 @@ module Types
     field :hand13_id, ID, null: false
     field :tsumo_id, ID, null: false
 
-    field :my_vote_tile_id, ID, null: true
-
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
-
-    def my_vote_tile_id
-      return nil unless context[:current_user]
-
-      object.votes.find { |vote| vote.voted_by?(context[:current_user]) }&.tile_id
-    end
   end
 end
