@@ -56,34 +56,34 @@ RSpec.describe "Queries::User", type: :request do
     end
 
     context "ログインしていない場合" do
-      it "isFollowing: falseを返すこと" do
+      it "isFollowing: nilを返すこと" do
         json = subject
 
-        expect(json[:data][:user][:isFollowing]).to eq(false)
+        expect(json[:data][:user][:isFollowing]).to eq(nil)
       end
     end
 
-    context "フォローしていない場合" do
+    context "ログインしている場合" do
       let(:current_user) { create(:user) }
 
-      it "isFollowing: falseを返すこと" do
-        json = subject
+      context "フォローしていない場合" do
+        it "isFollowing: falseを返すこと" do
+          json = subject
 
-        expect(json[:data][:user][:isFollowing]).to eq(false)
-      end
-    end
-
-    context "フォローしている場合" do
-      let(:current_user) { create(:user) }
-
-      before do
-        create(:follow, follower: current_user, followee: target_user)
+          expect(json[:data][:user][:isFollowing]).to eq(false)
+        end
       end
 
-      it "isFollowing: trueを返すこと" do
-        json = subject
+      context "フォローしている場合" do
+        before do
+          create(:follow, follower: current_user, followee: target_user)
+        end
 
-        expect(json[:data][:user][:isFollowing]).to eq(true)
+        it "isFollowing: trueを返すこと" do
+          json = subject
+
+          expect(json[:data][:user][:isFollowing]).to eq(true)
+        end
       end
     end
   end

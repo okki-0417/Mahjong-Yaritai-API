@@ -7,9 +7,9 @@ module Types
     field :email, String, null: true
     field :profile_text, String, null: true
     field :avatar_url, String, null: true
-    field :is_following, Boolean, null: false
-    field :following_count, Integer, null: false
-    field :followers_count, Integer, null: false
+    field :is_following, Boolean, null: true
+    field :following_count, Integer, null: true
+    field :followers_count, Integer, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
 
@@ -24,17 +24,15 @@ module Types
     end
 
     def is_following
-      return false unless context[:current_user]
-
-      context[:current_user].following?(object)
+      context[:is_following]
     end
 
     def following_count
-      object.followings.count
+      context[:followings_count] || nil
     end
 
     def followers_count
-      object.followers.count
+      context[:followers_count] || nil
     end
   end
 end

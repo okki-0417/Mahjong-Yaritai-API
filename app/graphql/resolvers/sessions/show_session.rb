@@ -8,6 +8,9 @@ module Resolvers
       type Types::SessionType, null: false
 
       def resolve
+        context[:followings_count] = current_user&.followings&.count
+        context[:followers_count] = current_user&.followers&.count
+
         {
           is_logged_in: logged_in?,
           user: current_user,
