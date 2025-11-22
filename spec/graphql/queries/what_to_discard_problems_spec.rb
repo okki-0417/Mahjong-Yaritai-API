@@ -28,6 +28,8 @@ RSpec.describe "Queries::WhatToDiscardProblems", type: :request do
                 hand1Id
                 hand2Id
                 hand3Id
+                isLikedByMe
+                myVoteTileId
                 user {
                   id
                   name
