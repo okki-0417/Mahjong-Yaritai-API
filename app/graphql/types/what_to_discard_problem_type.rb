@@ -30,17 +30,10 @@ module Types
     field :hand13_id, ID, null: false
     field :tsumo_id, ID, null: false
 
-    field :is_liked_by_me, Boolean, null: false
     field :my_vote_tile_id, ID, null: true
 
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
-
-    def is_liked_by_me
-      return false unless context[:current_user]
-
-      object.likes.select { |like| like.liked_by?(context[:current_user]) }.any?
-    end
 
     def my_vote_tile_id
       return nil unless context[:current_user]

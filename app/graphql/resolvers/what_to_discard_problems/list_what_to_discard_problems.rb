@@ -9,7 +9,6 @@ module Resolvers
         WhatToDiscardProblem
           .preload(
             :votes,
-            :likes,
             user: :avatar_attachment,
           )
           .order(id: :desc)

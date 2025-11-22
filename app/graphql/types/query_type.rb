@@ -29,5 +29,7 @@ module Types
     field :what_to_discard_problem_vote_results, resolver: Resolvers::WhatToDiscardProblems::VoteResults::ListWhatToDiscardProblemVoteResults
     field :what_to_discard_problem_comments, resolver: Resolvers::WhatToDiscardProblems::Comments::ListWhatToDiscardProblemComments
     field :what_to_discard_problem_comment_replies, resolver: Resolvers::WhatToDiscardProblems::Comments::ListWhatToDiscardProblemCommentReplies
+
+    field :liked_what_to_discard_problem_ids, resolver: Resolvers::WhatToDiscardProblems::LikedWhatToDiscardProblemIds
   end
 end

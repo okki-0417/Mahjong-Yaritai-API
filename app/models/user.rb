@@ -11,13 +11,15 @@ class User < ApplicationRecord
   has_one_attached :avatar
   has_many :created_what_to_discard_problems, class_name: :WhatToDiscardProblem, dependent: :destroy
   has_many :created_comments, class_name: :Comment, dependent: :destroy
-  has_many :created_likes, class_name: :Like, dependent: :destroy
   has_many :created_what_to_discard_problem_votes, class_name: "WhatToDiscardProblem::Vote", dependent: :destroy
 
   has_many :active_follows, class_name: "Follow", foreign_key: "follower_id", dependent: :destroy
   has_many :passive_follows, class_name: "Follow", foreign_key: "followee_id", dependent: :destroy
   has_many :followings, through: :active_follows, source: :followee
   has_many :followers, through: :passive_follows, source: :follower
+
+  has_many :created_likes, class_name: :Like, dependent: :destroy
+  has_many :liked_what_to_discard_problems, through: :created_likes, source: :likable, source_type: "WhatToDiscardProblem"
 
   attr_accessor :remember_token
 
