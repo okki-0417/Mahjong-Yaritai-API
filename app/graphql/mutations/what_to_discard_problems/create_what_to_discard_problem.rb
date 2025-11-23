@@ -99,7 +99,9 @@ module Mutations
           tsumo_id:,
         )
 
-        Rails.logger.warn("WhatToDiscardProblem to be created: #{problem.attributes.inspect}") if Rails.env.production?
+        Rails.logger.warn("WhatToDiscardProblem to be created: #{problem.inspect}") if Rails.env.production?
+        Rails.logger.warn("valid? #{problem.valid?.inspect}") if Rails.env.production?
+        Rails.logger.warn("errors: #{problem.errors.full_messages.inspect}") if Rails.env.production?
 
         if problem.save
           { what_to_discard_problem: problem }
