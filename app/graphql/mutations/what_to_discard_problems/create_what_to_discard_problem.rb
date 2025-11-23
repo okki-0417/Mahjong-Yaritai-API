@@ -52,7 +52,7 @@ module Mutations
       )
         require_authentication!
 
-        Rails.logger.warn("Creating WhatToDiscardProblem by user_id=#{current_user.id}")
+        Rails.logger.warn("Creating WhatToDiscardProblem by user_id=#{current_user.id}") if Rails.env.production?
         Rails.logger.warn("Params: #{{
           description:,
           round:,
@@ -74,7 +74,7 @@ module Mutations
           hand12_id:,
           hand13_id:,
           tsumo_id:,
-        }.inspect}")
+        }.inspect}") if Rails.env.production?
 
         problem = current_user.created_what_to_discard_problems.new(
           description:,
@@ -99,7 +99,7 @@ module Mutations
           tsumo_id:,
         )
 
-        Rails.logger.warn("WhatToDiscardProblem to be created: #{problem.attributes.inspect}")
+        Rails.logger.warn("WhatToDiscardProblem to be created: #{problem.attributes.inspect}") if Rails.env.production?
 
         if problem.save
           { what_to_discard_problem: problem }
