@@ -99,7 +99,29 @@ module Mutations
           tsumo_id:,
         )
 
-        Rails.logger.warn("WhatToDiscardProblem to be created: #{problem.inspect}") if Rails.env.production?
+        Rails.logger.warn("WhatToDiscardProblem to be created: #{{
+          description: problem.description,
+          round: problem.round,
+          turn: problem.turn,
+          wind: problem.wind,
+          points: problem.points,
+          dora_id: problem.dora_id,
+          hand1_id: problem.hand1_id,
+          hand2_id: problem.hand2_id,
+          hand3_id: problem.hand3_id,
+          hand4_id: problem.hand4_id,
+          hand5_id: problem.hand5_id,
+          hand6_id: problem.hand6_id,
+          hand7_id: problem.hand7_id,
+          hand8_id: problem.hand8_id,
+          hand9_id: problem.hand9_id,
+          hand10_id: problem.hand10_id,
+          hand11_id: problem.hand11_id,
+          hand12_id: problem.hand12_id,
+          hand13_id: problem.hand13_id,
+          tsumo_id: problem.tsumo_id,
+        }.inspect
+        }}") if Rails.env.production?
         Rails.logger.warn("valid? #{problem.valid?.inspect}") if Rails.env.production?
         Rails.logger.warn("errors: #{problem.errors.full_messages.inspect}") if Rails.env.production?
 
