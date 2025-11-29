@@ -160,4 +160,133 @@ hand4_id: 7, hand5_id: 7, hand6_id: 9, hand7_id: 10, hand8_id: 10, hand9_id: 10,
   (1..50).each do |i|
     FactoryBot.create(:what_to_discard_problem_vote, what_to_discard_problem_id: problem.id, tile_id: rand(1..14))
   end
+
+  # 麻雀セッションのサンプルデータ作成
+  # 4人の参加者を作成
+  player1 = FactoryBot.create(:user, name: "東家", email: "east@mahjong.com")
+  player2 = FactoryBot.create(:user, name: "南家", email: "south@mahjong.com")
+  player3 = FactoryBot.create(:user, name: "西家", email: "west@mahjong.com")
+  player4 = FactoryBot.create(:user, name: "北家", email: "north@mahjong.com")
+
+  # スコア設定を作成（レート100, ウマ10-30）
+  scoring_setting = FactoryBot.create(
+    :mahjong_scoring_setting,
+    rate: 100,
+    chip_amount: 0,
+    uma_rule_label: "10-30",
+    oka_rule_label: "25000点30000点返し"
+  )
+
+  # セッションを作成（ゲーム代4000円）
+  session = FactoryBot.create(
+    :mahjong_session,
+    total_game_fee: 4000,
+    creator_user: player1,
+    mahjong_scoring_setting: scoring_setting
+  )
+
+  # 参加者を作成
+  participant1 = FactoryBot.create(:mahjong_participant, mahjong_session: session, user: player1)
+  participant2 = FactoryBot.create(:mahjong_participant, mahjong_session: session, user: player2)
+  participant3 = FactoryBot.create(:mahjong_participant, mahjong_session: session, user: player3)
+  participant4 = FactoryBot.create(:mahjong_participant, mahjong_session: session, user: player4)
+
+  # 1ゲーム目を作成
+  game1 = FactoryBot.create(:mahjong_game, mahjong_session: session)
+
+  # 1ゲーム目の結果（player2が1位）
+  FactoryBot.create(:mahjong_result,
+    mahjong_participant: participant1,
+    mahjong_game: game1,
+    score: 22000,
+    result_point: -8,
+    ranking: 4
+  )
+  FactoryBot.create(:mahjong_result,
+    mahjong_participant: participant2,
+    mahjong_game: game1,
+    score: 38000,
+    result_point: 43,
+    ranking: 1
+  )
+  FactoryBot.create(:mahjong_result,
+    mahjong_participant: participant3,
+    mahjong_game: game1,
+    score: 28000,
+    result_point: -10,
+    ranking: 3
+  )
+  FactoryBot.create(:mahjong_result,
+    mahjong_participant: participant4,
+    mahjong_game: game1,
+    score: 32000,
+    result_point: -25,
+    ranking: 2
+  )
+
+  # 2ゲーム目を作成
+  game2 = FactoryBot.create(:mahjong_game, mahjong_session: session)
+
+  # 2ゲーム目の結果（player1が1位）
+  FactoryBot.create(:mahjong_result,
+    mahjong_participant: participant1,
+    mahjong_game: game2,
+    score: 42000,
+    result_point: 57,
+    ranking: 1
+  )
+  FactoryBot.create(:mahjong_result,
+    mahjong_participant: participant2,
+    mahjong_game: game2,
+    score: 18000,
+    result_point: -22,
+    ranking: 4
+  )
+  FactoryBot.create(:mahjong_result,
+    mahjong_participant: participant3,
+    mahjong_game: game2,
+    score: 33000,
+    result_point: -25,
+    ranking: 2
+  )
+  FactoryBot.create(:mahjong_result,
+    mahjong_participant: participant4,
+    mahjong_game: game2,
+    score: 27000,
+    result_point: -10,
+    ranking: 3
+  )
+
+  # 3ゲーム目を作成
+  game3 = FactoryBot.create(:mahjong_game, mahjong_session: session)
+
+  # 3ゲーム目の結果（player3が1位）
+  FactoryBot.create(:mahjong_result,
+    mahjong_participant: participant1,
+    mahjong_game: game3,
+    score: 25000,
+    result_point: -20,
+    ranking: 3
+  )
+  FactoryBot.create(:mahjong_result,
+    mahjong_participant: participant2,
+    mahjong_game: game3,
+    score: 31000,
+    result_point: -19,
+    ranking: 2
+  )
+  FactoryBot.create(:mahjong_result,
+    mahjong_participant: participant3,
+    mahjong_game: game3,
+    score: 39000,
+    result_point: 49,
+    ranking: 1
+  )
+  FactoryBot.create(:mahjong_result,
+    mahjong_participant: participant4,
+    mahjong_game: game3,
+    score: 25000,
+    result_point: -10,
+    ranking: 4
+  )
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_11_05_072326) do
+ActiveRecord::Schema[7.2].define(version: 2025_11_05_072360) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -98,6 +98,57 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_05_072326) do
     t.index [ "user_id" ], name: "index_likes_on_user_id"
   end
 
+  create_table "mahjong_games", force: :cascade do |t|
+    t.bigint "mahjong_session_id", null: false, comment: "麻雀開催ID"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index [ "mahjong_session_id" ], name: "index_mahjong_games_on_mahjong_session_id"
+  end
+
+  create_table "mahjong_participants", force: :cascade do |t|
+    t.bigint "mahjong_session_id", null: false, comment: "麻雀開催ID"
+    t.bigint "user_id", null: false, comment: "ユーザーID"
+    t.string "name", null: false, comment: "参加者名"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index %w[mahjong_session_id user_id], name: "index_mahjong_participants_on_session_and_user", unique: true
+    t.index [ "mahjong_session_id" ], name: "index_mahjong_participants_on_mahjong_session_id"
+    t.index [ "user_id" ], name: "index_mahjong_participants_on_user_id"
+  end
+
+  create_table "mahjong_results", force: :cascade do |t|
+    t.bigint "mahjong_participant_id", null: false, comment: "麻雀参加ID"
+    t.bigint "mahjong_game_id", null: false, comment: "麻雀ゲームID"
+    t.integer "ranking", null: false, comment: "着順"
+    t.integer "result_point", null: false, comment: "計算後のポイント"
+    t.integer "score", comment: "得点"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index %w[mahjong_game_id mahjong_participant_id], name: "index_mahjong_results_on_game_and_participant", unique: true
+    t.index %w[mahjong_game_id ranking], name: "index_mahjong_results_on_game_and_ranking", unique: true
+    t.index [ "mahjong_game_id" ], name: "index_mahjong_results_on_mahjong_game_id"
+    t.index [ "mahjong_participant_id" ], name: "index_mahjong_results_on_mahjong_participant_id"
+  end
+
+  create_table "mahjong_scoring_settings", force: :cascade do |t|
+    t.integer "rate", default: 100, null: false, comment: "1000点あたりの額"
+    t.integer "chip_amount", default: 0, null: false, comment: "チップ額"
+    t.string "uma_rule_label", default: "", null: false, comment: "ウマ設定のラベル"
+    t.string "oka_rule_label", default: "", null: false, comment: "オカ設定のラベル"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "mahjong_sessions", force: :cascade do |t|
+    t.integer "total_game_fee", default: 0, null: false, comment: "ゲーム代"
+    t.bigint "creator_user_id", null: false, comment: "作成者のユーザーID"
+    t.bigint "mahjong_scoring_setting_id", null: false, comment: "ゲーム設定ID"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index [ "creator_user_id" ], name: "index_mahjong_sessions_on_creator_user_id"
+    t.index [ "mahjong_scoring_setting_id" ], name: "index_mahjong_sessions_on_mahjong_scoring_setting_id"
+  end
+
   create_table "tiles", force: :cascade do |t|
     t.integer "suit", null: false
     t.integer "ordinal_number_in_suit", null: false
@@ -181,6 +232,13 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_05_072326) do
   add_foreign_key "follows", "users", column: "follower_id"
   add_foreign_key "learning_questions", "learning_categories"
   add_foreign_key "likes", "users"
+  add_foreign_key "mahjong_games", "mahjong_sessions"
+  add_foreign_key "mahjong_participants", "mahjong_sessions"
+  add_foreign_key "mahjong_participants", "users"
+  add_foreign_key "mahjong_results", "mahjong_games"
+  add_foreign_key "mahjong_results", "mahjong_participants"
+  add_foreign_key "mahjong_sessions", "mahjong_scoring_settings"
+  add_foreign_key "mahjong_sessions", "users", column: "creator_user_id"
   add_foreign_key "what_to_discard_problem_votes", "tiles"
   add_foreign_key "what_to_discard_problem_votes", "users"
   add_foreign_key "what_to_discard_problem_votes", "what_to_discard_problems"

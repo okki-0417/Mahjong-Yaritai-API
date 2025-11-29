@@ -28,3 +28,10 @@ RSpec.configure do |config|
 
   Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 end
+
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+    with.library :rails
+  end
+end

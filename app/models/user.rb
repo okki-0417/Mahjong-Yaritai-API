@@ -22,6 +22,10 @@ class User < ApplicationRecord
   has_many :liked_what_to_discard_problems, through: :created_likes, source: :likable, source_type: "WhatToDiscardProblem"
   has_many :voted_what_to_discard_problems, through: :created_what_to_discard_problem_votes, source: :what_to_discard_problem
 
+  has_many :created_mahjong_sessions, class_name: "MahjongSession", foreign_key: "creator_user_id", dependent: :destroy
+  has_many :mahjong_participants, dependent: :destroy
+  has_many :participated_mahjong_sessions, through: :mahjong_participants, source: :mahjong_session
+
   attr_accessor :remember_token
 
   def remember
@@ -47,6 +51,8 @@ class User < ApplicationRecord
       created_what_to_discard_problem_votes.destroy_all
       active_follows.destroy_all
       passive_follows.destroy_all
+      created_mahjong_sessions.destroy_all
+      mahjong_participants.destroy_all
 
       destroy!
     end

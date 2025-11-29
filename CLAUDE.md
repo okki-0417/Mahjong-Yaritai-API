@@ -24,16 +24,56 @@
 - パスワード認証なし - メールで送信される一時トークンを使用
 
 ### 麻雀ドメイン
+
+#### 何切る問題
 - **Tile**: 34種類の麻雀牌（萬子、筒子、索子、字牌）
 - **WhatToDiscardProblem**: 13枚の手牌 + 1枚のツモ牌、ユーザーが何を切るか投票
 - **WhatToDiscardProblem::Vote**: ユーザーの投票
 - **Comments & Likes**: 問題に対するソーシャル機能
 
+#### 麻雀戦績記録機能
+- **MahjongSession**: 麻雀開催（セッション）
+  - 複数のゲームをまとめる単位
+  - 作成者（creator_user）、ゲーム代総額（total_game_fee）を持つ
+  - スコア設定（MahjongScoringsSetting）を参照
+
+- **MahjongScoringsSetting**: スコア計算設定
+  - レート（rate）、チップ額（chip_amount）
+  - ウマルール（uma_rule_label）、オカルール（oka_rule_label）
+
+- **MahjongParticipant**: セッション参加者
+  - セッションとユーザーの中間テーブル
+  - セッションごとに4人の参加者を登録
+
+- **MahjongGame**: 半荘（ゲーム）
+  - セッション内の1回のゲーム
+  - 複数の結果（MahjongResult）を持つ
+
+- **MahjongResult**: ゲーム結果
+  - 参加者ごとの得点（score）、計算後ポイント（result_point）、着順（ranking）
+  - 1ゲームにつき4つの結果（4人分）
+
 ### 主要な関連
 ```ruby
+# 何切る問題
 User has_many :created_what_to_discard_problems
 WhatToDiscardProblem belongs_to 14牌 (hand1_id..hand13_id, tsumo_id, dora_id)
 WhatToDiscardProblem has_many :votes, :comments, :likes
+
+# 麻雀戦績記録
+User has_many :mahjong_sessions (as creator_user)
+User has_many :mahjong_participants
+MahjongSession belongs_to :creator_user (User)
+MahjongSession belongs_to :mahjong_scoring_setting
+MahjongSession has_many :mahjong_games
+MahjongSession has_many :mahjong_participants
+MahjongParticipant belongs_to :mahjong_session
+MahjongParticipant belongs_to :user
+MahjongParticipant has_many :mahjong_results
+MahjongGame belongs_to :mahjong_session
+MahjongGame has_many :mahjong_results
+MahjongResult belongs_to :mahjong_participant
+MahjongResult belongs_to :mahjong_game
 ```
 
 ## 開発環境
@@ -225,14 +265,41 @@ end
 ## データベーススキーマ要点
 
 ### 主要テーブル
+
+#### 認証・ユーザー
 - `users`: メールベース認証、20文字以内の名前
+- `auth_requests`: 6桁トークン、15分有効期限
+- `follows`: フォロー関係（follower_id, followee_id、ユニーク制約）
+
+#### 何切る問題
 - `tiles`: 34種類の麻雀牌（suit, ordinal_number_in_suit）
 - `what_to_discard_problems`: 14牌（hand1-13, tsumo, dora）+ メタ情報
 - `what_to_discard_problem_votes`: ユーザーの投票（ユニーク制約）
+
+#### 麻雀戦績記録
+- `mahjong_sessions`: セッション（開催）情報
+  - `creator_user_id`: 作成者のユーザーID
+  - `total_game_fee`: ゲーム代総額
+  - `mahjong_scoring_setting_id`: スコア設定ID
+- `mahjong_scoring_settings`: スコア計算設定
+  - `rate`: レート
+  - `chip_amount`: チップ額
+  - `uma_rule_label`: ウマルール（例: "10-30"）
+  - `oka_rule_label`: オカルール（例: "25000点30000点返し"）
+- `mahjong_participants`: セッション参加者（中間テーブル）
+  - `mahjong_session_id`, `user_id`
+- `mahjong_games`: 半荘（ゲーム）
+  - `mahjong_session_id`: どのセッションのゲームか
+- `mahjong_results`: ゲーム結果
+  - `mahjong_participant_id`: 参加者
+  - `mahjong_game_id`: ゲーム
+  - `score`: 得点（例: 38000）
+  - `result_point`: 計算後ポイント（例: +43）
+  - `ranking`: 着順（1-4）
+
+#### ソーシャル機能
 - `comments`: ポリモーフィック、自己参照（返信）
 - `likes`: ポリモーフィック、ユーザーごとにユニーク
-- `auth_requests`: 6桁トークン、15分有効期限
-- `follows`: フォロー関係（follower_id, followee_id、ユニーク制約）
 
 ### インデックスとカウンターキャッシュ
 - ユニークインデックス: email, user_id + what_to_discard_problem_id, follower_id + followee_id
@@ -313,6 +380,109 @@ end
 
 # 使用例
 create(:what_to_discard_problem, :dev)
+```
+
+### 麻雀戦績記録機能のFactory使用例
+
+#### 基本的なセッションの作成
+```ruby
+# スコア設定を作成
+scoring_setting = create(:mahjong_scoring_setting,
+  rate: 100,
+  chip_amount: 0,
+  uma_rule_label: "10-30",
+  oka_rule_label: "25000点30000点返し"
+)
+
+# セッションを作成
+session = create(:mahjong_session,
+  total_game_fee: 4000,
+  creator_user: create(:user),
+  mahjong_scoring_setting: scoring_setting
+)
+
+# 参加者を作成（4人）
+participants = create_list(:mahjong_participant, 4, mahjong_session: session)
+
+# または特定のユーザーで参加者を作成
+user1 = create(:user, name: "東家")
+participant1 = create(:mahjong_participant, mahjong_session: session, user: user1)
+```
+
+#### ゲームと結果の作成
+```ruby
+# ゲームを作成
+game = create(:mahjong_game, mahjong_session: session)
+
+# 各参加者の結果を作成（4人分）
+create(:mahjong_result,
+  mahjong_participant: participants[0],
+  mahjong_game: game,
+  score: 38000,
+  result_point: 43,
+  ranking: 1
+)
+
+create(:mahjong_result,
+  mahjong_participant: participants[1],
+  mahjong_game: game,
+  score: 32000,
+  result_point: -25,
+  ranking: 2
+)
+
+create(:mahjong_result,
+  mahjong_participant: participants[2],
+  mahjong_game: game,
+  score: 28000,
+  result_point: -10,
+  ranking: 3
+)
+
+create(:mahjong_result,
+  mahjong_participant: participants[3],
+  mahjong_game: game,
+  score: 22000,
+  result_point: -8,
+  ranking: 4
+)
+```
+
+#### 完全なセッションを一度に作成
+```ruby
+# 4人のユーザー
+players = create_list(:user, 4)
+
+# スコア設定
+scoring_setting = create(:mahjong_scoring_setting, rate: 100)
+
+# セッション
+session = create(:mahjong_session,
+  creator_user: players[0],
+  mahjong_scoring_setting: scoring_setting,
+  total_game_fee: 4000
+)
+
+# 参加者
+participants = players.map do |player|
+  create(:mahjong_participant, mahjong_session: session, user: player)
+end
+
+# 3ゲーム作成
+3.times do
+  game = create(:mahjong_game, mahjong_session: session)
+
+  # 各ゲームの結果（適当な得点で）
+  participants.each_with_index do |participant, index|
+    create(:mahjong_result,
+      mahjong_participant: participant,
+      mahjong_game: game,
+      score: [38000, 32000, 28000, 22000][index],
+      result_point: [43, -25, -10, -8][index],
+      ranking: index + 1
+    )
+  end
+end
 ```
 
 ## RSpec + Rswag テストパターン

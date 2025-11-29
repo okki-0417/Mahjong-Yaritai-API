@@ -30,6 +30,7 @@ group :development, :test do
   gem "factory_bot_rails"
   gem "pry"
   gem "rspec-rails", "~> 8.0.1"
+  gem "shoulda-matchers"
   gem "rswag-specs"
 end
 
