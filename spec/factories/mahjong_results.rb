@@ -6,6 +6,6 @@ FactoryBot.define do
     association :mahjong_game
     sequence(:ranking) { |n| ((n - 1) % 4) + 1 }
     score { 30000 }
-    result_point { 50 }
+    result_points { 50 }
   end
 end

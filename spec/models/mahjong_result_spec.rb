@@ -14,12 +14,12 @@ RSpec.describe MahjongResult, type: :model do
   end
 
   describe "バリデーション" do
-    subject { build(:mahjong_result, mahjong_participant:, mahjong_game:, result_point:, score:) }
+    subject { build(:mahjong_result, mahjong_participant:, mahjong_game:, result_points:, score:) }
 
     let(:mahjong_game) { create(:mahjong_game, mahjong_session:) }
     let(:mahjong_session) { create(:mahjong_session) }
     let(:mahjong_participant) { create(:mahjong_participant, mahjong_session:) }
-    let(:result_point) { 0 }
+    let(:result_points) { 0 }
     let(:score) { 25000 }
 
     describe "score" do
@@ -32,13 +32,13 @@ RSpec.describe MahjongResult, type: :model do
       end
     end
 
-    describe "result_point" do
+    describe "result_points" do
       it "数値のみ許可されていること" do
-        should validate_numericality_of(:result_point)
+        should validate_numericality_of(:result_points)
       end
 
       context "正の値の場合" do
-        let(:result_point) { 15 }
+        let(:result_points) { 15 }
 
         it "有効であること" do
           expect(subject).to be_valid
@@ -46,7 +46,7 @@ RSpec.describe MahjongResult, type: :model do
       end
 
       context "負の値の場合" do
-        let(:result_point) { -10 }
+        let(:result_points) { -10 }
 
         it "有効であること" do
           expect(subject).to be_valid

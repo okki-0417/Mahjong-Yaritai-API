@@ -59,6 +59,27 @@ RSpec.describe MahjongParticipant, type: :model do
     end
   end
 
+  describe "コールバック" do
+    describe "after_initialize" do
+      subject { described_class.new(user:) }
+
+      context "ユーザーが与えられている場合" do
+        let(:user) { create(:user, name: "ユーザー名") }
+        it "名前がユーザー名で設定されること" do
+          expect(subject.name).to eq("ユーザー名")
+        end
+      end
+
+      context "ユーザーが与えられていない場合" do
+        let(:user) { nil }
+
+        it "名前がデフォルト名で設定されること" do
+          expect(subject.name).to eq(MahjongParticipant::DEFAULT_NAME)
+        end
+      end
+    end
+  end
+
   describe "メソッド" do
     describe "#winner_games" do
       let(:mahjong_session) { create(:mahjong_session) }

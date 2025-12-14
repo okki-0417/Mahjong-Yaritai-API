@@ -4,7 +4,7 @@ class CreateMahjongResults < ActiveRecord::Migration[7.2]
       t.references :mahjong_participant, null: false, foreign_key: true, comment: "麻雀参加ID"
       t.references :mahjong_game, null: false, foreign_key: true, comment: "麻雀ゲームID"
       t.integer :ranking, null: false, comment: "着順"
-      t.integer :result_point, null: false, comment: "計算後のポイント"
+      t.integer :result_points, null: false, comment: "計算後のポイント"
       t.integer :score, comment: "得点"
 
       t.timestamps

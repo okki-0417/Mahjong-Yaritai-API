@@ -3,6 +3,17 @@
 require "rails_helper"
 
 RSpec.describe MahjongSession, type: :model do
+  describe "attribute" do
+    subject { described_class.new }
+
+    describe "name" do
+      it "デフォルト値が作成時の日付をフォーマットした文字列であること" do
+        expected_name = Time.current.strftime("%Y年%m月%d日")
+        expect(subject.name).to eq expected_name
+      end
+    end
+  end
+
   describe "アソシエーション" do
     it "belongs_to 作成者ユーザー" do
       should belong_to(:creator_user).class_name("User")
@@ -21,7 +32,7 @@ RSpec.describe MahjongSession, type: :model do
     end
 
     it "has_many 参加者 through 麻雀参加者" do
-      should have_many(:participants).through(:mahjong_participants).source(:user)
+      should have_many(:participant_users).through(:mahjong_participants).source(:user)
     end
   end
 

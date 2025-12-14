@@ -4,6 +4,8 @@ FactoryBot.define do
   factory :mahjong_participant do
     association :mahjong_session
     association :user
-    name { "参加者#{SecureRandom.hex(4)}" }
+
+    # after_initializeコールバックと同じロジックをFactoryで実装
+    name { user&.name || MahjongParticipant::DEFAULT_NAME }
   end
 end

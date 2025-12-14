@@ -23,6 +23,7 @@ module Types
     field :user, resolver: Resolvers::Users::ShowUser
     field :followings, resolver: Resolvers::Me::Followings::ListFollowings
     field :followers, resolver: Resolvers::Me::Followers::ListFollowers
+    field :mutual_users, resolver: Resolvers::Me::MutualUsers::ListMutualUsers
     field :voted_what_to_discard_problems, resolver: Resolvers::Me::WhatToDiscardProblems::VotedWhatToDiscardProblems
 
     field :what_to_discard_problems, resolver: Resolvers::WhatToDiscardProblems::ListWhatToDiscardProblems
@@ -33,5 +34,8 @@ module Types
 
     field :liked_what_to_discard_problem_ids, resolver: Resolvers::WhatToDiscardProblems::LikedWhatToDiscardProblemIds
     field :voted_tile_ids, resolver: Resolvers::WhatToDiscardProblems::VotedTileIds
+
+    field :participated_mahjong_sessions, resolver: Resolvers::Me::ParticipatedMahjongSessions
+    field :participated_mahjong_session, resolver: Resolvers::Me::ParticipatedMahjongSession
   end
 end

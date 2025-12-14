@@ -31,18 +31,21 @@ module Controllers
     end
 
     def current_user
-      if user_id = session[:user_id]
-        @current_user ||= User.find_by(id: user_id)
-      elsif user_id = cookies.signed[:user_id]
-        return unless remember_token = cookies.signed[:remember_token]
+      @current_user ||= begin
+        if user_id = session[:user_id]
+          User.find_by(id: user_id)
+        elsif user_id = cookies.signed[:user_id]
+          remember_token = cookies.signed[:remember_token]
+          return nil unless remember_token
 
-        user = User.find_by(id: user_id)
-        return unless user&.authenticated?(remember_token)
+          user = User.find_by(id: user_id)
+          return nil unless user&.authenticated?(remember_token)
 
-        login user
-        @current_user = user
-      else
-        nil
+          login user
+          user
+        else
+          nil
+        end
       end
     end
 
