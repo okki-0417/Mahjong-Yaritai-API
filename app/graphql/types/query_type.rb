@@ -23,7 +23,7 @@ module Types
     field :user, resolver: Resolvers::Users::ShowUser
     field :followings, resolver: Resolvers::Me::Followings::ListFollowings
     field :followers, resolver: Resolvers::Me::Followers::ListFollowers
-    field :mutual_users, resolver: Resolvers::Me::MutualUsers::ListMutualUsers
+    field :mutual_followers, resolver: Resolvers::Me::MutualFollowers
     field :voted_what_to_discard_problems, resolver: Resolvers::Me::WhatToDiscardProblems::VotedWhatToDiscardProblems
 
     field :what_to_discard_problems, resolver: Resolvers::WhatToDiscardProblems::ListWhatToDiscardProblems
