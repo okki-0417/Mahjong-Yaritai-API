@@ -2,7 +2,7 @@ ja:
   activerecord:
     errors:
       messages:
-        record_invalid: "レコードの保存に失敗しました: %{errors}"
+        record_invalid: "%{errors}"
         blank: "を入力してください"
         required: "は必須です"
         taken: "はすでに存在します"

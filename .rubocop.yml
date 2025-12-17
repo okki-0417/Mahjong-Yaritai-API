@@ -20,7 +20,7 @@ Layout/SpaceInsideHashLiteralBraces:
 # 配列リテラルの括弧内のスペース
 # 例: [ 1, 2, 3 ] を強制
 Layout/SpaceInsideArrayLiteralBrackets:
-  Enabled: true
+  Enabled: false
   EnforcedStyle: space
 
 # インデント幅を2スペースに設定

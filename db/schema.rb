@@ -125,7 +125,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_11_05_072360) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["mahjong_game_id", "mahjong_participant_id"], name: "index_mahjong_results_on_game_and_participant", unique: true
-    t.index ["mahjong_game_id", "ranking"], name: "index_mahjong_results_on_game_and_ranking", unique: true
     t.index ["mahjong_game_id"], name: "index_mahjong_results_on_mahjong_game_id"
     t.index ["mahjong_participant_id"], name: "index_mahjong_results_on_mahjong_participant_id"
   end

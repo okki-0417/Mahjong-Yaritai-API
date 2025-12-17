@@ -11,6 +11,5 @@ class CreateMahjongResults < ActiveRecord::Migration[7.2]
     end
 
     add_index :mahjong_results, %i[mahjong_game_id mahjong_participant_id], unique: true, name: "index_mahjong_results_on_game_and_participant"
-    add_index :mahjong_results, %i[mahjong_game_id ranking], unique: true, name: "index_mahjong_results_on_game_and_ranking"
   end
 end

@@ -1,8 +1,8 @@
 module Types
   class MahjongParticipantType < Types::BaseObject
     field :id, ID, null: false
-    field :user_id, ID, null: false
-    field :user, Types::UserType, null: false
+    field :user_id, ID, null: true
+    field :user, Types::UserType, null: true
     field :mahjong_session_id, ID, null: false
     field :mahjong_session, Types::MahjongSessionType, null: false
     field :total_points, Integer, null: false

@@ -25,5 +25,7 @@ module Types
 
     field :create_what_to_discard_problem_like, mutation: Mutations::WhatToDiscardProblems::Likes::CreateWhatToDiscardProblemLike
     field :delete_what_to_discard_problem_like, mutation: Mutations::WhatToDiscardProblems::Likes::DeleteWhatToDiscardProblemLike
+
+    field :create_mahjong_session, mutation: Mutations::MahjongSessions::CreateMahjongSession
   end
 end
