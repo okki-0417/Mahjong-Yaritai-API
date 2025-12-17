@@ -11,7 +11,7 @@ module Resolvers
         require_authentication!
 
         participated_mahjong_sessions = current_user.participated_mahjong_sessions
-          .preload(
+                                                    .preload(
             :participant_users,
             :creator_user,
             :mahjong_scoring_setting,

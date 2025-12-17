@@ -15,9 +15,9 @@ module Resolvers
         return [] unless logged_in?
 
         votes = current_user
-          .created_what_to_discard_problem_votes
-          .where(what_to_discard_problem_id: what_to_discard_problem_ids)
-          .select(:tile_id, :what_to_discard_problem_id)
+                .created_what_to_discard_problem_votes
+                .where(what_to_discard_problem_id: what_to_discard_problem_ids)
+                .select(:tile_id, :what_to_discard_problem_id)
 
         votes.map do |vote|
           {

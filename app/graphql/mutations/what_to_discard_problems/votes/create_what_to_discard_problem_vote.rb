@@ -17,14 +17,14 @@ module Mutations
           problem = WhatToDiscardProblem.find(problem_id)
 
           previous_vote = context[:current_user]
-            .created_what_to_discard_problem_votes
-            .find_by(what_to_discard_problem: problem)
+                          .created_what_to_discard_problem_votes
+                          .find_by(what_to_discard_problem: problem)
 
           previous_vote.destroy if previous_vote
 
           vote = context[:current_user]
-            .created_what_to_discard_problem_votes
-            .new(
+                 .created_what_to_discard_problem_votes
+                 .new(
               what_to_discard_problem: problem,
               tile_id:,
             )
