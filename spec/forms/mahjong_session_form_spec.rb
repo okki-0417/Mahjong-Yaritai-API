@@ -131,7 +131,7 @@ RSpec.describe MahjongSessionForm, type: :model do
 
         it "バリデーションに通らないこと" do
           expect(subject).to be false
-          expect(form.errors).to be_added(:participant_users, "は3人以上必要です")
+          expect(form.errors).to be_added(:participant_users, "は最低3人以上必要です")
         end
       end
 
@@ -149,7 +149,7 @@ RSpec.describe MahjongSessionForm, type: :model do
 
         it "バリデーションに通らないこと" do
           expect(subject).to be false
-          expect(form.errors).to be_added(:games, "は1つ以上必要です")
+          expect(form.errors).to be_added(:games, "は最低1つ以上必要です")
         end
       end
 
@@ -167,7 +167,7 @@ RSpec.describe MahjongSessionForm, type: :model do
 
         it "バリデーションに通らないこと" do
           expect(subject).to be false
-          expect(form.errors).to be_added(:games, "の1番目のゲームの結果数が3人以上必要です")
+          expect(form.errors).to be_added(:base, "1戦目の結果をすべて入力してください")
         end
       end
 
