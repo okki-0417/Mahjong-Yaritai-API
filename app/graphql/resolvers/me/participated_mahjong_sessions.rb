@@ -11,12 +11,10 @@ module Resolvers
         require_authentication!
 
         # 参加したセッション OR 作成したセッション
+        participated_session_ids = MahjongParticipant.where(user_id: current_user.id).select(:mahjong_session_id)
         participated_mahjong_sessions = MahjongSession
                                         .where(creator_user: current_user)
-                                        .or(
-                                            MahjongSession.joins(:mahjong_participants)
-                                                          .where(mahjong_participants: { user_id: current_user.id })
-                                          )
+                                        .or(MahjongSession.where(id: participated_session_ids))
                                         .distinct
                                         .preload(
                                             :participant_users,
