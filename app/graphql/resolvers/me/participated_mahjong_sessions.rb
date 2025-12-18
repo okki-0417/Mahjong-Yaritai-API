@@ -12,13 +12,13 @@ module Resolvers
 
         # 参加したセッション OR 作成したセッション
         participated_mahjong_sessions = MahjongSession
-                                          .where(creator_user: current_user)
-                                          .or(
+                                        .where(creator_user: current_user)
+                                        .or(
                                             MahjongSession.joins(:mahjong_participants)
                                                           .where(mahjong_participants: { user_id: current_user.id })
                                           )
-                                          .distinct
-                                          .preload(
+                                        .distinct
+                                        .preload(
                                             :participant_users,
                                             :creator_user,
                                             :mahjong_scoring_setting,
