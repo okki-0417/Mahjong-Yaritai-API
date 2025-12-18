@@ -9,7 +9,7 @@ module Mutations
 
       argument :name, String, required: true
       argument :profile_text, String, required: false
-      argument :avatar, Types::UploadType, required: false
+      argument :avatar, ApolloUploadServer::Upload, required: false
 
       def resolve(name:, profile_text: nil, avatar: nil)
         raise GraphQL::ExecutionError, "既にログインしています" if logged_in?
@@ -22,7 +22,13 @@ module Mutations
 
         user = User.new(name:, email: auth_request.email, profile_text:)
 
-        user.avatar.attach(avatar) if avatar.present?
+        if avatar.present?
+          user.avatar.attach(
+            io: avatar.tempfile,
+            filename: avatar.original_filename,
+            content_type: avatar.content_type
+          )
+        end
 
         if user.save
           session.delete(:auth_request_id)

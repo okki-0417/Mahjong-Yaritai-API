@@ -16,6 +16,7 @@ gem "rswag-ui"
 gem "sidekiq"
 gem "graphql"
 gem "graphql-batch"
+gem "apollo_upload_server", "~> 2.1"
 
 group :development do
   gem "graphiql-rails"
